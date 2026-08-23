@@ -1,0 +1,51 @@
+---
+// src/pages/galeria/index.astro
+import GaleriaLayout from "../../layouts/GaleriaLayout.astro";
+---
+<GaleriaLayout title="rePraça - Galeria"
+title="rePraça — Galeria da Praça"
+    description="Galeria da praça X."
+    canonical="https://repraca.feliperpv.com/galeria/praca/"
+    stylesheets={[
+        "/css/index.css",
+        "/css/privacidade.css"
+    ]}>
+    <!-- BARRA DE FILTROS -->
+    <section class="filtros-container">
+        <div class="filtro-grupo">
+            <label for="filtroOrdem">Ordenar por:</label>
+            <select id="filtroOrdem">
+                <option value="recentes">Mais Recentes</option>
+                <option value="antigas">Mais Antigas</option>
+                <option value="likes">Mais Likes</option>
+            </select>
+        </div>
+
+        <div class="filtro-grupo">
+            <label for="filtroItens">Mínimo de itens:</label>
+            <select id="filtroItens">
+                <option value="3" selected>Pelo menos 3 (Ocultar vazias)</option>
+                <option value="10">Mais de 10 itens</option>
+                <option value="0">Mostrar Todas</option>
+            </select>
+        </div>
+
+        <div class="filtro-grupo">
+            <label for="filtroEspecifico">Contém o item:</label>
+            <select id="filtroEspecifico">
+                <button>
+                    <selectedcontent></selectedcontent>
+                </button>
+                <option value="todos">Qualquer item</option>
+                <!-- As demais opções são preenchidas pelo app.js, a partir
+                     do mesmo dicionário usado pros ícones (iconePorNome) -->
+            </select>
+        </div>
+    </section>
+
+    <!-- A GRID ONDE OS CARDS VÃO APARECER -->
+    <section id="gallery" class="grid-galeria"></section>
+
+    <!-- OBSERVADOR PARA O SCROLL INFINITO -->
+    <div id="fim-da-pagina" class="loading-spinner">A carregar mais praças...</div>
+</GaleriaLayout>

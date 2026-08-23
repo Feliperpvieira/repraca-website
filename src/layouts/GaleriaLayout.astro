@@ -1,0 +1,154 @@
+---
+// src/layouts/GaleriaLayout.astro
+// Layout compartilhado por TODAS as páginas da galeria (/galeria e
+// /galeria/praca/<slug>). Junta o que era duplicado entre os dois HTML
+// antigos: <head>, header com logo, e o popup (modal) inteiro — que é
+// idêntico nas duas páginas. Cada página só entra com o que é dela via
+// <slot />.
+
+import Header from '../components/header.astro';
+import Footer from '../components/footer.astro';
+
+const {
+    title = "rePraça — reimagine sua praça",
+    ogDescription = "Veja e crie praças reimaginadas no rePraça.",
+    ogImage = "https://repraca.feliperpv.com/img/repraca-logo-horiz.png",
+    description,
+    canonical,
+    stylesheet,
+    stylesheets = []
+} = Astro.props;
+
+const cssFiles = [
+    ...(stylesheet ? [stylesheet] : []),
+    ...stylesheets
+];
+
+---
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+
+    <!-- Fallback genérico — a página de uma praça específica sobrescreve
+         isto via JS (document.title, e futuramente as próprias meta tags)
+         assim que o JSON da praça-base carrega. -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- CSS adicional -->
+    {cssFiles.map((css: string) => (
+        <link rel="stylesheet" href={css}>
+    ))}
+    
+    <!-- Caminho ABSOLUTO de propósito: index e praça ficam em profundidades
+         de URL diferentes (/galeria/ vs /galeria/praca/<slug>/), então um
+         caminho relativo (ex: "css/style.css") quebraria numa das duas. -->
+    <link rel="stylesheet" href="/galeria/css/style.css" />
+    
+    
+
+</head>
+<body>
+    <Header />
+
+    <main class="container">
+        <slot />
+
+        <Footer />
+    </main>
+
+    <!-- O MODAL (POPUP) QUE ABRE VIA ?id= NA URL — igual nas duas páginas -->
+    <div id="popup" class="escondido">
+        <div class="popup-content">
+            <button id="btnFecharModal" class="btn-fechar">X</button>
+
+            <div class="popup-imagem-container">
+                <img src="" alt="Vista da praça" id="selectedImage" />
+                <div class="toggle-vista">
+                    <button id="btnVistaTopo" class="btn-vista ativo" title="Vista de topo">Topo</button>
+                    <button id="btnVistaAngulo" class="btn-vista" title="Vista de ângulo">Ângulo</button>
+                </div>
+            </div>
+
+            <div class="popup-sidebar">
+                <div class="sidebar-topo">
+                    <p class="praca-numero" id="modalNumero">rePraça</p>
+                    <h2 id="modalTitulo">Carregando...</h2>
+                    <p class="praca-base" id="modalBaseadoEm"></p>
+                    <p id="modalData" class="texto-dica"></p>
+
+                    <div class="popup-acoes">
+                        <button id="btnLikeModal" class="btn-like">
+                            <span id="modalLikesCount">0</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="33" viewBox="0 0 36 33" fill="none">
+                                <path d="M9.4212 0C4.6476 0 0 3.35317 0 9.49117C0 16.3203 7.821 23.6573 16.7454 32.4812C17.0946 32.8277 17.5482 33 18 33C18.4518 33 18.9054 32.8277 19.2546 32.4812C28.2132 23.6243 36 16.3222 36 9.49117C36 3.344 31.356 0.0165001 26.5878 0.0165001C23.283 0.0165001 20.025 1.60417 18 4.69883C15.966 1.5895 12.717 0 9.4212 0Z" fill="#B76F51" />
+                            </svg>
+                        </button>
+                        <a href="#" id="btnRemix" class="btn-remix">
+                            reMixar praça
+                            <img src="/img/icone-lapis.png" width="54" height="54" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs-header">
+                        <button class="tab-btn tab-itens ativo" data-tab="itens">info</button>
+                        <button class="tab-btn tab-remixes" data-tab="remixes">remixes</button>
+                        <button class="tab-btn tab-historico" data-tab="historico" id="btnTabHistorico">histórico</button>
+                    </div>
+
+                    <div class="tabs-conteudo tabs-conteudo--itens">
+                        <div class="tab-painel ativo" id="painelItens">
+                            <div class="estatisticas">
+                                <div class="stat-box">
+                                    <span id="modalTotalItens" class="stat-numero">-</span>
+                                    <span class="stat-label">Itens</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span id="modalCategoria" class="stat-numero">-</span>
+                                    <span class="stat-label">Foco</span>
+                                </div>
+                            </div>
+                            <p id="modalComentario" class="comentario-praca"></p>
+
+                            <div class="radar-container">
+                                <canvas id="radarPraca"></canvas>
+                            </div>
+
+                            <div id="modalListaItens" class="lista-categorias">
+                                <!-- O JS injeta aqui os grupos por categoria -->
+                            </div>
+                        </div>
+
+                        <div class="tab-painel" id="painelRemixes">
+                            <div id="listaRemixes" class="lista-remixes"></div>
+                        </div>
+
+                        <div class="tab-painel" id="painelHistorico">
+                            <div id="listaHistorico" class="lista-historico"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Chart.Js pras tabelas no popup de cada praça -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <!-- Caminho absoluto pelo mesmo motivo do CSS acima -->
+    <script src="/galeria/js/app.js" is:inline></script>
+</body>
+</html>
