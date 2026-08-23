@@ -34,6 +34,7 @@ export default {
       .on('meta[property="og:title"]', { element(el) { el.setAttribute("content", titulo); } })
       .on('meta[property="og:description"]', { element(el) { el.setAttribute("content", descricao); } })
       .on('meta[property="og:image"]', { element(el) { el.setAttribute("content", praca.image_topo_url); } })
+      .on('meta[property="og:url"]', { element(el) { el.setAttribute("content", url.toString()); } })
       .transform(resposta);
   }
 };
