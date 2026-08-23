@@ -503,7 +503,7 @@ function desenharCards(pracas) {
             </div>
         `;
 
-        card.addEventListener("click", () => { window.location.hash = praca.praca_id; });
+        card.addEventListener("click", () => abrirPraca(praca.praca_id));
         gallery.appendChild(card);
     });
 }
@@ -531,15 +531,40 @@ document.getElementById("filtroItens").addEventListener("change", aplicarFiltros
 document.getElementById("filtroEspecifico").addEventListener("change", aplicarFiltros);
 
 // ==========================================
-// 4. SISTEMA DE HASH ROUTING
+// 4. SISTEMA DE ROTEAMENTO POR QUERY STRING (?id=)
 // ==========================================
+// Trocado de #hash pra ?id= porque o #hash nunca chega ao servidor numa
+// requisição HTTP — a Cloudflare Function que gera a preview certa pro
+// WhatsApp/Instagram só consegue ler ?id=. O pushState/popstate abaixo
+// mantém a MESMA experiência de antes (popup abre/fecha na hora, sem
+// recarregar a página); só a forma de guardar o id na URL muda.
 
-window.addEventListener("hashchange", lidarComNavegacao);
+function pegarIdDaUrl() {
+    return new URLSearchParams(window.location.search).get("id");
+}
+
+// Usado sempre que algo no site abre uma praça (clique num card, num
+// remix, etc.) — troca a URL sem recarregar e chama o handler na mão,
+// porque pushState (diferente do hash) não dispara evento sozinho.
+function abrirPraca(id) {
+    history.pushState({}, "", "?id=" + id);
+    lidarComNavegacao();
+}
+
+// Usado sempre que o popup fecha (botão X, clique fora, erro ao carregar).
+function fecharPraca() {
+    history.pushState({}, "", window.location.pathname);
+    lidarComNavegacao();
+}
+
+// popstate cobre o botão voltar/avançar do navegador (pushState não
+// dispara isso sozinho, só a navegação por histórico dispara).
+window.addEventListener("popstate", lidarComNavegacao);
 
 async function lidarComNavegacao() {
-    const hash = window.location.hash.replace("#", "");
+    const id = pegarIdDaUrl();
 
-    if (!hash) {
+    if (!id) {
         popup.classList.add("escondido");
         document.body.style.overflow = "auto";
         return;
@@ -549,13 +574,13 @@ async function lidarComNavegacao() {
     popup.classList.remove("escondido");
     document.body.style.overflow = "hidden";
 
-    // NOTA: .eq('praca_id', hash).single() quebrava assim que o mesmo
+    // NOTA: .eq('praca_id', id).single() quebrava assim que o mesmo
     // praca_id passasse a ter mais de uma linha (cada edição salva de
     // novo). Buscamos sempre a versão mais recente.
     const { data, error } = await db
         .from('city_creations')
         .select('*')
-        .eq('praca_id', hash)
+        .eq('praca_id', id)
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
@@ -563,7 +588,7 @@ async function lidarComNavegacao() {
     if (error) {
         console.error("Erro ao carregar praça:", error);
         alert("Erro ao carregar a praça.");
-        window.location.hash = "";
+        fecharPraca();
         return;
     }
 
@@ -571,13 +596,13 @@ async function lidarComNavegacao() {
         await preencherModal(data);
     } else {
         alert("Praça não encontrada!");
-        window.location.hash = "";
+        fecharPraca();
     }
 }
 
-document.getElementById("btnFecharModal").addEventListener("click", () => window.location.hash = "");
+document.getElementById("btnFecharModal").addEventListener("click", fecharPraca);
 popup.addEventListener("click", e => {
-    if (e.target === popup) window.location.hash = "";
+    if (e.target === popup) fecharPraca();
 });
 
 // ==========================================
@@ -728,7 +753,7 @@ async function carregarRemixes(pracaId) {
             <span>${new Date(filho.created_at).toLocaleDateString('pt-PT')}</span>
             <img src="${filho.image_topo_url}" alt="" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">
         `;
-        linha.addEventListener("click", () => { window.location.hash = filho.praca_id; });
+        linha.addEventListener("click", () => abrirPraca(filho.praca_id));
         container.appendChild(linha);
     });
 }

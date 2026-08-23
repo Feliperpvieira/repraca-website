@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "repraca-website",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-20",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/galeria/*"]
+  }
+}
