@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="pt">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Relatório de pesquisa e desenvolvimento do projeto rePraça, com todas as etapas detalhadas desde as primeiras ideias a conclusão final.">
+       
+        
+        <!-- Title -->
+        <title>Pesquisa e desenvolvimento - rePraça</title>
+
+        <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
+        <!-- Social media preview -->
+        <meta property="og:title" content="Pesquisa e desenvolvimento - rePraça">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://feliperpv.com/repraca/img/social-preview.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="600">
+        <meta property="og:description" content="Relatório de pesquisa e desenvolvimento do projeto rePraça.">
+        <meta property="og:url" content="https://feliperpv.com/repraca/relatorio.html">
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com"> 
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+        <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&display=swap" rel="stylesheet">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="css/privacidade.css">
+        <link rel="stylesheet" href="css/arquivos.css">
+        <link rel="stylesheet" href="css/desenvolvimento.css">
+    </head>
+
+    <body>
+        <header>
+            <a class="nav-frpv" href="https://feliperpv.com">
+                <img src="https://feliperpv.com/img/frpv-logo.svg" alt="frpv logo" width="86">
+            </a>
+
+            <a class="logo" href="https://feliperpv.com/repraca/">
+                <img class="img-logo" src="img/repraca-logo-horiz.png" width="800" alt="Logo do projeto rePraça">
+            </a>
+        </header>
+            
+        
+        <main>
+            <div class="texto-termos">
+                <h1 class="texto-azul">Relatório de projeto</h1>
+                <h3 class="texto-marrom"><b>Observação, pesquisa e desenvolvimento</b></h3>
+
+                <section id="resumo">
+                    <h2>Resumo</h2>
+                    <p>rePraça é um projeto sobre a imaginação de espaços públicos no Rio de Janeiro.</p>
+                    <p>A ideia surge da mistura entre a pesquisa sobre os espaços urbanos com o meu interesse pessoal sobre trabalhar a imaginação desses lugares. Com o foco em praças devido às suas características únicas, o trabalho se desenvolve na reimaginação desses locais pelos usuários por meio de uma plataforma virtual. Desse modo, é possível saber se as características daquele lugar atendem aos desejos da maioria e quais usos que as pessoas imaginam que diferem dos atuais.</p>
+                    <p><a target="_blank" class="texto-azul" href="arquivos/relatorio.pdf">Download do relatório em versão PDF</a></p>
+                </section>
+
+                <section id="sumario">
+                    <h2>Sumário</h2>
+
+                    <nav class="sumario-nav">
+                    <ul>
+                        <li><a href="#introducao">Introdução</a></li>
+                        <li><a href="#definicao-tema">Definição do Tema</a></li>
+                        <li><a href="#geracao-alternativas">Geração de Alternativas</a></li>
+                        <li><a href="#similares">Similares</a></li>
+                        <li>
+                            <a href="#estudo-pracas">Estudo de Praças</a>
+                            <ul>
+                                <li><a href="#nossa-senhora">Praça #1: Nossa Senhora da Paz</a></li>
+                                <li><a href="#xavier-brito">Praça #2: Xavier de Brito</a></li>
+                                <li><a href="#barao-corumba">Praça #3: Barão de Corumbá</a></li>
+                                <li><a href="#gabriel-soares">Praça #4: Gabriel Soares</a></li>
+                                <li><a href="#escolha-praca">Escolha da praça</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#mobiliario-urbano">Mobiliário Urbano</a></li>
+                        <li><a href="#fluxograma-wireframe">Fluxograma e Wireframe</a></li>
+                        <li>
+                            <a href="#desenvolvimento">Desenvolvimento</a>
+                            <ul>
+                                <li><a href="#momento-1">Momento #1: Mecânicas base</a></li>
+                                <li><a href="#momento-2">Momento #2: Testes</a></li>
+                                <li><a href="#momento-3">Momento #3: Interface e identidade visual</a></li>
+                                <li><a href="#momento-4">Momento #4: Finalização</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#demo-day">Demo Day</a></li>
+                        <li><a href="#conclusao">Conclusão</a></li>
+                    </ul>
+                </nav>
+                </section>
+                
+                <section id="introducao">
+                    <h2>Introdução</h2>
+                    <p>A proposta desse trabalho começa pela minha vontade pessoal: eu sempre tive muito interesse por cidades e pelas histórias por trás delas, e, ao longo do curso, esse interesse foi se fortalecendo. Pelos projetos desenvolvidos na faculdade, meu foco de trabalho foi sendo direcionado principalmente às inúmeras formas de interação que se dão entre as pessoas, a tecnologia e o cenário urbano. Assim, escolhi explorar mais essa interação para o meu último projeto na graduação, buscando me aprofundar nas possibilidades e reflexões que a tecnologia pode trazer aos centros.</p>
+                    <p>Com isso em mente, comecei a pesquisar sobre projetos já existentes que utilizam meios virtuais para trazer soluções ao meio urbano. Os primeiros do tipo que eu encontrei foram serviços em que os cidadãos podem fiscalizar áreas da cidade e serviços prestados por órgãos públicos, como os aplicativos <a target="_blank" class="texto-azul" href="https://www.1746.rio/hc/pt-br">1746</a>, da Prefeitura do Rio de Janeiro, e o <a target="_blank" class="texto-azul" href="https://www.colab.com.br/sou-cidadao/">Colab</a>.</p>
+                    
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/screen-1746-1.jpg" alt="Interface do aplicativo 1746">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/screen-1746-2.jpg" alt="Interface do aplicativo 1746">
+                        </figure>
+                        <figcaption>Aplicativo 1746 - Google Play Store.</figcaption>
+                    </div>
+
+                    <p>O 1746 é o aplicativo oficial da Prefeitura do Rio de Janeiro e funciona como forma de comunicação oficial entre cidadãos e governo municipal. Nele, as pessoas podem fazer reclamações ou abrir solicitações sobre os mais diversos assuntos da cidade, como poda de árvores, remoção de entulhos, conserto de iluminação, fiscalização de estabelecimentos ou denúncias. O funcionamento é simples: o usuário acessa o site ou aplicativo, seleciona a categoria na qual deseja abrir um protocolo, descreve a situação e envia o pedido para o órgão público responsável, que irá responder e, talvez, solucionar a solicitação.</p>
+                    <p>Já o Colab é um aplicativo que começou em Recife no ano de 2013 e se expandiu pelo Brasil, tendo como diferencial ser administrado por uma empresa privada que, para servir de ponte para as reclamações entre cidadãos e prefeituras, cria parcerias com os órgãos governamentais. O funcionamento segue uma linha similar ao do 1746, em que você pode selecionar uma categoria e realizar sua solicitação. Além disso, o aplicativo tenta criar um senso de comunidade, disponibilizando enquetes e conteúdos sobre cidadania para engajar os usuários.</p>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="img/relatorio/screen-colab-1.jpg" alt="Interface do aplicativo 1746">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/screen-colab-2.jpg" alt="Interface do aplicativo 1746">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/screen-colab-3.jpg" alt="Interface do aplicativo 1746">
+                        </figure>
+                        <figcaption>Aplicativo Colab - Google Play Store.</figcaption>
+                    </div>
+
+                    <p>Com esses dois exemplos, concluí que eles eram exatamente o que eu <b>não</b> estava interessado: plataformas para fiscalização, onde uma pessoa reclama e a prefeitura responde, finalizando toda a operação até que uma nova reclamação surja. Esses serviços, por mais que essenciais para o bom funcionamento das cidades,  têm uma pegada muito curta e burocrática, enquanto que para esse projeto eu queria algo mais livre, criativo e que tivesse uma duração maior.</p>
+                    <p>Outro exemplo que encontrei nas pesquisas, dessa vez na linha de algo um pouco mais criativo, foi o <a target="_blank" class="texto-azul" href="https://www.querodiscutiromeuestado.rj.gov.br">Fórum da ALERJ de Desenvolvimento do Rio</a>, em que cidadãos e parlamentares podem discutir propostas e tópicos que talvez se transformem em ideias para legislação de todo o Estado do Rio de Janeiro. Entretanto, esse fórum ocorre no interior da Assembleia Legislativa, no centro da cidade, com trabalhos geralmente ocorrendo em horário comercial. Por mais que seja a casa representativa da população, a ALERJ não é um espaço muito aberto para os que não conhecem sua estrutura, portanto os debates do fórum acabam se fechando em pequenos grupos normalmente formados por especialistas e pessoas mais ligadas ao funcionalismo público.</p>
+                    <p>Ainda durante essa linha de pesquisa inicial, feita para definir a temática do projeto, encontrei também o trabalho <a target="_blank" class="texto-azul" href="https://www.candychang.com/i-was-this-was/">I Wish This Was</a>, da artista Candy Chang na cidade de New Orleans, nos Estados Unidos.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/i-wish-this-was-mural.jpg" alt="Painel da instalação I Wish This Was, em New Orleans">
+                            <figcaption>Painel da instalação "I Wish This Was", em New Orleans.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Na instalação, a artista colou pequenos adesivos nos quais se lia "I Wish This Was" ("Eu queria que isso fosse", em português) seguido por um espaço em branco, onde as pessoas eram convidadas a escrever o que elas gostariam que existisse ali.</p>
+                    <p>A obra foi criada depois que Chang reparou na quantidade de casas e estabelecimentos abandonados que ela via pelas ruas. Ela decidiu usar dos adesivos como uma maneira de incentivar a imaginação coletiva daqueles espaços, de modo a poder visualizar posteriormente o conjunto de pensamentos individuais de todos que participaram, como é possível ver na imagem acima.</p>
+                    <p>No Brasil, uma ideia semelhante a essa foi a obra <a target="_blank" href="https://gabrielevalente.wixsite.com/liberteseussonhos" class="texto-azul">Liberte seus Sonhos</a>, realizada na Lapa, no Rio de Janeiro, pela artista Gabriela Valente, que a define como "uma intervenção urbana de arte relacional que convida a comunidade e transeuntes a compartilhar seus sonhos em murais interativos e assim cocriar novos espaços de ser e estar". Nesse caso, a artista reparou em um muro de um prédio abandonado próximo ao local onde ela morava, e decidiu transformar aquela parede em um grande mural no qual as pessoas que ali passavam poderiam escrever seus sonhos usando giz de cera.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/liberte-seus-sonhos-painel.jpg" alt="Painel da instalação Liberte seus sonhos, no Rio de Janeiro">
+                            <figcaption>Painel da instalação Liberte seus sonhos, no Rio de Janeiro.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por mais que nessa obra os sonhos não sejam específicos sobre o local, deixando a interpretação aberta para que escrevam sobre qualquer tipo de sonho que tenham, essa proposta se relaciona muito com a anterior pela ideia de convidar as pessoas a imaginarem algo e compartilhar isso com os outros, gerando também um grande painel em que é possível ver todas as individualidades juntas.</p>
+
+                </section>
+
+
+                <section id="definicao-tema">
+                    <h2>Definição do Tema</h2>
+                    <p>Se as plataformas de fiscalização da cidade eram o caminho que eu não queria seguir, a proposta de imaginar espaços públicos e ter a visão do conjunto das imaginações de cada pessoa me cativou muito. Além disso, trabalhar a imaginação com pessoas mais velhas é uma ótima oportunidade, pois o público adulto costuma ser mais apático, tendo uma tendência maior a apenas aceitar as coisas do jeito que são e seguir em frente. Trazer de volta essa capacidade de imaginação, que costuma ser muito atribuída ao público infantil e acaba se perdendo com o tempo, será essencial para qualquer proposta de intervenção na cidade.</p>
+                    <p>Assim, juntando o interesse pessoal por cidades com a oportunidade de trabalhar a imaginação, vindo dos projetos similares, o tema do projeto foi definido como:</p>
+
+                    <div class="frase-tema">
+                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="50">
+                        <h4>Incentivo à <b>imaginação</b> utilizando os <b>espaços da cidade</b> como cenário.</h4>
+                    </div>
+
+                    <p>A ideia, portanto, é de incentivar a reflexão sobre o espaço com a quebra do esperado, daquilo que já existe no local. A imaginação extrapola a crítica pois ela não se restringe ao já existente; a proposta é que o usuário possa conceber novas estruturas, de pequeno ou médio porte, para a cidade.</p>
+
+                </section>
+
+                <section id="geracao-alternativas">
+                    <h2>Geração de Alternativas</h2>
+                    <p>Com o tema definido, comecei a pensar diferentes maneiras que poderiam abordar a imaginação nos nossos arredores. A primeira alternativa pensada foi construir uma plataforma colaborativa de sugestões e melhorias da cidade. A proposta era de elaborar um mapa em que as pessoas pudessem adicionar propostas baseadas em locais reais, junto de uma descrição que o usuário escreveria com apoio de um guia na plataforma. O principal problema dessa ideia foi que, por mais que as pessoas já vejam problemas na cidade no seu cotidiano, como quebrar a inércia e incentivá-las a participar da plataforma, sugerindo melhorias que talvez nunca se tornem realidade?</p>
+                    <p>A proposta de projeto, então, começou a sofrer algumas mudanças. Primeiro, o foco, que anteriormente era apenas uma plataforma social, mudou para algo mais próximo de um jogo, pelo entendimento de que uma experiência gameficada traz elementos recompensadores que engajam mais os usuários do que uma rede social. Além disso, uma segunda leitura do tema do projeto me fez questionar que ele não tinha que ser sobre projetar algo <b>para</b> a cidade, mas também poderia ser algo apenas <b>sobre</b> ou <b>na</b> cidade. A imaginação pode ser sobre coisas tomadas como "úteis", que tenham um reflexo prático visto nas ruas, ou de coisas não tão importantes, em que a imaginação ocorre apenas por ela mesma, sem nenhum impacto no mundo real.</p>
+                    <p>Nessa linha de raciocínio foram consideradas algumas novas alternativas, sendo elas:</p>
+
+                    <div class="alternativas">
+                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
+                        <p>Uma <b class="texto-marrom">galeria pública de arte virtual</b>, em que usuários poderiam projetar obras em 3D e instalá-las digitalmente no mundo real ao seu redor;</p>
+                    </div>
+
+                    <div class="alternativas">
+                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
+                        <p>Um <b class="texto-marrom">jogo simulador de cidade</b>, em que o cenário surgiria a partir do mapa real daquele lugar e o jogador poderia editar os pontos próximos a ele;</p>
+                    </div>
+
+                    <div class="alternativas">
+                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
+                        <p>Um <b class="texto-marrom">jogo de modelo narrativo</b>, em que os usuários controlariam times de personagens fictícios e batalhariam pelo controle de bairros da cidade.</p>
+                    </div>
+
+                    <p>Todas essas ideias trazem em comum a questão de que a imaginação pode apenas utilizar a cidade como cenário e não como sujeito ativo do processo, sem necessariamente trazer resultados ou possibilidades que solucionem problemas do cotidiano dos cidadãos.</p>
+                    <p>Além disso, em todas as alternativas até aqui a intenção era trabalhar a imaginação em toda a cidade, sem uma restrição espacial específica. O problema, porém, é que a área contemplada pelos "espaços da cidade" é muito ampla, e isso dificultaria qualquer troca entre os usuários. Para que o processo de incentivo à imaginação possa acontecer da maneira mais potente possível, é muito importante que as ideias de um usuário sejam vistas, exploradas, comparadas e até editadas pelas demais pessoas, pois nessa interação entre o que cada um pensou é que o processo fica mais marcante. Entretanto, se o projeto ficar disperso por cada metro da cidade, a chance de dois usuários trabalharem o mesmo local se reduz muito, enfraquecendo as possibilidades de troca.</p>
+                    <p>Assim, a última mudança de caminho do projeto foi a troca de foco geográfico, partindo de algo que abordasse a cidade inteira, sem restrições, para algo direcionado a alguns pontos específicos.</p>
+                    <p>No livro Urbanismo Tático X Ações para Transformar Cidades, os autores definem as praças como "um espaço público de permanência e convivência". Essa característica desses lugares atende a questão do fortalecimento do processo de incentivo à imaginação com as trocas entre pessoas. Trabalhar um espaço que já seja coletivo e de convivência ajuda a fortalecer o caráter social do projeto, e o caráter social ajuda a fortalecer o processo imaginativo, pois expõe o usuário às ideias de dezenas de outras pessoas e não só às dele.</p>
+                    <p>Por esse motivo, o cenário para esse projeto foi definido como as praças do Rio de Janeiro. Com o local definido, a alternativa escolhida foi de <b>reprojetar praças da cidade</b> em um ambiente virtual. A ideia é que o usuário tenha acesso a uma planta da praça selecionada e uma lista com todos os itens do mobiliário urbano da cidade, podendo projetar aquele espaço da maneira que quiser, compartilhando o resultado no final. Essa proposta atende a ideia de incentivar a imaginação, pois propõe que cidadãos possam reimaginar espaços públicos que, por muitas vezes, eles já conhecem e frequentam. Essa possibilidade de reprojetar o já conhecido incentiva a reflexão sobre o estado atual dos locais e também questiona que nem tudo precisa ser do jeito que é.</p>
+
+                </section>
+
+                <section id="similares">
+                    <h2>Similares</h2>
+                    <p>Por mais que a proposta aqui não seja construir um jogo, mas sim uma plataforma com elementos de um, é na linha de videogames que possibilitam a construção de mundos virtuais que a maioria dos similares desse conceito estão, com jogos que permitem a remodelagem de ambientes através de módulos, sendo um dos mais famosos o Minecraft. Nesse jogo, você controla um personagem em primeira pessoa que possui uma infinidade de blocos diferentes, podendo selecioná-los de uma espécie de "gaveta" para construir qualquer tipo de coisa que imaginar.</p>
+                    
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/screen-minecraft.jpg" alt="Captura de tela do jogo Minecraft">
+                            <figcaption>Minecraft, da Mojang.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Minecraft segue bem a ideia de permitir que o jogador construa uma infinidade de coisas diferentes, porém fornece liberdade demais no espaço ao entregar o mundo inteiro para ser construído. Como a ideia do projeto é imaginar apenas a área de uma praça, o similar seguinte é o jogo The Sims.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/screen-the-sims.jpg" alt="Tela de edição de casas em The Sims">
+                            <figcaption>Tela de edição de casas em The Sims.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Em The Sims, o jogador possui também uma vasta seleção de objetos e módulos para montar sua casa, mas precisa fazer isso dentro do espaço delimitado pelo terreno de sua residência e nada a mais. Essa ideia já se aproxima mais da proposta de projeto, pois a imaginação do jogador fica restrita ao tamanho do terreno que simula uma propriedade real.</p>
+                    <p>Além desses dois, uma plataforma virtual baseada em ruas reais é o <a target="_blank" class="texto-azul" href="https://streetmix.net">Streetmix</a>.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/screen-streetmix.jpg" alt="Edição das estruturas viárias no Streetmix">
+                            <figcaption>Edição das estruturas viárias no Streetmix.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O site possibilita que você escolha uma rua de verdade, selecione sua largura e imagine outro desenho viário para ela, podendo explorar outras formas de faixas de carro, faixas exclusivas de ônibus, bondes, jardins, ciclovias, espaço para pedestres, dentre outros</p>
+                    <p>Por fim, um último similar é o jogo <a target="_blank" class="texto-azul" href="https://oskarstalberg.com/Townscaper/">Townscaper</a>, que segue uma linha mais criativa e menos atrelada ao mundo físico real.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/screen-townscaper.jpg" alt="Cenário criado no jogo Townscaper">
+                            <figcaption>Exemplo de cenário criado no jogo Townscaper.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Nesse jogo, você escolhe a cor do prédio e vai clicando livremente pela grid, construindo casinhas daquela cor. O que torna esse conceito interessante é a automatização do gameplay, pois dependendo de onde você constrói algo todo o entorno é moldado, criando arcos, pilares, caminhos e demais estruturas necessárias.</p>
+                    <p>Essa possibilidade de o jogo controlar uma parcela do projeto é interessante para retirar parte da carga do jogador. No caso do projeto rePraça, um exemplo seria que o usuário adicione os itens e peças de mobiliário na praça enquanto a plataforma constrói, sozinha, os caminhos e áreas livres ao redor do que for adicionado.</p>
+                </section>
+
+                <section id="estudo-pracas">
+                    <h2>Estudo de Praças</h2>
+                    <p>Com a alternativa escolhida e os similares analisados, o próximo passo foi me aprofundar em algumas praças da cidade e entender suas dinâmicas. Para isso, escolhi utilizar as metodologias abordadas no livro <i>How to Study Public Life</i> (Como Estudar a Vida Pública, em português), no qual os autores Jan Gehl e Birgitte Svarre abordam as características únicas da vida nas cidades e quais métodos utilizar para estudá-la. O ponto principal do livro é a importância do observar, ação definida como o "ato de olhar ou estudar algo com carinho e atenção, visando descobrir alguma coisa". Os autores defendem que é preciso aprender a observar, ir a campo e aprender algo mesmo com coisas que pareçam irrelevantes. Por mais que as coisas vistas nas cidades possam aparentar ser banais, é exatamente nessa banalidade que precisamos prestar atenção para ver como a vida se desenha nos espaços públicos.</p>
+                    <p>Além da defesa de que humanos, e não máquinas, façam a coleta de informações, pois pessoas trazem muito mais do que apenas dados frios para análise, o livro utiliza 5 perguntas chave para começar a entender um contexto: <b>quantas pessoas</b> estão ali, <b>quem</b> frequenta tal espaço, <b>onde</b> os visitantes ficam, <b>o que</b> as pessoas fazem e <b>quanto tempo</b> os frequentadores permanecem. Na minha pesquisa eu não respondi precisamente a cada uma dessas perguntas, principalmente devido a falta de tempo para gerar esses dados com alguma precisão, mas mantive elas em mente para traçar um perfil geral de cada praça analisada.</p>
+                    <p>Por fim, antes de escolher os espaços a serem estudados, é preciso ter em mente os diferentes tipos de praças que podem existir. Praças de alto fluxo, em regiões centrais da cidade e que hospedam estruturas de transporte, como estações de metrô e pontos de ônibus, possuem usos e desenhos muito diferentes de praças de bairro, em que o fluxo de passageiros não é tão intenso. Existem também outros tipos de praças e exceções nos tipos listados, como praças em ruas sem saída, que tem uma dinâmica muito única pela proteção do ambiente que elas se encontram.</p>
+                    <p>Com a metodologia acertada, as praças foram escolhidas principalmente pela facilidade de acesso, mas também buscando alguma diversidade na categoria e tamanho dos espaços estudados. Finalmente, as praças escolhidas foram a Nossa Senhora da Paz, em Ipanema, Xavier de Brito, Barão de Corumbá e Gabriel Soares, todas na Tijuca.</p>
+                   
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="nossa-senhora"><b>Praça #1</b></h3>
+                        <h3 class="nome-praca">Nossa Senhora da Paz</h3>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-1-1.jpg" alt="Lago na praça">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-1-2.jpg" alt="Mapa com o tamanho da praça destacado">
+                        </figure>
+                        <figcaption>Visão geral e localização em mapa da praça.</figcaption>
+                    </div>
+
+                    <p>A Praça Nossa Senhora da Paz fica bem no meio do bairro de Ipanema, zona sul do Rio, a dois quarteirões da lagoa e da praia, ao lado de ruas com diversas opções de comércio e restaurantes, além dos prédios de escritório e moradia. Foi totalmente reformada para a construção da estação de metrô de mesmo nome, tendo sido reinaugurada no meio de 2016, quando passou a receber também o fluxo de passageiros utilizando a estação.</p>
+                    <p>A praça dispõe das principais estruturas de transporte. A rua Visconde de Pirajá atende o local com um corredor exclusivo para ônibus e as duas esquinas contam com acessos à estação de metrô. Bicicletários, estações de bicicleta de aluguel e vagas exclusivas para táxi complementam as opções de transporte oferecidas, além de uma boa disponibilidade de vagas para carros nas calçadas ao redor.</p>
+                    <p>No lazer, as opções são igualmente completas. Para as crianças, existe um parque infantil com ampla variedade de brinquedos, todos extremamente bem cuidados. A praça é gradeada, então, por mais que o parque infantil não tenha uma cerca própria, ele passa boa sensação de segurança para as famílias e crianças no local. Além disso, foi possível reparar que algumas crianças brincavam fora do espaço do parquinho, inclusive com grupos de alunos uniformizados de escolas da região brincando nas áreas comuns e abertas do local.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-2-1.jpg" alt="Escorrega em brinquedão">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-2-2.jpg" alt="Escorrega na praça">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-2-3.jpg" alt="Brinquedo em globo">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-2-4.jpg" alt="Balanços na praça">
+                        </figure>
+                        <figcaption>Alguns dos brinquedos infantis disponíveis na Praça Nossa Senhora da Paz.</figcaption>
+                    </div>
+
+                    <p>No campo de atividades físicas, os visitantes têm acesso a uma estrutura de metal para ginástica e a uma Academia da Terceira Idade. Para o descanso, a praça dispõe de grande quantidade de bancos e mesas, espalhados por todo o espaço, ficando alguns em ambientes de sombra e outros no sol.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-3-1.jpg" alt="Aparelho de exercício ao ar livre">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-3-2.jpg" alt="Bancos cobertos por flores com pessoas sentadas">
+                        </figure>
+                        <figcaption>Da esquerda para direita: aparelho de ginástica e caramanchão com bancos sob as plantas.</figcaption>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-3-3.jpg" alt="Banco de madeira">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-3-4.jpg" alt="Mesinha de xadrez">
+                        </figure>
+                        <figcaption>Da esquerda para direita: banco de madeira e mesa de mosaico para dama e xadrez.</figcaption>
+                    </div>
+
+                    <p>Nos dias que visitei, um dos lugares em que grande parte do público estava era no banco de concreto que ocupa toda a margem do laguinho existente na praça.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-4.jpg" alt="Lago com banco de concreto ao redor">
+                            <figcaption>Banco de concreto, na esquerda da foto, margeando o lago, era um dos lugares com mais gente na praça.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por fim, a Praça Nossa Senhora da Paz também possui uma grande quantidade de monumentos, estátuas e placas comemorativas. O principal é um grande bloco de concreto em homenagem a um senador, mas também possui algumas placas contando a história de Ipanema, da santa que nomeia o local e uma escultura artística de duas crianças brincando no meio do lago.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-5-1.jpg" alt="Escultura no lago">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-5-2.jpg" alt="Busto">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-5-3.jpg" alt="Placa comemorativa">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-5-4.jpg" alt="Placa em vidro">
+                        </figure>
+                        <figcaption>Esculturas e placas comemorativas espalhadas ao redor da praça.</figcaption>
+                    </div>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-5-5.jpg" alt="Monumento central na praça">
+                            <figcaption>Principal e maior dos monumentos, o bloco em homenagem a um político fica bem no meio da praça.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Assim, a Praça Nossa Senhora da Paz é uma praça de bairro muito utilizada para lazer e descanso de quem mora na região, mas também muito frequentada por usuários das opções de transporte e turistas que passam por ali. A praça é grande, bem cuidada, dispõe de boa infraestrutura para todas as necessidades, inclusive áreas para crianças e para cachorros, além de uma grande área livre, onde ocorrem feiras, piqueniques e outros encontros e eventos.</p>
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="xavier-brito"><b>Praça #2</b></h3>
+                        <h3 class="nome-praca">Xavier de Brito</h3>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-1-1.jpg" alt="Vista chafariz e praça">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-1-2.jpg" alt="Mapa praça">
+                        </figure>
+                    </div>
+
+                    <p>A Praça Xavier de Brito fica no bairro da Tijuca, zona norte do Rio, na região da rua Uruguai com a avenida Maracanã. Fica em uma área majoritariamente residencial, com algumas opções de comércio e alimentação nas proximidades.</p>
+                    <p>No campo dos transportes, a única opção localizada na praça é um ponto de táxi. Nas imediações existe uma estação de bicicleta de aluguel, que fica em um largo ao lado do local, no meio da avenida Maracanã. O ponto de ônibus mais próximo fica a quase dois quarteirões de distância, já a estação de metrô Uruguai fica a três quarteirões.</p>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="img/relatorio/xavier-2-1.jpg" alt="Ponto de taxi">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-2-2.jpg" alt="estação de bicicleta bike itau">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-2-3.jpg" alt="ponto de ônibus">
+                        </figure>
+                        <figcaption>Ponto de Táxi é a única estrutura na praça; estação de bicicleta de aluguel e ponto de ônibus ficam próximos.</figcaption>
+                    </div>
+
+                    <p>A Xavier de Brito não é gradeada como a Nossa Senhora da Paz, mas as estruturas principais de lazer são cercadas para garantir maior segurança aos frequentadores, sendo elas o parque para cachorros e o parquinho infantil.</p>
+                    <p>O parcão, como é chamado o parque para cachorros, consiste de uma área relativamente grande e aberta, com alguns bancos de concreto para descanso dos donos e estruturas para os animais brincarem e se exercitarem, feitas principalmente de madeira. Os brinquedos são simples porém funcionais.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-3-1.jpg" alt="Parque de cachorros">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-3-2.jpg" alt="Parque de cachorros">
+                        </figure>
+                        <figcaption>Área para cachorros é cercada e possui alguns brinquedos.</figcaption>
+                    </div>
+
+                    <p>Nessa área me chamou muita atenção a intervenção dos frequentadores no espaço, principalmente nas árvores que ficam dentro do parque. Pelo tempo que as pessoas ficam ali e pela necessidade de cuidar dos animais, dando água, comida e limpando fezes, as pessoas acabaram adaptando os troncos e galhos como suportes para guardar as mochilas e oferecer sacolas plásticas para quem puder precisar.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-3-3.jpg" alt="Parque de cachorros">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-3-4.jpg" alt="Parque de cachorros">
+                        </figure>
+                        <figcaption>Árvores do parque são adaptadas para segurar mochilas enquanto os donos permanecem no local e oferecer sacolas plásticas para a limpeza de fezes.</figcaption>
+                    </div>
+
+                    <p>No parque infantil, os brinquedos são em maioria feitos de metal, o que, segundo Bitiz Aflallo, designer e Doutora em Planejamento Urbanismo, não é a escolha mais adequada para uma cidade como o Rio de Janeiro, pois o metal esquenta e torna o mobiliário difícil de ser utilizado. Aqui, porém, isso não parece ser um problema muito grande, pois a cobertura de árvores proporciona uma grande área de sombra que, aparentemente, impede que os brinquedos fiquem muito quentes.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/xavier-4.jpg" alt="Parque infantil">
+                            <figcaption>Parque infantil é cercado e possui boa cobertura de árvores, que garantem sombra nos brinquedos.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Além do parquinho, a praça tem também um Teatro de Bonecos, que foi reinaugurado no início de 2022 e oferece espetáculos gratuitos nos fins de semana pela manhã.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-5-1.jpg" alt="Teatro de bonecos">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-5-2.jpg" alt="Teatro de bonecos">
+                        </figure>
+                        <figcaption>Teatro de Guignol foi reinaugurado no início de 2022.</figcaption>
+                    </div>
+
+                    <p>Para as atividades físicas, existe uma Academia da Terceira Idade (ATI) e a praça recebe algumas atividades de esporte e ginástica, como aulas de Boxe Olímpico amador, oferecidas pelo Governo do Estado através do programa Esporte Presente. Além disso, durante minha visita percebi que uma aula de alongamento, frequentada principalmente por idosos, utilizava da estrutura de metal ao redor da cerca do parquinho infantil para os alunos realizarem os exercícios físicos propostos.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-6-1.jpg" alt="ATI">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-6-2.jpg" alt="Grade">
+                        </figure>
+                        <figcaption>Esquerda: pessoas se exercitando na ATI. Direita: estrutura de metal ao redor do parquinho é utilizada para atividades de alongamento.</figcaption>
+                    </div>
+
+                    <p>Ainda nos esportes, a parte mais mal cuidada da Praça Xavier de Brito é a quadra de bocha, que pela quantidade de sujeira e plantas crescendo parece estar sem uso ou manutenção há algum tempo.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/xavier-7.jpg" alt="quadra de bocha abandonada">
+                            <figcaption>A quadra de bocha parece não ser muito usada.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Já no lazer, a praça possui alguns bancos diferentes, feitos com toras que imagino serem vindas de reaproveitamento de madeira, contribuindo para um diferenciamento do visual da praça. Também são encontrados bancos comuns, feitos com tábuas de madeira, mesas de mosaico com bancos de concreto e um telhado cobrindo algumas mesas para abrigar os frequentadores das condições climáticas.</p>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="img/relatorio/xavier-8-1.jpg" alt="Bancos protegidos por telhado">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-8-2.jpg" alt="Banco em tronco de arvore">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-8-3.jpg" alt="Homem deitado descansando num banco">
+                        </figure>
+                        <figcaption>Telhado protege algumas das mesinhas de sol e chuva; Bancos de diferentes formatos complementam as opções de descanso na praça. Na direita, um rapaz aproveita de um banco de tábuas de madeira para deitar e descansar.</figcaption>
+                    </div>
+
+                    <p>Um uso inesperado do espaço foi o grupo abaixo, que trouxe para a praça algumas cadeiras de praia mesmo que o local já disponha de diversos banquinhos para sentar. Dessa cena, imagino que os possíveis motivos para essa situação sejam conforto, pois as cadeiras de praia tem o apoio para as costas que faltam nos bancos de concreto, e proximidade entre eles, pois a maioria das mesas ficam afastadas uma das outras, e eles provavelmente queriam ficar próximos.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/xavier-9-1.jpg" alt="grupo em cadeiras de praia do lado de mesas vazias na praça">
+                            <figcaption>Um grupo trouxe cadeiras de praia mesmo com a vasta quantidade de banquinhos livres na praça.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A praça tem apenas dois monumentos, sendo eles um busto em homenagem ao coronel que dá nome ao local e um grande chafariz que ocupa o centro da praça. Por motivos desconhecidos, o busto do coronel vestia uma blusa no dia da minha visita.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-9-2.jpg" alt="busto coronel">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-9-3.jpg" alt="chafariz">
+                        </figure>
+                        <figcaption>Busto do Coronel Xavier de Brito e grande chafariz no meio da praça.</figcaption>
+                    </div>
+
+                    <p>Por fim, uma das coisas que mais me chamou atenção na praça foram os banheiros públicos existentes no local. Interditados e sem funcionar há muitos anos, reparei que algumas pessoas entravam em uma parte do jardim logo atrás deles exatamente para urinar. Esse uso do local já é tão marcado que o jardim chega a ter um clarão sem grama, apenas terra, no ponto em que as pessoas urinam, conforme é possível ver na imagem da direita.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-9-4.jpg" alt="banheiros fechados">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/xavier-9-5.jpg" alt="jardim usado como banheiro">
+                        </figure>
+                        <figcaption>Banheiros interditados, na esquerda, e espaço no meio do jardim que funciona como banheiro improvisado, à direita.</figcaption>
+                    </div>
+
+                    <p>Esse uso se dá, em parte, graças à proteção visual que os próprios banheiros interditados proporcionam, junto da cobertura vegetal nos outros lados e um fácil acesso graças a um pequeno caminho de pedras que passa por ali. No esquema abaixo é possível reparar melhor a disposição dos elementos na cena.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/xavier-9-6.jpg" alt="esquema mostrando banheiro e banheiro improvisado na praça">
+                            <figcaption>Posição do banheiro e banheiro improvisado na visão de satélite do Google Maps.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por mais que essa improvisação possa parecer irrelevante, ou apenas uma certa nojeira presente no local, foi essa descoberta que fez eu perceber que não fazia muito sentido iniciar o projeto de reimaginação dos locais com praças grandes e já muito usadas. Na Praça Xavier de Brito foi possível encontrar uma série de adaptações feitas pelos frequentadores, como a disposição de mochilas e sacos plásticos nas árvores do parcão, uso das grades para aulas de alongamento, brincadeiras como o busto vestindo uma camisa e até mesmo um banheiro improvisado para contornar a interdição do banheiro oficial. Se a praça já é tão adaptada assim às necessidades e aos desejos dos frequentadores, me questionei qual abertura teria para reimaginar aquele local, e se no fim o mapa imaginado não ficaria muito próximo do mapa atual, apenas oficializando as adaptações feitas.</p>
+                    <p>Por isso, para as duas praças seguintes a serem visitadas, decidi ir em locais menores e sem muito uso.</p>
+
+
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="barao-corumba"><b>Praça #3</b></h3>
+                        <h3 class="nome-praca">Barão de Corumbá</h3>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/barao-1-1.jpg" alt="Vista praça e igreja ao fundo">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/barao-1-2.jpg" alt="Mapa praça">
+                        </figure>
+                    </div>
+
+                    <p>A Praça Barão de Corumbá, também na Tijuca, ocupa o espaço de uma rotatória no cruzamento entre as ruas Andrade Neves e Visconde de Cabo Frio. Localizada em uma área totalmente residencial, ela fica em frente à Igreja Batista Itacuruçá e ao acesso secundário do Colégio Batista.</p>
+                    <p>No campo de transportes, a praça não tem nenhuma estrutura presente nela. Uma linha de ônibus intermunicipal passa pela rua Andrade Neves, tendo ponto a um quarteirão de distância, e a estação de metrô Uruguai fica a dois quarteirões.</p>
+                    <p>A praça não possui nenhuma estrutura de lazer. Todos os equipamentos disponíveis no local são duas mesas de mosaico, dois bancos de madeira e um banco comprido de concreto. Além disso, apenas uma lixeira e alguns postes complementam a paisagem junto da vegetação.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/barao-2-1.jpg" alt="Mesa no centro">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/barao-2-2.jpg" alt="Mesa no centro">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/barao-2-3.jpg" alt="Mesa no canto, cercada de grama">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/barao-2-4.jpg" alt="Vista geral da praça">
+                        </figure>
+                        <figcaption>Todas as estruturas existentes na praça são duas mesas de mosaico de xadrez, dois bancos de madeira e um banco de concreto comprido.</figcaption>
+                    </div>
+
+                    <p>No dia que eu tirei as fotos a praça estava vazia, mas em outros momentos pude ver algumas pessoas utilizando seu espaço. O primeiro caso foi de pessoas se alongando no local. Isso se dá principalmente pois a rotatória fica em uma das quinas de um conjunto de ruas muito utilizado para corridas e caminhada de quem mora por ali, conforme é possível ver no esquema abaixo:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/barao-2-5.jpg" alt="esquema mostrando rota de corrida">
+                            <figcaption>A praça fica bem no caminho de uma rota de corrida, pintada de laranja, muito usada por quem mora no local. No mapa, a praça é representada pelo círculo branco.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por ficar bem em uma das esquinas da rota de caminhada, algumas pessoas, mas não muitas, utilizam ela como início e fim da corrida, se alongando e descansando nos seus poucos bancos.</p>
+                    <p>Além da corrida e alongamento, também encontrei mães com carrinhos de bebê, aproveitando a proximidade da praça para pegar um pouco de sol e ar livre. Nesse caso, existe uma curiosidade: já existiu um berçário bem no meio do local, onde atualmente fica uma das mesas de mosaico, conforme é possível ver na imagem do <a target="_blank" class="texto-azul" href="https://tijucarj.wordpress.com/2008/09/27/praca-barao-de-corumba/">blog Tijuca-RJ</a>, exposta abaixo. Usando o histórico de imagens do Google Street View, é possível estimar que o berçário foi removido entre janeiro e novembro de 2015.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/barao-3.jpg" alt="antigo berçario já não existente">
+                            <figcaption>A Praça Barão de Corumbá já teve um berçário e um orelhão, hoje retirados.  Imagem: Tijuca-RJ.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>As únicas duas outras coisas na praça, além das estruturas já citadas, são um poste para ventilação de galerias subterrâneas e uma pedra que exibia uma placa em homenagem a remodelação da praça, ocorrida em 1965, mas que aparenta ter sido furtada.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/barao-4-1.jpg" alt="poste de ventilação do subsolo">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/barao-4-2.jpg" alt="pedra que tinha uma placa">
+                        </figure>
+                        <figcaption>Poste de ventilação de subsolo e pedra onde ficava placa comemorativa.</figcaption>
+                    </div>
+
+                    <p>Assim, a Praça Barão de Corumbá é completamente diferente das duas praças vistas até agora. De tamanho reduzido, sem nenhuma estrutura de transporte ou comércio nem nenhum atrativo de lazer, a praça é um espaço vazio em uma área residencial, onde alguns moradores da região a utilizam como área de descanso ou exercício, mas sem nenhum uso marcante ou especial. A percepção de potencial desperdiçado da praça pode ser encontrada também nas avaliações dela no Google Maps, no qual os usuários comentam sobre o potencial desperdiçado do espaço.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/barao-5.jpg" alt="print de reviews no google maps">
+                            <figcaption>Avaliações da praça no Google Maps comentam sobre como ela tinha potencial para ser melhor do que o seu estado atual.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="gabriel-soares"><b>Praça #4</b></h3>
+                        <h3 class="nome-praca">Gabriel Soares</h3>
+                    </div>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/gabriel-1-1.jpg" alt="Vista praça">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/gabriel-1-2.jpg" alt="Mapa praça">
+                        </figure>
+                    </div>
+
+                    <p>A última praça a ser analisada foi a Gabriel Soares, novamente na Tijuca. Essa praça fica a apenas 5 minutos de caminhada da anterior, em uma área igualmente residencial, porém os arredores contam com restaurante e comércio, o acesso principal do Colégio Batista e, próximo dali, um Centro Municipal de Saúde, na rua Desembargador Izidro.</p>
+                    <p>No campo de transportes essa praça também é mais bem servida, pois ela dispõe do ponto final do ônibus 409, dois pontos de táxi e um bicicletário, além de também estar a dois quarteirões de distância da estação de metrô Uruguai.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/gabriel-2-1.jpg" alt="poste de ventilação do subsolo">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/gabriel-2-2.jpg" alt="pedra que tinha uma placa">
+                        </figure>
+                        <figcaption>Um dos pontos de táxi fica em um largo ao lado da praça. O bicicletário complementa as opções do local.</figcaption>
+                    </div>
+
+                    <p>Para o lazer, não existem muitos brinquedos para crianças na praça, mas ela tem dois balanços e uma gangorra. Os brinquedos são construídos de madeira com estrutura em metal, simples e bem cuidados. Pude ver algumas crianças brincando neles enquanto observava o lugar.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/barao-3-1.jpg" alt="balanço">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/barao-3-2.jpg" alt="gangorra">
+                        </figure>
+                        <figcaption>Balanço e gangorra formam as opções de brinquedos infantis da praça.</figcaption>
+                    </div>
+
+                    <p>Por mais que não tenha nenhuma estrutura planejada especificamente para cachorros, havia uma grande quantidade de pessoas passeando com seus cães no local, sentando nos bancos para descansar ou andando pelos jardins.</p>
+                    <p>Existem alguns aparelhos simples de ginástica para a prática de exercícios físicos. Construídos em metal e madeira, eles são parecidos com os brinquedos infantis em quantidade e construção. Aqui são encontrados apenas os aparelhos dessa linha mais básica, sem os equipamentos das Academias da Terceira Idade.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/gabriel-4.jpg" alt="aparelhos de exercicios">
+                            <figcaption>Aparelhos de ginástica são simples mas cumprem sua função.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Na área de descanso, a praça oferece menor diversidade nas opções do que os outros espaços analisados até agora. Na Praça Gabriel Soares só são encontrados bancos de concreto e mesas de mosaico, ambos formatos de estrutura mais desconfortáveis por não terem descanso para as costas. Os bancos de madeira, com apoio para coluna, não são encontrados por aqui.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/gabriel-5.jpg" alt="pessoas sentadas em banco">
+                            <figcaption>Pessoas descansam em mesa de mosaico. Ao fundo, uma viatura da polícia garante a segurança do local.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por fim, o lugar não possui nenhuma estátua, escultura ou homenagem. Assim, a Praça Gabriel Soares se apresenta como uma praça simples, relativamente protegida do fluxo de carros pela sua vegetação, mas sem nenhum grande diferencial. Nos dias de semana serve como ponto de lazer e descanso para algumas pessoas e famílias que passam por ali, enquanto nos fins de semana os espaços vazios são ocupados pela feira, que traz um aumento considerável de movimento para o local.</p>
+
+
+
+
+                    <div class="subtitulo-pracas single-subtitle">
+                        <h3 class="numeracao" id="escolha-praca"><b>Escolha da praça</b></h3>
+                    </div>
+
+                    <p>Ao fim desse estudo sobre as quatro praças analisadas, foi decidido que, para o escopo desse projeto, eu deveria escolher apenas uma para ser trabalhada, testando a ideia de imaginação ao redor dela, mas mantendo em mente as possibilidades para a expansão do projeto para as demais praças da cidade no futuro.</p>
+                    <p>Para facilitar a comparação, alguns dos dados obtidos, características do entorno e observações foram anotados em uma planilha, que pode ser acessada <a target="_blank" class="texto-azul" href="https://docs.google.com/spreadsheets/d/1ebhE5id_cY3dqvIvcrH9xxqT78yb7NzP4fvW7-qhsgc/edit?usp=sharing">neste link</a>.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/tabela-escolha-praca.jpg" alt="tabela de comparação entre as praças">
+                            <figcaption>Planilha de comparação entre as praças.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Com os dados em mãos e analisando as informações obtidas durante minhas observações, optei por trabalhar a <b>Praça Barão de Corumbá</b> no presente projeto. Um fator importante foi a proximidade do lugar com onde eu moro, pois isso tornará mais fácil o retorno à praça durante os estudos, mas o principal motivo foi a falta de uso da praça no seu estado atual. Ao trabalhar a ideia de reativação de um espaço público com baixo uso, o projeto se aproxima das ideias de ativação de espaços do urbanismo tático, potencializando ainda mais as possibilidades do projeto naquele ambiente. Além disso, o tamanho reduzido da Barão de Corumbá facilita os experimentos e testes a serem realizados, pois reduz um pouco a complexidade das imaginações possíveis. Por fim, o potencial da praça ser melhor do que ela atualmente é, reforçada pelos próprios moradores nas análises do Google Maps, mostra que já existe uma vontade de repensar aquele ambiente e os usos que ele recebe.</p>
+
+
+                </section>
+
+                <section id="mobiliario-urbano">
+                    <h2>Mobiliário Urbano</h2>
+                    <p>Em paralelo ao estudo das praças foi feito também um catalogamento das peças de mobiliário urbano que eram encontradas nos locais. Esse catálogo foi desenvolvido a partir da fotografia realizada de itens e objetos encontrados nas praças, que foram então agrupados de acordo com suas similaridades. O arquivo completo, com todas as fotos, categorias e anotações da minha pesquisa estão disponíveis no Figma e podem ser acessadas por meio <a target="_blank" class="texto-azul" href="https://www.figma.com/file/KVcdJpM1ukbGpkDXNNAfL7/Projeto-7?node-id=0%3A1">deste link</a>.</p>
+                    
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/mobiliario-geral.jpg" alt="Painel com itens do mobiliário urbano separados em categorias">
+                            <figcaption>Painel com itens do mobiliário urbano separados em categorias.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Essa parte da pesquisa é essencial pois, para imaginar as praças, os usuários serão convidados a projetar os espaços utilizando módulos com o mobiliário do jeito que desejarem. Logo, é crucial que a plataforma disponibilize todas as peças que são comuns de serem vistas nas ruas do Rio de Janeiro.</p>
+                    <p>Além disso, é importante ressaltar que alguns itens possuem um ou mais estilos, seja por terem passado por mudanças ao longo do tempo, seja por possuírem visuais diferentes dependendo do ambiente que se encontram. A Dra. Bitiz Aflallo comenta na palestra "Mobiliário Urbano: Tipos e questões envolvidas e suas interações na cidade" sobre a importância do desenho se adequar ao contexto em que se encontra. Como exemplo, os balizadores nas ruas históricas do Catete tem um desenho tradicional, enquanto que os mesmos objetos no Leblon possuem traços muito mais modernos. Por isso, uma praça histórica precisa ofertar objetos que se adequem ao seu contexto, e a mesma coisa para uma praça moderna.</p>
+                    <p>Finalmente, a categorização desenvolvida do mobiliário urbano possui oito tópicos:</p>
+
+                    <h6><b class="texto-marrom">Infantil</b> – Brinquedos e itens de parquinho para crianças</h6>
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/mobiliario-infantil-1.jpg" alt="gangorra">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-2-2.jpg" alt="escorrega">
+                        </figure>
+                        <figcaption>Gangorra, balanço e escorrega são alguns exemplos dos itens infantis mapeados.</figcaption>
+                    </div>
+
+
+                    <h6><b class="texto-marrom">Atividades físicas</b> – Aparelhos de ginástica e Academias da Terceira Idade</h6>
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-6-1.jpg" alt="ati">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/gabriel-4.jpg" alt="academia">
+                        </figure>
+                        <figcaption>Academia da Terceira Idade e aparelhos de ginástica são os itens mais comuns de atividade física.</figcaption>
+                    </div>
+
+
+                    <h6><b class="texto-marrom">Infraestrutura</b> – Lixeiras, postes, sinalização, relógios, etc.</h6>
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="img/relatorio/mobiliario-infra-3-1.jpg" alt="relogio">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-infra-3-2.jpg" alt="placa sinalizacao">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-infra-3-3.jpg" alt="poste com lixeira">
+                        </figure>
+                        <figcaption>Relógio de rua, placas de sinalização e toda a infraestrutura que garante o bom funcionamento do espaço.</figcaption>
+                    </div>
+
+
+                    <h6><b class="texto-marrom">Paisagem e Jardins</b> – Vegetação, jardins, caminhos e monumentos</h6>
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="img/relatorio/xavier-9-3.jpg" alt="chafariz">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-paisagem-4-2.jpg" alt="busto">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-paisagem-4-3.jpg" alt="arvore">
+                        </figure>
+                        <figcaption>Chafariz, monumentos e árvores, a categoria engloba importantes objetos de embelezamento e sombra.</figcaption>
+                    </div>
+
+
+
+                    <h6><b class="texto-marrom">Lazer e Descanso</b> – Mesas e bancos para descanso</h6>
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/nossa-senhora-3-2.jpg" alt="banco">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/barao-2-1.jpg" alt="mesa">
+                        </figure>
+                        <figcaption>Banquinhos e mesas que podem ser usados para descanso ou atividades de lazer.</figcaption>
+                    </div>
+
+
+
+                    <h6><b class="texto-marrom">Animais de estimação</b> – Parque para cachorros e estruturas para animais</h6>
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/xavier-3-1.jpg" alt="parcão">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-animais-5-3.jpg" alt="parcão">
+                        </figure>
+                        <figcaption>“Parcão” e toda estrutura destinada a animais de estimação.</figcaption>
+                    </div>
+
+
+
+                    <h6><b class="texto-marrom">Transporte</b> – Bicicletário, bicicleta de aluguel, ponto de táxi e ônibus, metrô</h6>
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="img/relatorio/mobiliario-transporte-7-1.jpg" alt="bike itau">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-transporte-7-2.jpg" alt="ponto de onibus">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-transporte-7-3.jpg" alt="ponto de taxi">
+                        </figure>
+                        <figcaption>Bicicletas de aluguel, pontos de ônibus e de táxi são algumas das estruturas de transporte mais comuns.</figcaption>
+                    </div>
+
+
+
+                    <h6><b class="texto-marrom">Comércio</b> – Banca de jornal, vendedor de flores, pipoca, churros, etc.</h6>
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/mobiliario-comercio-8-2.jpg" alt="banca de jornal">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/mobiliario-comercio-8-1.jpg" alt="barraca de churros">
+                        </figure>
+                        <figcaption>Vendinhas de churros, comida árabe, flores e bancas de jornal funcionam nas praças e arredores.</figcaption>
+                    </div>
+
+
+                </section>
+
+
+                <section id="fluxograma-wireframe">
+                    <h2>Fluxograma e Wireframe</h2>
+                    <p>Com a Praça Barão de Corumbá escolhida e a categorização do mobiliário realizada, o passo seguinte foi o desenvolvimento da solução. Relembrando, a ideia do projeto é possibilitar a imaginação de praças da cidade por meio de uma plataforma virtual, no qual o usuário teria acesso a uma planta do local escolhido junto da lista de itens de mobiliário urbano e poderia movê-los livremente pelo espaço, montando a praça do jeito que imaginar.</p>
+                    <p>Para representar o funcionamento do aplicativo, foi feito o fluxograma abaixo mostrando os principais momentos de interação do usuário com a plataforma. Ele pode ser acessado por <a target="_blank" class="texto-azul" href="https://www.figma.com/file/KVcdJpM1ukbGpkDXNNAfL7/Projeto-7?node-id=162%3A7">esse link</a>.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/fluxograma.svg" alt="Fluxograma do projeto">
+                            <figcaption>Fluxograma do projeto.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O fluxo começa na tela inicial, que possibilita que o usuário vá para a tela de configurações, onde estão alguns ajustes da plataforma e informações legais, a lista de praças salvas, onde ficam todas as praças já editadas pelo usuário anteriormente, e a opção para selecionar uma praça nova.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/wireframe-1-home.png" alt="tela inicial">
+                            <figcaption>Wireframe da tela inicial, com botão para escolher uma nova praça e logo do projeto no centro da tela.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Ao escolher selecionar uma nova praça, a pessoa é levada para uma tela com uma ficha de informações sobre o local, para que ela compreenda um pouco melhor sobre como é aquele lugar atualmente e quais usos ele recebe antes de começar o processo de reimaginação. Os detalhes presentes na ficha são o nome da praça escolhida, o bairro em que ela fica, fotografias do local e uma breve descrição, que deve abordar tópicos como se ela fica numa área residencial ou comercial, se é mais usada como lazer ou transporte, e quaisquer detalhes que sejam importantes.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/wireframe-2-ficha.png" alt="ficha informações de praça">
+                            <figcaption>Exemplo de como poderia ser a ficha da praça, com algumas informações e fotos do local para situar o usuário antes dele iniciar a edição.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Depois disso, é chegada a hora de editar a praça, parte em que estão disponíveis os itens do mobiliário urbano nas categorias definidas no capítulo anterior. As opções que o usuário tem são de adicionar, mover ou remover essas peças, sendo que cada item possui uma ficha de informações para aprender mais sobre o objeto.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/wireframe-3-mobiliario.png" alt="inventário de itens do mobiliário urbano">
+                            <figcaption>Inventário de mobiliário urbano, com todas as opções de objetos e suas respectivas informações.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por exemplo, na categoria "Infantil" o usuário seleciona o item "Escorrega", e dentro dele encontra as opções de madeira, plástico ou metal. Na ficha do objeto é possível ler as especificações de cada possibilidade e tirar conclusões a partir dela, como a diferença do conforto térmico, que será muito baixo caso a opção de metal seja escolhida, pois esse material esquenta muito.</p>
+                    <p>No futuro, fora do escopo desta disciplina, também é uma possibilidade que a ficha inclua um botão para visualizar o objeto desejado em realidade aumentada. Essa opção vai aumentar a relação do usuário com o item que ele escolher, permitindo que se obtenha uma melhor noção de suas dimensões e até mesmo visualizar o objeto na praça real, caso o usuário esteja presente fisicamente no lugar.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/wireframe-4-ficha-mobiliario.png" alt="ficha de informações de mobília">
+                            <figcaption>Uma das possibilidades de organização da ficha de mobiliário, que mostra as principais informações do objeto escolhido.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Após as edições realizadas, o usuário pode salvar a praça para se ele quiser retornar posteriormente para a edição antes de compartilhar o resultado.</p>
+                    <p>A última etapa é o compartilhamento do seu resultado. Aqui é feita uma captura de tela da sua praça e ela é compartilhada diretamente em um feed dentro do aplicativo, no qual todas as praças imaginadas podem ser vistas em conjunto. Dessa forma, é possível comparar as imaginações individuais, vendo quais objetos todos utilizaram e quais que foram usados pouquíssimas vezes. Desse modo, se a maioria imaginou mais áreas de lazer, por exemplo, é possível inferir que essa é uma necessidade do local e que, em uma possível reforma, um aumento nas áreas de lazer seria bem-vindo.</p>
+                    <p>Por fim, como a ideia é de algo colaborativo, é possível também gerar clones das praças de outras pessoas, aproveitando do projeto delas como base e ir alterando por cima. Os clones ficam salvos em uma espécie de "linha do tempo", em que é possível ver todas as praças anteriores àquela, permitindo ver o histórico dos clones e das alterações realizadas. Esse funcionamento se assemelha muito a ideia dos forks em sites de código colaborativo, como o Github e Open Processing.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/wireframe-5-fork.png" alt="fork de praças">
+                            <figcaption>Exemplo do "fork de praças", que mostra a praça imaginada original e todas as outras imaginações que surgiram a partir dela.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+                </section>
+
+                <section id="desenvolvimento">
+                    <h2>Desenvolvimento</h2>
+                    <p>Agora que os principais pontos do sistema já estavam definidos no fluxograma, foi dado início ao desenvolvimento efetivo da plataforma. Por se tratar de um aplicativo para dispositivos móveis, existiam duas principais opções para qual seria a entrega final desse projeto: um protótipo interativo ou um aplicativo efetivamente desenvolvido.</p>
+                    <p>O protótipo seria realizado em uma plataforma própria para isso, como o Figma, o que tornaria mais fácil trabalhar e refinar detalhes como a interface e o fluxo geral do sistema. Entretanto, uma plataforma de prototipagem permite apenas simular o aplicativo, não sendo possível que o usuário interaja com os objetos de maneira livre. Isto é, caso eu tivesse escolhido realizar um protótipo, a plataforma permitiria apenas <b>simular</b> o ato de posicionar objetos no mapa, fazendo com que os usuários só pudessem adicionar itens nos exatos locais que eu tivesse definido no Figma e não movê-los livremente como eu gostaria.</p>
+                    <p>Esse foi o principal motivo de fazer com que a segunda opção, de efetivamente desenvolver o aplicativo, tenha sido escolhida. Foi definido que o desenvolvimento iria ocorrer na plataforma Unity devido a uma familiaridade que eu já tinha com a <i>engine</i> graças a experiência adquirida em outras disciplinas, além da alta quantidade de tutoriais e guias disponíveis para ela na internet.</p>
+                    
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-arrasa.png" alt="arrasa quarteirao no unity">
+                            <figcaption>Jogo <a target="_blank" class="texto-azul" href="https://feliperpv.com/arrasaquarteirao/">Arrasa Quarteirão</a>, desenvolvido na disciplina Computação para Jogos. A experiência adquirida desenvolvendo esse jogo no Unity foi aproveitada para esse projeto.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Além disso, defini que todo o código e planejamento do desenvolvimento do aplicativo seria hospedado no Github, em um repositório que pode ser acessado por <a target="_blank" class="texto-azul" href="https://github.com/Feliperpvieira/rePraca">esse link</a>. A hospedagem aberta e online do código facilita o compartilhamento do projeto com colegas, orientadores e aqueles que puderem ter interesse na plataforma ou em colaborar com seu desenvolvimento. O Github também se destaca por possuir abas como <a target="_blank" class="texto-azul" href="https://github.com/Feliperpvieira/rePraca/issues">Issues</a>, em que é possível salvar os próximos passos e o que está sendo desenvolvido no projeto, organizando-os em um <a target="_blank" class="texto-azul" href="https://github.com/users/Feliperpvieira/projects/2/views/1">Project</a>.</p>
+                    
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-git-project.png" alt="project no github">
+                            <figcaption>Project do Github, que organiza as tarefas a serem realizadas (Issues) em maneira similar ao Trello.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Já no desenvolvimento em si, o primeiro problema encontrado foi que, por mais que eu já tivesse uma familiaridade com Unity e com conceitos gerais de programação, era só isso mesmo que eu tinha: uma facilidade de entender e seguir tutoriais, fazendo alguns ajustes no código para alcançar o resultado que eu desejasse. Escrever um código do zero, criando meus próprios conceitos e parâmetros, ainda é um pouco além dos meus conhecimentos de desenvolvimento nessa área. Eu tinha o desafio, então, de desenvolver um programa de considerável complexidade sem possuir muito conhecimento de programação ou da plataforma. A solução encontrada veio justamente de um tipo de jogo que, à primeira vista, parecia bastante diferente do que era buscado para esse projeto: os <i>Tower Defense</i>.</p>
+                    <p>Tower Defense é uma categoria em que o jogador precisa posicionar várias torres no mapa, que então atiram nos inimigos enquanto eles seguem um caminho pré-definido tentando a todo custo atravessar o armamento posicionado. Por mais que a temática de guerra seja muito diferente do proposto aqui, a base do gameplay é bem similar: ambos os jogos possuem um mapa e itens que você deve posicionar nele. O plano para contornar minha falta de conhecimento técnico para programar esse projeto foi então utilizar tutoriais gratuitos de Tower Defense disponíveis na internet e modificá-los, colocando os itens de mobiliário urbano no lugar das armas e o mapa das praças no lugar de um campo de batalha.</p>
+                    <p>Com a definição de como o desenvolvimento seria iniciado, realizei um planejamento que dividia o projeto em 5 categorias principais que pode ser acessado <a target="_blank" class="texto-azul" href="https://docs.google.com/spreadsheets/d/1O__0YXuLyVrF7Rr_3J85QBBX1LRMIvTdNYXKUKJ7vMU/edit?usp=sharing">neste link</a>.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-calendario.png" alt="cronograma de projeto">
+                            <figcaption>Planilha com planejamento do desenvolvimento durante o semestre.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A categoria número zero reúne os tópicos ligados a documentação do projeto, como a escrita desse relatório. Já as outras quatro dividem o projeto em dois momentos principais: o de validação, com o protótipo primário do aplicativo e a testagem com diversas pessoas, e o de refino, em que ajustes serão feitos e a plataforma finalizada para o fim do curso.</p>
+                    <p>Para melhorar a organização narrativa, a partir daqui o capítulo de desenvolvimento foi dividido em momentos chave, cada um separado em subtópicos. Essa organização ajuda a marcar o objetivo de cada momento do desenvolvimento da plataforma, já que foram realizadas tarefas de diversas áreas ao mesmo tempo, como programação, modelagem 3D, testes, interface do usuário, e outros. Cada momento possui um objetivo específico e, dentro deles, os tópicos separam quais áreas foram trabalhadas para atingir as metas.</p>
+
+
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="momento-1"><b>Momento #1</b></h3>
+                        <h3 class="nome-praca">Mecânicas base</h3>
+                    </div>
+                    <h5 class="texto-azul">Busca pelo tutorial certo</h5>
+
+                    <p>Com a ideia de seguir um tutorial de Tower Defense, o primeiro considerado foi a <a target="_blank" class="texto-azul" href="https://assetstore.unity.com/packages/essentials/tutorial-projects/tower-defense-template-107692">cena de exemplo da própria Unity</a>, usada pela empresa para mostrar do que a game engine é capaz. Esse template, por ser usado pela própria empresa como caso ideal, é complexo demais, pois apresenta efeitos e mecânicas muito elaboradas e que tornariam muito difícil polir e reduzir para usar nesse projeto.</p>
+                    <p>Encontrei então, nas minhas pesquisas, um tutorial que prometia ser ainda melhor do que os de Tower Defense: um guia para programar um simples construtor de cidades no Unity. Comecei a acompanhar então a série de vídeos do canal <a target="_blank" class="texto-azul" href="https://youtu.be/8ayFCDbfIIM">Sunny Valley Studios</a>, porém esse guia também acabou sendo deixado de lado pela maneira como o código ia sendo construído. O tutorial utilizava muitas fórmulas matemáticas, se valendo demasiadamente de contas e cálculos fora do meu nível de compreensão para cumprir as tarefas básicas. Sem entender o código não seria possível editá-lo posteriormente, então voltei para a busca por um novo tutorial na internet.</p>
+                    <p>Foi aí que encontrei os vídeos <a target="_blank" class="texto-azul" href="https://youtu.be/ytauir6XLc8">How to make a Tower Defense in Unity (2021)</a> do canal Rytech. Esse vídeo possuía uma vantagem grande em relação aos outros dois, que era a maneira livre pelo qual os objetos eram posicionados no mapa, sem o uso de um grid de quadradinhos fixos, que reduziria as possibilidades de posicionamento. Além disso, o código é escrito de uma maneira que, pessoalmente, eu achei muito mais fácil de compreender, o que possibilita a edição de trechos no futuro para transformar esse Tower Defense no editor de praças desejado.</p>
+                    <p>Depois de alguns dias, o tutorial foi concluído. Eu segui todos os pedaços sobre a edição e posicionamento de itens no mapa, ignorando os vídeos sobre armas, inimigos e combate, já que esses não são importantes para o projeto. Cheguei então a uma etapa em que era possível mover a câmera pelo ambiente e posicionar os itens em qualquer lugar disponível do mapa, bloqueando o posicionamento sobre os caminhos ou sobre outros objetos colocados anteriormente. O projeto pode ser visto no vídeo a seguir:</p>
+
+                    <iframe src="https://www.youtube.com/embed/J3Wt7fhCBQ0?si=vq6yRpDjxslf2Vht" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>Com a interação base funcionando em um cenário fictício, o desenvolvimento partiu então para o uso do cenário real, a praça Barão de Corumbá. Para isso, foi utilizada a primeira metade do tutorial em vídeo <a target="_blank" class="texto-azul" href="https://youtu.be/NW_djQS_N8U">Create any City in Blender in 20 Minutes</a>, do canal CG Geek. Assim, foi gerado um clone do relevo e de alguns prédios da região selecionada utilizando os dados do Open Street Map e de serviços como o Mapbox. Alguns dos problemas foram a ausência de prédios, deixando vazios no mapa, e a geometria muito simples, com erros na altura, das construções existentes. Esse ponto do desenvolvimento pode ser visto no vídeo a seguir:</p>
+
+                    <iframe src="https://www.youtube-nocookie.com/embed/Y0G5ZnscOQE?si=3FVmwF3rry6c7Lsr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    
+                    <p>Com a praça real e a mecânica de posicionar objetos funcionando, o tutorial parecia promissor. Entretanto, ele trabalhava apenas a movimentação e posicionamento dos objetos no cenário e nada além disso, o que, com o andamento do desenvolvimento, percebi que seria um problema. Havia uma série de funções que a plataforma precisaria ter, como mover ou deletar um objeto já posicionado, rotacionar os elementos, movimentação da câmera, dentre outras questões, e tudo isso teria que ser feito a parte do guia original. Foi aí que encontrei, ao acaso, um diferente tutorial que cobria todas essas questões e ainda adicionava outras: o vídeo <a target="_blank" class="texto-azul" href="https://youtu.be/YuGabUUSqlE">How to make a simple BUILDING SYSTEM in Unity C#!</a> do canal Ludorem Studios.</p>
+                    <p>Ao concluir a série de três tutoriais, eu possuía uma cópia exata do projeto desenvolvido no guia virtual. Nele é possível adicionar e mover os objetos, selecionar aqueles já posicionados, ação que marca o item com uma linha branca ao redor dele, e rotacionar os itens ao editá-los.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-01-turorial01.png" alt="formas posicionadas">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-01-turorial02.png" alt="forma selecionada após posicionada">
+                        </figure>
+                        <figcaption>Mapa para posicionamento dos objetos e, na direita, menu de seleção de um item já posicionado.</figcaption>
+                    </div>
+
+                    <h5 class="texto-azul">Ida à praça e modelagem de objetos</h5>
+                    <p>Seguindo os mesmos passos do tutorial anterior, o passo seguinte foi modificar o cenário do jogo para o mapa da praça real.</p>
+                    <p>Além disso, a interface também foi adaptada para telas touch-screen. Antes as ações de posicionar e rotacionar os objetos eram realizadas ao apertar a tecla "P" e "R", respectivamente, no teclado. Agora, foram adicionados dois botões no canto inferior direito da tela para cumprir essa função em celulares.</p>
+                    <p>Com a versão instalada no celular, conforme é possível ver no vídeo a seguir, foi possível perceber já um primeiro problema na movimentação da câmera. No computador, o programa usava o ponteiro do mouse para mover o posicionamento do objeto e o mouse pressionado para mover a câmera. Em uma tela de toque não existe a diferenciação entre os status do mouse em hover e pressionado, então mover um objeto movia também a câmera, tornando a experiência um tanto confusa.</p>
+
+                    <iframe src="https://www.youtube.com/embed/bcEeP_Rtfpw?si=RysiJP_oXtox7TXl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>Com as principais mecânicas já programadas e a praça real de cenário, era hora então de trabalhar nos modelos tridimensionais do mobiliário urbano. Para isso, foi utilizado o programa Blender, onde realizei a construção de uma gangorra simples para testar a modelagem e como seria o funcionamento do modelo no Unity.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-02-gangorra.png" alt="balança">
+                            <figcaption>Gangorra modelada no Blender, ainda sem cores.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O primeiro aprendizado desse processo veio logo ao exportar o arquivo 3D para o cenário da praça: eu não havia prestado atenção nas medidas e tamanho do objeto. Desse modo, a gangorra, que no Blender parecia estar certa, no Unity media aproximadamente 7 metros de comprimento, um pouco maior que o desejado.</p>
+                    <p>Além das dimensões, também descobri que existem algumas questões sobre a rotação do objeto no Unity contra a do Blender, pois o eixo vertical de um software é o Z e no outro é o Y. Essa questão pode ser facilmente corrigida ao selecionar a opção "Aplicar transformações" no menu de exportação do Blender, então não trouxe muitos problemas para o projeto.</p>
+                    <p>Com esses aprendizados, segui com a modelagem dos demais itens do mobiliário. A meta nessa etapa era desenvolver o conjunto mínimo de itens necessários para um primeiro teste, como uma mesinha de xadrez, poste de luz, lixeira; os itens mais básicos de se encontrar em uma praça e que as pessoas iriam querer usar.</p>
+                    <p>Não consegui encontrar nenhum manual ou catálogo que tivesse as dimensões do mobiliário urbano do Rio de Janeiro, então algumas das medidas usadas foram tiradas de arquivos avulsos enquanto outras foram estimadas.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-02-poste01.png" alt="poste de cima">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-02-poste02.png" alt="poste de baixo">
+                        </figure>
+                        <figcaption>Poste duplo visto por cima e por baixo.</figcaption>
+                    </div>
+
+                    <p>O poste duplo tem 4,5 metros de altura e foi feito inspirado em um poste de LED usado pela Prefeitura. Nesse primeiro momento ele não tem nenhuma lâmpada modelada, sendo formado apenas por duas caixas lisas de cada lado.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-02-xadrez.png" alt="mesa de xadrez no blender">
+                            <figcaption>Mesa de xadrez com um banco em cada lado.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A mesa de xadrez é um dos itens mais populares das praças, presente em todas as que eu visitei, por isso era essencial que ela estivesse presente já desde essa primeira versão. As medidas dela foram obtidas em esquemas disponíveis por construtoras na internet, e o tabuleiro de xadrez recebeu um material um pouco mais reflexivo que o de concreto presente no restante do objeto.</p>
+                    <p>A mesa de xadrez também foi reaproveitada como ícone do aplicativo, já que se trata dessa representante tão universal das praças da cidade.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-02-icone.jpeg" alt="icone do app">
+                            <figcaption>Ícone do aplicativo instalado em um celular Android.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O banco de concreto foi feito com base nos bancos mais simples encontrados nas praças, que são formados por apenas uma placa de concreto apoiada em dois tubos de sustentação. Entretanto, na visão de topo usada pelo aplicativo ficava muito difícil de identificar o que esse retângulo cinza era, então foi adicionado um encosto no banco para facilitar a visualização dele durante esse primeiro teste.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-02-banco01.png" alt="banco">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-02-banco02.png" alt="banco com encosto">
+                        </figure>
+                        <figcaption>Banco simples de concreto e, na direita, versão com encosto para as costas.</figcaption>
+                    </div>
+
+                    <p>A lixeira foi um dos objetos mais difíceis para ser modelado devido sua complexidade de formato. Além disso, não consegui encontrar nenhum esquema com medidas ou proporções da lixeira laranja da Comlurb, o que levou essa modelagem a ser uma simplificação totalmente baseada em fotos, que ainda precisa de diversos ajustes para atingir um formato que seja mais fácil de identificar ao ser visto de cima.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-02-lixo01.png" alt="lixeira">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-02-lixo02.png" alt="wireframe da lixeira">
+                        </figure>
+                        <figcaption>Lixeira da Comlurb em versão sólida e wireframe mostrando a estrutura do modelo 3D.</figcaption>
+                    </div>
+
+                    <p>Para o modelo de árvore nessa primeira versão foi usado <a target="_blank" class="texto-azul" href="https://www.google.com/url?q=https://sketchfab.com/3d-models/maple-tree-4b27adcf92f644bdabf8ecc6c5bef399&sa=D&source=editors&ust=1757203986404178&usg=AOvVaw2binTj7FqnPqnhyvB45GFh">esse arquivo de árvore Maple</a> disponível no Sketchfab. As texturas do modelo foram removidas e substituídas por cores lisas, de modo que a árvore fique no mesmo estilo gráfico dos outros objetos.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-02-maple.png" alt="arvore maple">
+                            <figcaption>Árvore de Maple baixada no site Sketchfab.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Com todos os modelos essenciais prontos e coloridos, eles foram então exportados em formato .fbx e importados dentro do Unity, substituindo todas as formas geométricas básicas que estavam disponíveis anteriormente e trazendo as opções para o jogador imaginar seu modelo de praça virtual.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-02-print.png" alt="print do app">
+                            <figcaption>Praça com todos os objetos modelados até agora, com a proporção de tamanho entre cada um deles ainda a ser ajustada.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+                    <h5 class="texto-azul">Pequenos testes e experimentos</h5>
+
+                    <p>Com os modelos prontos, realizei alguns pequenos testes, sem realizar registros, para ver como estava o entendimento do sistema pelo público. Os usuários conseguiram manusear os principais pontos do aplicativo, porém o botão de Posicionar e Girar passaram um pouco despercebidos por terem ficado tão no canto da tela.</p>
+                    <p>Para tentar melhorar a situação, testei um esquema similar ao encontrado em jogos como The Sims, em que os botões de posicionar e girar acompanham o objeto que está sendo movido.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-02-the-sims.jpeg" alt="print do the sims">
+                            <figcaption>Tela do jogo The Sims Grátis para Jogar, para celular, em que os botões acompanham o objeto selecionado.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Para alcançar esse resultado foi necessário criar uma outra instância da interface no modo <i>World Space</i>, que trata os botões e elementos de interface como objetos de jogo. Isso permite que a interface seja posicionada dentro do espaço da praça, o que é essencial para que os botões possam ser movidos ao mesmo tempo que os objetos.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-print-teste.png" alt="print da UI">
+                            <figcaption>Menu dos botões Posicionar e Girar acompanham a posição do objeto sendo editado.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Entretanto, alguns problemas ocorreram e acabaram fazendo essa ideia ser descartada. Por serem tratados como objetos de jogo, eles ficam suscetíveis inclusive às mudanças de perspectiva e ângulo na visualização da câmera, o que provoca que os botões acabem aparecendo em posições indesejadas em alguns momentos do uso. Esse problema pode ser melhor compreendido nesse vídeo:</p>
+
+                    <iframe src="https://www.youtube-nocookie.com/embed/3wvto89jDLU?si=T25qygMJs-7mnYE6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>Com o menu móvel descartado, a solução adotada foi reorganizar totalmente a interface atual. Conforme é possível ver nas imagens abaixo, as opções de mobiliário foram movidas para a esquerda da tela, liberando o centro inferior para as informações do objeto selecionado. Isso fez com que os botões de deletar e mover ficassem juntos das opções de girar e posicionar, aparecendo apenas quando algum objeto está selecionado. Desse modo, as informações referentes aos itens ficam agrupadas em uma parte, visivelmente separadas da lista de opções de mobiliário.</p>
+                    <p>Além disso, os botões para adicionar novos objetos ficam desativados enquanto existe um item sendo editado na cena, o que evita que erros e bugs aconteçam caso a pessoa adicione por acidente vários objetos ao mesmo tempo.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-03-print-ui01.png" alt="ui atualizada com botões na lateral">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-03-print-ui02.png" alt="ui atualizada com objeto selecionado">
+                        </figure>
+                        <figcaption>Interface atualizada para os primeiros testes. Na direita, tela com a mesa de xadrez sendo editada.</figcaption>
+                    </div>
+
+                    
+
+                    <h5 class="texto-azul">Nomenclatura do projeto</h5>
+
+                    <p>O mobiliário já estava modelado, a interface ajustada e as mecânicas base funcionais. Faltava então apenas um pequeno detalhe antes de partir para os testes com usuários: como esse projeto se chama?</p>
+                    <p>Focando no tema de praças e imaginação, algumas das opções utilizam palavras remetentes ao Rio de Janeiro, como "Praça Carioca". Entretanto, senti que usar o nome da cidade no projeto passava uma imagem muito institucional, como se a plataforma fosse oficial da prefeitura, o que não era do meu interesse.</p>
+                    <p>Cheguei então ao nome de <b>rePraça</b>, que utiliza o prefixo "re", de repensar ou reimaginar, junto de "praça", elemento central do projeto.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-nome.png" alt="nome do app">
+                            <figcaption>Esquema com alguns dos temas e conceitos usados no processo de naming do projeto.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="momento-2"><b>Momento #2</b></h3>
+                        <h3 class="nome-praca">Testes</h3>
+                    </div>
+
+                    <p>Agora sim, finalmente chegou a hora de testar o aplicativo e conferir o que está e não está funcionando. Defini que os testes seriam abertos e livres, sem nenhum objetivo específico nesse momento, eu daria apenas uma breve introdução sobre a plataforma e a praça escolhida antes de entregar o celular na mão do usuário.</p>
+                    <p>Apenas por questões de registro, publiquei no Github a versão 0.0.1-alpha, que foi utilizada para esses testes. Ela pode ser encontrada <a target="_blank" class="texto-azul" href="https://github.com/Feliperpvieira/rePraca/releases/tag/v0.0.1-alpha">nesse link</a>, que possui também um vídeo mostrando as principais ferramentas dessa versão do projeto.</p>
+
+                    <h5 class="texto-azul">Daniel – 25 anos</h5>
+
+                    <p>Como a movimentação dos objetos estava interferindo com a movimentação da câmera, conforme explicado anteriormente, optei por bloquear a movimentação da câmera enquanto um objeto é editado, e essa foi a primeira crítica que Daniel realizou ao testar o rePraça. Como muitas vezes ele dava zoom no objeto para então movimentá-lo, a área de tela ficava reduzida, o que tornava essencial poder mover a câmera junto do objeto.</p>
+                    <p>Outra questão foi a interpretação da interface. Na imagem abaixo é possível ver o menu que aparecia ao selecionar um objeto:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-daniel-01.jpeg" alt="ui">
+                            <figcaption>Menu dos objetos foi confuso para alguns usuários.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A diferença entre o botão de "X", de desselecionar, e o botão "Deletar" não ficou clara, e por alguns momentos ele apertou em desselecionar tentando deletar o objeto.</p>
+                    <p>Além disso, o botão de Grid também não foi usado pois não foi compreendido. Como a grid era aplicada sem um guia visual, ou seja, o objeto se movia em grid mas não existia nenhuma grid visível na tela, era difícil de entender do que ela se tratava.</p>
+                    <p>Ele também sugeriu desativar o botão "Posicionar" quando o objeto estiver em uma área que ele não possa ser posicionado a fim de evitar confusões.</p>
+                    <p>Na montagem da praça ele iniciou o processo colocando árvores, pois, segundo ele, "quando penso em uma praça penso logo nas árvores dela", e em um momento que ele afirmou já ter concluído a montagem do espaço ele logo voltou atrás dizendo "mentira, esqueci dos postes, precisa de mais poste", percebendo também que queria colocar mais lixeiras. Ao posicionar os postes, ele disse que seria legal se desse pra alterar a iluminação entre dia e noite para ver se a iluminação estava suficiente.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-daniel-02.jpeg" alt="praça montada">
+                            <figcaption>Praça final montada pelo Daniel.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por fim, essa foi a praça que o Daniel montou. Ele colocou vários bancos e árvores com duas mesinhas e uma gangorra. Também foi comentado que, ao início, enquanto a praça ainda estava vazia, ele demorou um pouco para entender que esse círculo verde e liso era a praça a ser imaginada.</p>
+
+
+                    <h5 class="texto-azul">Leonardo – 24 anos</h5>
+                    
+                    <p>Logo de início Leonardo compartilhou das mesmas dores do Daniel em relação ao Grid, por não conseguir visualizá-lo, e ao botão "X" de desselecionar, que tentou usar para deletar um objeto. Outra dificuldade foi que, ao selecionar um objeto, ele tentou editá-los clicando no botão de "Posicionar" ao invés de usar o botão de "Mover", já que ambos os botões apareciam na tela ao mesmo tempo.</p>
+                    <p>Nos comentários, ele brincou que ia encher a praça de lixeira pois "sempre falta lixeira" e sugeriu uma opção para alterar o ângulo da câmera, mudando da visão de topo para algo em primeira pessoa, que desse a sensação de ver a sua edição como se estivesse presente na pracinha.</p>
+                    <p>Um movimento curioso dele foi que, ao movimentar os objetos pela cena, ele preferiu fazer clicando diretamente no ponto que queria ao invés de arrastar o objeto pelo espaço, pois achou mais fácil assim. Também comentou que é péssimo para esses jogos, que geralmente a parte de montagem do cenário é o trecho que ele pula no The Sims.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-leo.jpeg" alt="praça montada">
+                            <figcaption>Praça final montada pelo Leonardo.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por fim, a praça do Leonardo é cercada de árvores e possui uma divisão igualitária entre a quantidade de mesas, bancos e gangorras.</p>
+                    <p>O botão de Grid ficava ativado por padrão, com a possibilidade do usuário desativá-lo. Como essa função não estava sendo compreendida, mudei para os testes seguintes o comportamento, de modo que o Grid inicia desativado, podendo o usuário ativar.</p>
+                    <p>Outra mudança foi a adoção dos jardins já existentes na praça, adotando então a cor bege para o piso de areia e o verde para a grama nos pedaços de jardim. Essa mudança foi feita para melhorar a dificuldade de visualizar que o círculo verde era uma praça.</p>
+
+
+                    <h5 class="texto-azul">Guilherme – 22 anos</h5>
+
+                    <p>Guilherme começou a edição colocando lixeiras, tendo feito duas fileiras, uma de cada lado, com quatro lixeiras cada, pois queria fazer a linha de lixeiras recicláveis com diferentes cores. Quando colocou o primeiro banco de concreto ele olhou em dúvida e perguntou se era possível girar o banquinho. Ao clicar no botão "Girar" ele viu que dava e começou a rotacionar os demais objetos também.</p>
+                    <p>Ele disse que queria colocar vários postes para deixar bem iluminado e, em um momento, colocou uma gangorra, mas depois decidiu tirar porque "ela estava muito perto das lixeiras, ia ficar desagradável".</p>
+                    <p>Comentou que seria legal se tivesse mais praças, porque queria experimentar em outros tipos de espaço já que o lugar do teste é uma praça bem pequena. Ele não viu o botão de grid e não sentiu falta de sua funcionalidade.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-gui.jpeg" alt="praça montada">
+                            <figcaption>Praça final montada pelo Guilherme.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A praça do Guilherme só tem bancos, árvores, poste e lixeira. A ausência de mesas de xadrez foi pelo espaço reduzido, que fez ele achar que as pessoas não iriam se reunir ali, enquanto que a ausência de gangorra foi porque ele queria mais diversidade de brinquedos infantis para poder montar uma praça também com mais itens em geral.</p>
+
+
+
+
+                    <h5 class="texto-azul">Jessica – 22 anos</h5>
+
+                    <p>No início,  Jessica ficou um longo tempo parada, pensando previamente qual plano ela queria seguir, pois de acordo com ela estava em dúvida entre duas ideias para a praça. Ao iniciar a edição, ela tentou algumas vezes movimentar a câmera enquanto movia um objeto, mas percebeu sozinha depois de algumas tentativas que isso não era possível e afirmou que não se incomodou.</p>
+                    <p>Como os botões de objetos usam apenas os nomes, sem imagens, ela achava que "Mesa" seria uma mesa grande, como uma de jantar, mas depois entendeu que era uma mesa de xadrez, o que achou que "em praças faz mais sentido mesmo".</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-jessica.jpeg" alt="praça montada">
+                            <figcaption>Praça final montada pela Jessica.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Os objetos foram posicionados nas extremidades devido a questão estética, segundo ela, fazendo algo mais na linha simétrica em que um objeto principal ocupa o centro do círculo e os outros se espalham ao redor. Como sugestão, ela gostaria de mais opção de brinquedos e itens de lazer, e disse que colocou poucas lixeiras pois essa era uma praça "de ficar", que se fosse uma "mais de brincar" precisaria de mais lixeiras pois as pessoas acabariam levando cachorro e isso gera mais lixo.</p>
+
+
+                    <h5 class="texto-azul">Luísa – 23 anos</h5>
+
+                    <p>Ao tentar alinhar os objetos com as ruas da praça, a Luísa se frustrou um pouco com a rotação dos itens ser de 45º em 45º, pois em alguns cenários esse ângulo era grande demais para alcançar o alinhamento desejado. Além disso, também teve dificuldade por não conseguir mover a câmera enquanto movia um objeto, o que piorou a experiência de edição da praça. Ela considerou essa a parte mais frustrante da experiência, pois se quisesse mover a câmera precisava posicionar o objeto, mover a câmera, selecionar o objeto, movimentá-lo para o local desejado e aí sim posicionar o item onde quisesse.</p>
+                    <p>Além disso, ela também se confundiu um pouco entre o botão de Editar e o de Posicionar. A praça dela ficou assim:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-03-luisa.jpeg" alt="praça montada">
+                            <figcaption>Praça final montada pela Luísa.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A praça da Luísa teve pelo menos um de cada item e várias árvores formando as ruas de acesso do círculo interno.</p>
+
+                    <h5 class="texto-azul">Correções feitas após os testes</h5>
+
+                    <p>O principal ajuste realizado logo após a conclusão dos testes foi no funcionamento das câmeras. Até agora não era possível mover a visualização enquanto editava um objeto, pois o deslize do dedo para arrastar o objeto de um ponto a outro acabava movimentando a câmera no sentido oposto. O código foi então modificado para possuir duas diferentes condições de uso da câmera: a tradicional, que ocorre quando não há nenhum objeto sendo movido e funciona pelo arrastar do dedo na tela; e a nova maneira, que ocorre quando você movimenta um objeto. Nela, a câmera se movimenta de acordo com o canto da tela que o seu dedo está, ou seja, se você estiver arrastando o dedo para o topo da tela, a câmera irá se mover para o topo, e assim respectivamente para todos os cantos. A nova forma pode ser visualizada no vídeo:</p>
+
+                    <iframe src="https://www.youtube.com/embed/a8QO3oZXIuA?si=ODa-fr4LCGR0dkAv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>O restante das correções foram na interface, que foram feitas em conjunto com o desenvolvimento da identidade visual do rePraça.</p>
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="momento-3"><b>Momento #3</b></h3>
+                        <h3 class="nome-praca">Interface e identidade visual</h3>
+                    </div>
+
+                    <p>Até o momento, toda a interface e parte visual do aplicativo era temporária, construída com o mínimo possível apenas para validar as mecânicas e a base da plataforma. Agora que os testes estavam concluídos, foi hora então de avançar com o visual do jogo.</p>
+
+                    <h5 class="texto-azul">Rascunhos e rascunhos</h5>
+
+                    <p>A primeira ideia para a interface foi inspirada em adesivos que são muito encontrados colados em postes e placas pela cidade. Para alcançar essa ideia, experimentei com ícones levemente inclinados e fora dos botões, tentando trazer um pouco do ar natural e menos alinhado que os adesivos tomam no ambiente urbano.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-04-ui-01.jpeg" alt="teste cores">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-04-ui-02.jpeg" alt="teste cores">
+                        </figure>
+                        <figcaption>Primeiro rascunho de interface desenvolvido.</figcaption>
+                    </div>
+
+                    <p>Nas cores a ideia foi buscar algo mais próximo de adesivos holográficos, o que foi logo descartado e substituído por uma cor única e menos brilhante.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-04-ui-03.jpeg" alt="teste cores">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-04-ui-04.jpeg" alt="teste cores">
+                        </figure>
+                        <figcaption>Uso do azul nos ícones e bege como fundo do botão.</figcaption>
+                    </div>
+
+                    <p>Com os diferentes testes de cor, prossegui por enquanto com o ícone e fundo de cores iguais, conforme é possível ver abaixo. Além disso, a principal mudança desse momento foi o descolamento dos botões das bordas da tela, o que ajudou a reduzir o tamanho deles, que estavam grandes demais.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-ui-05.jpeg" alt="teste botao">
+                            <figcaption>Tela de edição de objeto.</figcaption>
+                        </figure>
+                    </div>
+
+                    <h5 class="texto-azul">Cores, ícones e fonte</h5>
+
+                    <p>As cores foram evoluindo junto da interface, mas até o momento elas vinham sendo escolhidas aleatoriamente, sem nenhum conceito ou embasamento, apenas para colorir as ideias de botões apresentados até agora. Assim, com a interface já encaminhada, desenvolvi uma paleta de cores definitiva com 5 cores. As duas primeiras foram feitas para serem usadas como preto e branco, respectivamente, para garantir que as páginas sempre tenham alguma cor e mantenham um bom contraste.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-paleta-cores.png" alt="paleta de cores">
+                            <figcaption>Paleta de cores e gradientes.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Além das cores, dois gradientes também foram feitos com a paleta. Ambos são gradientes lineares em ângulo de 45º, sendo que o mais claro vai do branco (#FFFFFF) até o bege (#F9EFE7), enquanto o mais escuro vai do azul (#0A6EB6) até o azul marinho - preto (#131C3B).</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-paleta-contraste.png" alt="contraste entre cores">
+                            <figcaption>Validação do contraste entre o bege e azul marinho.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Alguns ícones já vinham sendo usados, mas eles foram ajustados e coloridos com a nova paleta. Os dois símbolos à direita - o balão de informação e o lápis - foram baixados no <a target="_blank" class="texto-azul" href="https://iconmonstr.com">iconmonstr</a>, site que permite download de arquivos para usos com fins pessoais e comerciais, edição dos assets baixados e não requer atribuição no trabalho. Os demais itens da iconografia foram desenvolvidos por mim.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-icones.png" alt="icones">
+                            <figcaption>Iconografia utilizada na plataforma.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p><a target="_blank" class="texto-azul" href="https://www.google.com/url?q=https://fonts.google.com/specimen/Cabin&sa=D&source=editors&ust=1757203986430341&usg=AOvVaw1ztxrTcDiZZ2jyXl694rS9">Cabin</a> foi escolhida como tipografia para representar o rePraça em forma de letra. Com suas formas simples e direta, ela é ideal para dispositivos digitais por ser da categoria sans-serif, o que permite uma leitura agradável e objetiva. Além disso, ela apresenta traços levemente curvilíneos nas suas extremidades, o que traz um charme sutil e apropriado para o projeto.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-fonte.png" alt="fonte">
+                        </figure>
+                    </div>
+
+                    <p>Aproveitando as mudanças visuais, o ícone do aplicativo também foi atualizado. A ideia de representar o projeto pela mesa de xadrez devido sua presença universal nas praças foi mantida, porém o modelo, cores e iluminação sofreram melhorias.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-04-logo-01.png" alt="logo antigo">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-04-logo-01.png" alt="logo atualizado">
+                        </figure>
+                        <figcaption>Versão anterior e versão com modelo e iluminação atualizados.</figcaption>
+                    </div>
+
+                    <p>Com todas essas questões definidas, as cores, ícones e fonte foram aplicados na interface. O resultado pode ser visto no vídeo a seguir:</p>
+
+                    <iframe src="https://www.youtube.com/embed/HzDdRfWlBaA?si=92q6diYO_nVq_RD2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <h5 class="texto-azul">Mais funções para a interface</h5>
+                    <p>A interface que vinha sendo trabalhada até agora, quando em seu estado inicial, possuía apenas o botão “Adicionar +” para novos objetos e nada mais. Entretanto, algumas funções ficaram faltando, sendo elas:</p>
+
+                    <p><b class="texto-marrom">Informações</b> - Ficha de informações sobre a praça que está sendo editada e guia de ajuda do aplicativo</p>
+                    <p><b class="texto-marrom">Dia e Noite</b> - Toggle para alternar entre a iluminação claro diurno e escuro noturno</p>
+                    <p><b class="texto-marrom">Ângulo de câmera</b> - Alterar a visão da câmera entre visão de topo e visão 45º</p>
+                    <p><b class="texto-marrom">Concluir</b> - Finalizar a parte de edição da praça e ir para a tela de salvar e compartilhar</p>
+
+                    <p>O resultado final, com os quatro botões adicionados, pode ser visto no vídeo:</p>
+
+                    <iframe src="https://www.youtube.com/embed/Vd0GijqHMRA?si=tMYGF6CFisRtMG2q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    
+                    <p>O botão de adicionar elementos, que antes tinha a palavra "Adicionar" junto do ícone de adição, foi movido da parte superior central para o canto inferior direito. Essa mudança ocorreu para criar duas linhas de botões separados na interface: a no topo da tela, que contém os novos elementos, é mais ligada ao status da plataforma e controla os assuntos "globais", como a luz, o ângulo da câmera, e concluir o processo de edição. Já a segunda linha, na parte inferior da tela, recebeu os botões ligados aos objetos da praça, como o botão de adicionar itens, que é acompanhado por outras opções dependendo de ter ou não um objeto selecionado no momento.</p>
+                    <p>Ao ter um objeto selecionado, dois novos botões aparecem na linha inferior de botões, sendo que o primeiro deles apresenta o nome do item ao lado do ícone de informação. Ao clicar nele, o usuário deve ser levado diretamente para a ficha de dados da peça selecionada. Já o segundo botão serve para editar o objeto no mapa, que leva o usuário para o estágio de edição da mobília.</p>
+                    <p>Vale destacar a ausência do botão de desselecionar, que estava presente nos testes do Momento #2. Como o botão "X" estava confundindo os usuários, ele foi totalmente removido e, agora, para desmarcar um objeto, basta tocar em qualquer ponto fora dele.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-tela-01.jpeg" alt="tela">
+                            <figcaption>Tela com o objeto selecionado, em que é possível clicar no lápis para editá-lo.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por fim, temos o estágio de edição do objeto:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-tela-02.jpeg" alt="tela">
+                            <figcaption>Tela de edição do objeto, com os botões é possível deletar, rotacionar e posicionar, respectivamente.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Nessa tela, os botões que aparecem na parte inferior são justamente os que cumprem as funções de edição. Da esquerda para a direita, é possível deletar, rotacionar ou confirmar a posição do objeto na praça, o que retorna o usuário para o estágio inicial. Vale lembrar que ainda existe a tela de inventário, com todas as possibilidades de itens a serem adicionados, que será trabalhada mais a frente. Desse modo, cheguei ao seguinte fluxo geral para o funcionamento da plataforma:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-fluxo.jpeg" alt="fluxo">
+                            <figcaption>Tela inicial > Inventário de itens > Edição de objetos > Tela inicial. A tela de objeto selecionado não aparece nesse fluxo.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O fluxo em alta resolução pode ser visualizado <a target="_blank" class="texto-azul" href="https://www.google.com/url?q=https://www.figma.com/file/KVcdJpM1ukbGpkDXNNAfL7/Projeto-7-e-8?node-id%3D839%253A330&sa=D&source=editors&ust=1757203986439587&usg=AOvVaw0bqmyZqvCtBrr0wrP-vJUp">no Figma por esse link</a>.</p>
+
+                    <p>Com a adição da função de alternar a iluminação entre dia e noite, é importante que a interface funcione sobre tanto o fundo claro quanto o escuro. Por isso, o cenário noturno foi simulado escurecendo a imagem da praça, de modo a conferir a visibilidade dos botões à noite.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-04-tela-03.jpeg" alt="tela">
+                            <figcaption>Simulação de interface com a praça à noite.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+
+
+
+                    <div class="subtitulo-pracas">
+                        <h3 class="numeracao" id="momento-4"><b>Momento #4</b></h3>
+                        <h3 class="nome-praca">Finalização</h3>
+                    </div>
+
+                    <p>A identidade visual já estava concluída e os principais pontos da interface já estavam presentes… mas não funcionavam. Faltava agora, então, justamente finalizar esses pontos: tornar tudo que estava na tela funcional, principalmente as funções do sistema e a tela de inventário do mobiliário urbano, e fazer ajustes em tudo que precisasse.</p>
+
+                    <h5 class="texto-azul">Luz, câmera, toggle</h5>
+                    <p>Um dos principais pedidos feitos durante os testes era sobre a vontade de ver a praça em um ângulo diferente, em perspectiva, saindo da visão chapada de cima. A primeira adição então foi tornar funcional o botão para mudar o ângulo da câmera, que varia de 90º (visão de topo) para 40º (visão em ângulo).</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-05-angulo-01.jpeg" alt="vista de cima">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-05-angulo-02.jpeg" alt="vista em 45 graus">
+                        </figure>
+                        <figcaption>Visão de topo e visão em ângulo, respectivamente.</figcaption>
+                    </div>
+
+                    <p>Para tornar a transição entre esses dois estados mais fluida, utilizei o parâmetro <a target="_blank" class="texto-azul" href="https://gamedevbeginner.com/how-to-rotate-in-unity-complete-beginners-guide/#rotate_over_time">este tutorial</a> para aplicar a função <i>lerp</i>, que faz com que a mudança de câmera seja animada em um intervalo de tempo entre os dois ângulos definidos. O resultado final dessa animação pode ser vista no vídeo a seguir.</p>
+
+                    <iframe src="https://www.youtube.com/embed/J7IYee7jmCs?si=WOescu-flFeYbp6q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>Em continuidade ao desenvolvimento de novas funções, a etapa seguinte foi de adicionar a variação entre a iluminação diurna e a noturna. Para isso, a luz já existente, que imita o Sol, foi preservada, e foi criada uma nova luz, imitando a Lua. Cada uma aponta em sentidos opostos, ou seja, quando o Sol aponta para baixo a Lua aponta para cima, logo, a luz da Lua não tem efeito nenhum sobre a cena, e vice-versa. Com o mesmo código utilizado no ângulo de câmera, é possível então rotacionar ambas as luzes ao mesmo tempo em um curto tempo, formando um efeito similar ao timelapse para marcar a passagem entre os dois momentos de iluminação do dia.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-05-iluminacao.png" alt="luzes">
+                            <figcaption>Modelo do poste com as luzes.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Já nas praças do mundo real, assim que anoitece os postes se acendem e a iluminação artificial toma conta dos espaços. Para simular esse efeito, foram adicionadas luzes do tipo spotlight no objeto do poste, cada uma com a tag "LuzPoste". Assim, toda vez que o cenário fica noturno, o código do jogo busca por todos os objetos que utilizam essa tag e definem, um a um, que o componente Light está ativado. Quando fica de dia, o mesmo código é rodado, mas dessa vez desligando o componente de luz.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-05-noite-01.png" alt="vista de dia">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-05-noite-02.png" alt="vista de noite">
+                        </figure>
+                        <figcaption>Iluminação da mesma cena de dia e de noite.</figcaption>
+                    </div>
+
+                    <h5 class="texto-azul">+ mobília, + ícone</h5>
+
+                    <p>Além disso, nesse momento também foram adicionados dois novos objetos: o escorrega, para expandir os itens da categoria infantil, e um bicicletário, para adicionar o primeiro objeto de transportes, ambas áreas que foram comentadas durante os testes iniciais.</p>
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-05-itens.png" alt="novos itens">
+                            <figcaption>Escorrega e bicicletário foram adicionados; a câmera em ângulo ajuda a visualizá-los.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O escorrega foi inspirado no modelo encontrado na praça Nossa Senhora da Paz, em Ipanema. Todo de madeira, ele possui os cantos da madeira pintados com diferentes cores, trazendo um ar mais alegre e jovem para a sobriedade da madeira.</p>
+                    <p>Foi feito também mais um ajuste no ícone do aplicativo. O sistema Android é personalizado pelas fabricantes, que modificam o formato dos ícones exibidos na tela de cada aparelho. Isso faz com que, em alguns formatos, o sistema de cada marca corte a imagem de maneiras peculiares e prejudique a visualização, como no caso da Motorola, em que o tamanho do quadrado é reduzido para ser encaixado em um círculo.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-05-icon-01.png" alt="motorola">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-05-icon-02.jpeg" alt="samsung">
+                        </figure>
+                        <figcaption>Celular da Motorola e Samsung, respectivamente, apresentam o ícone de formas diferentes.</figcaption>
+                    </div>
+
+                    <p>Para contornar essa questão, o Google desenvolveu o Android Adaptive Icons, que basicamente separa o ícone dos aplicativos em duas camadas: símbolo e fundo. O próprio sistema operacional então, usando esses dois arquivos, adapta a imagem para todos os formatos de ícone existentes no Android.</p>
+                    <p>Com a separação em símbolo e fundo, necessária para usar esse sistema, o arquivo original foi dividido da seguinte maneira:</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/dev-05-icon-03.png" alt="icone">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/dev-05-icon-04.png" alt="fundo">
+                        </figure>
+                        <figcaption>Símbolo e fundo do ícone do rePraça, que são montados pelo sistema em cada celular.</figcaption>
+                    </div>
+
+                    <p>Assim, uma simples quebra entre figura e fundo permitiu que o ícone fosse adaptado e visto da maneira ideal em todas as marcas e formatos de celular Android, como é possível ver na imagem abaixo, onde, no mesmo celular Motorola visto anteriormente, o ícone passou a ser exibido da maneira esperada.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-05-icon-05.png" alt="novo icone">
+                            <figcaption>Ícone do aplicativo passou a ser exibido corretamente mesmo em formatos diferentes.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+                    <h5 class="texto-azul">Criação da biblioteca urbana</h5>
+
+                    <p>Com os dois toggles funcionais e uma quantidade razoável de objetos já disponíveis, o desenvolvimento se virou então para um dos últimos grandes desafios que faltava: o inventário de objetos do mobiliário urbano.</p>
+                    <p>Ao clicar no botão de +, no canto inferior direito da tela de edição, o usuário era levado para a tela do inventário, que, no momento, era apenas uma lista de botões. Ao tocar em um dos nomes dos itens, eles eram adicionados diretamente na cena.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-grid-01.png" alt="grid itens">
+                            <figcaption>Estado do inventário de objetos nesse momento do desenvolvimento.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>A proposta era transformar essa tela não apenas em um inventário de itens, mas em algo muito mais próximo de uma biblioteca do mobiliário urbano, reunindo as informações sobre cada coisa no acervo. Para isso, o painel azul, presente na direita da tela, foi transformado no painel de informações, que exibe os detalhes do objeto selecionado pelo usuário.</p>
+                    <p>Primeiro, foi preciso construir o acervo de dados. Para isso, foi criado um <i>Scriptable Object</i> chamado "Objetos Data", que é basicamente um formato de arquivo do Unity feito para salvar informações. Nesse arquivo master, foram definidos alguns parâmetros, como nome, categoria e tamanho, que serão replicados em todas as cópias a serem criadas posteriormente. Assim, é possível criar um arquivo desse tipo para cada peça do mobiliário urbano e todos eles irão compartilhar dos mesmos campos para dados, porém cada um com valores personalizados, formando então a nossa biblioteca.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-grid-02.png" alt="scriptable object">
+                            <figcaption>Exemplo do arquivo Objetos Data do Bicicletário, com os valores preenchidos.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Com todos os arquivos criados e seus respectivos dados preenchidos, eles foram então posicionados em um Array, que é uma espécie de lista de itens no código. E pronto. A partir daqui todo o resto do processo de construção da interface é feito de forma automática, com o sistema criando a grid de botões com os objetos sozinho: o código do aplicativo passa por cada item desse array, e, de um em um, cria os botões na grid, definindo a imagem e dados do respectivo objeto no botão atual.</p>
+                    <p>Por esse processo ter sido automatizado, é interessante perceber que a grid aparece vazia dentro do ambiente de desenvolvimento do Unity, porém é logo preenchida ao rodar o app, pois esse processo só ocorre enquanto o programa está sendo executado.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-grid-03.png" alt="scriptable object">
+                            <figcaption>Na direita, o array "Lista Todos Dados" preenchido com os Scriptable Objects; no centro da tela, a grid de botões está vazia no ambiente de desenvolvimento do Unity.</figcaption>
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-grid-04.jpeg" alt="scriptable object">
+                            <figcaption>O código preenche a grid de objetos automaticamente ao executar o aplicativo.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Essa automação é útil principalmente para evitar o trabalho dobrado de criar cada botão manualmente. Se os botões fossem criados na mão e, por exemplo, a foto de um objeto precisasse ser alterada, seria preciso mudar a imagem no arquivo de dados e no botão. Com a forma automatizada, futuras atualizações dessas informações podem ser feitas ao alterar o dado em um único local, sem se preocupar em ter que mudar a imagem ou outro texto em dois espaços, evitando possíveis erros nesse processo.</p>
+                    <p>O funcionamento do restante do painel é simples. Ao clicar no botão de um dos itens do mobiliário, os campos são substituídos com os dados do objeto selecionado, como pode ser visto no vídeo a seguir:</p>
+
+                    <iframe src="https://www.youtube.com/embed/2DXhBzQ76hg?si=l_2e-PAnTUHbJl_m" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>No início, a ficha aparecia com todas as informações centralizadas, formando uma lista vertical. Entretanto, nesse formato a maioria dos usuários não percebia que havia mais informações ao rolar o painel para baixo. Por isso, a ficha foi modificada para mostrar já no topo da tela a maior parte dos dados, inclusive um trecho do texto de descrição, que antes estava passando despercebida pela maioria. O resultado final ficou assim:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-grid-05.jpeg" alt="tela informacoes">
+                            <figcaption>Versão final do painel.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+
+                    <h5 class="texto-azul">Últimas telas…</h5>
+
+                    <p>Agora que o inventário e o painel de informações já estavam funcionando, faltava então a última etapa do ciclo de edição das praças: o de exportar uma imagem do resultado do lugar imaginado, no botão "Concluir". Ao clicar nesse botão, a seguinte tela aparece:</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-concluir-01.jpeg" alt="tela concluir">
+                            <figcaption>Tela de conclusão de edição, com botão para salvar uma captura da praça.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Para garantir que a fotografia mostre sempre a mesma área da praça foi criada uma nova câmera independente, posicionada em um ponto fixo da cena, cuja imagem é exibida ao usuário no quadrado na esquerda da tela. Isso permite que a pessoa possa conferir se a praça está do jeito que ela esperava e tinha imaginado, e pode voltar à edição caso deseje. Clicando no botão "Salvar" a visão dessa câmera é então convertida em um arquivo .png, que é salvo na galeria do celular em uma pasta chamada "rePraça".</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-praca-exp.png" alt="praça exportada">
+                            <figcaption>Imagem exportada da praça.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Com os testes, o botão "Concluir" sofreu uma pequena alteração: seu símbolo foi alterado do check mark para uma seta, de compartilhar. Essa alteração ocorreu pois o check mark azul era o mesmo formato usado como ícone no botão de posicionar um objeto, o que estava causando confusão em alguns usuários, que clicavam em Concluir ao querer posicionar algum elemento na cena.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-concluir-03.jpeg" alt="icone novo">
+                            <figcaption>Ícone do botão de concluir atualizado para uma seta.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Agora que todas as partes essenciais da plataforma já estavam funcionais, o último botão da interface que ainda faltava era o de informações, no canto superior esquerdo. A ideia da tela de "Informação" é apresentar um pequeno resumo e foto da praça real que está sendo vista e editada no aplicativo.</p>
+                    <p>Essa proposta surgiu para esclarecer ao usuário que a praça que ele vê ali, sendo imaginada no mundo virtual, existe de verdade, e criar uma conexão mais forte entre a versão real e a virtual. A foto do local, junto do pequeno texto descritivo, ajudam a relacionar o usuário com os usos que a praça recebe e a maneira como o cenário é atualmente, criando uma base que os ajuda a pensar e imaginar de forma mais fiel.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-info-01.jpeg" alt="infos">
+                            <figcaption>Tela de informações da praça.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Em conjunto às informações da praça, foi adicionado também um guia com informações sobre o próprio aplicativo, em uma espécie de manual de instruções da plataforma. Por mais que o rePraça tenha sido feito com a intenção de ser auto explicativo, essa aba foi adicionada como uma opção: no caso de alguém ter muita dificuldade em alguma etapa é possível abrir essa tela para tirar dúvidas.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-info-02.jpeg" alt="configurações">
+                            <figcaption>Tela de ajuda do aplicativo.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Nos ajustes da interface, a <i>splash screen</i>, que é a tela que aparece brevemente enquanto o aplicativo carrega ao ser aberto, também foi refeita. Agora ela apresenta uma versão similar à logo do projeto porém em tela cheia, sendo formada pelo fundo de céu e grama com uma mesa de xadrez texturizada no meio.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-splash.png" alt="splash screen">
+                            <figcaption>Nova splash screen do aplicativo.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Até agora o usuário, ao abrir o aplicativo, entrava diretamente na tela de edição da praça. Isso foi mudado com a criação de uma tela inicial, em estilo simples, que apresenta apenas a logo do projeto e um botão "Iniciar", com a vista da praça na cidade ao fundo. O plano original era adicionar algum movimento de câmera nessa cena, tornando-a mais interessante, porém a tela acabou sendo mantida totalmente estática devido ao curto tempo para o desenvolvimento dessa etapa.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-home.jpeg" alt="home screen">
+                            <figcaption>Tela inicial do aplicativo.</figcaption>
+                        </figure>
+                    </div>
+
+
+
+                    <h5 class="texto-azul">…e os últimos objetos</h5>
+
+                    <p>Com o fim do desenvolvimento da interface e funções do sistema, o restante do tempo de desenvolvimento foi direcionado para criar novos itens de mobiliário. Nesse momento foram adicionados os novos banco de madeira e MUPI (painel publicitário), enquanto que a lixeira e o banco de concreto foram totalmente remodelados.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-novos-itens-01.png" alt="novos itens">
+                            <figcaption>Novos itens posicionados um do lado do outro.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>O banco de madeira foi feito com base nos modelos encontrados na região do Porto Maravilha. Esse estilo foi escolhido pois, além de pessoalmente considerá-lo bonito, ele também apresenta um desenho moderno e bom nível de conforto.</p>
+                    <p>MUPI significa Mobiliário Urbano para Informação, que são os totens de publicidade espalhados pelas vias mais movimentadas da cidade. O modelo escolhido como base foi o utilizado pela Clear Channel, uma das empresas que gerencia o mobiliário urbano do Rio de Janeiro. Para adicionar uma pequena referência aos meus projetos na plataforma, os cartazes publicitários dessa mobília referenciam ao próprio rePraça de um lado e ao jogo Arrasa Quarteirão, desenvolvido em outra disciplina, do outro lado.</p>
+                    <p>Já a lixeira da Comlurb merece atenção especial. Ela foi um dos primeiros objetos do projeto a serem modelados, mas seu formato original não estava sendo bem compreendido durante os testes.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-novos-itens-02.jpeg" alt="novos itens">
+                            <figcaption>Diversos ângulos da lixeira da Comlurb, remodelada, dentro da plataforma.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Na remodelagem, as proporções foram corrigidas e o modelo ficou muito mais fiel ao seu formato real, adicionando detalhes como a aba com cinzeiro e suavizando as curvas. Esses pontos tornam ela muito mais fácil de ser reconhecida, principalmente ao ser observada pelo ângulo da câmera de topo.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-novos-itens-03.png" alt="novos itens">
+                            <figcaption>Modelo de lixeira da Comlurb antes e depois de ser totalmente refeito.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>No banco de concreto, a sua primeira versão foi criada de forma totalmente fictícia, tendo sido feita dessa maneira conscientemente de forma temporária para facilitar a compreensão dos usuários durante os primeiros testes. Agora que essa questão já não é mais necessária, o banco foi substituído por um modelo real, que é formado por dois pés, uma barra de concreto e nada mais.</p>
+                    <p>Por fim, alguns últimos objetos a mais foram adicionados: cesta de basquete, barra fixa, estátua e palmeira.</p>
+                    <p>A estátua foi criada para simbolizar a representação de alguma figura neutra. Por isso foi utilizado um modelo de corpo propositalmente sem rosto, <a target="_blank" class="texto-azul" href="https://sketchfab.com/3d-models/low-poly-statue-5e7b33ada6534c95a9bc3144e86daa5c">disponível no Sketchfab</a>, para tornar possível que qualquer um possa ser o homenageado por esse elemento.</p>
+                    <p>A palmeira também foi baixada do <a target="_blank" class="texto-azul" href="https://sketchfab.com/3d-models/free-game-ready-palm-e8c0ea53410947b0b7f20d33702f4098">texto</a>Sketchfab. As texturas foram retiradas e substituídas por cores sólidas para deixá-la no mesmo estilo gráfico dos demais objetos.</p>
+                    <p>Os dois últimos objetos, a barra fixa e a cesta de basquete, foram modelados no Blender e complementam as opções de Atividades Físicas existentes na plataforma.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/dev-06-novos-itens-04.png" alt="novos itens">
+                            <figcaption>Última leva de novos itens adicionados.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Com esses últimos objetos adicionados, a versão final do rePraça possui 14 itens ao todo. Todos eles podem ser vistos na grid abaixo:</p>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="arquivos/renders/banco-de-concreto.png" alt="banco de concreto">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/banco-de-madeira.png" alt="banco de madeira">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/barra-fixa.png" alt="barra fixa">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="arquivos/renders/bicicletario-u-x2.png" alt="bicicletario">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/cereja-do-mato.png" alt="cereja do mato">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/cesta-basquuete.png" alt="cesta de basquete">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="arquivos/renders/escorrega.png" alt="escorrega">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/gangorra.png" alt="gangorra">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/lixeira-comlurb.png" alt="lixeira">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="arquivos/renders/mesa-de-xadrez.png" alt="mesa de xadrez">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/monumento-estatua.png" alt="estatua">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/mupi.png" alt="mupi">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="arquivos/renders/palmeira.png" alt="palmeira">
+                        </figure>
+                        <figure>
+                            <img src="arquivos/renders/poste-duplo.png" alt="poste duplo">
+                        </figure>
+                        <figure>
+                            
+                        </figure>
+                    </div>
+
+                    <p>Assim, foi concluído o desenvolvimento da plataforma rePraça. Do primeiro tutorial consultado até o último item de mobiliário urbano modelado, foram diversas etapas, buscas na internet, sessões de orientação, dias passados e testes realizados para chegar até aqui. Como resultado final, temos um aplicativo completo e funcional, que possibilita aos usuários a chance de projetar e imaginar uma praça usando itens similares aos que eles veem no cotidiano da cidade; a experiência completa pode ser vista no vídeo abaixo.</p>
+
+                    <iframe src="https://www.youtube.com/embed/WHm0KwVIdy4?si=akfEhduNwpKnNmTu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                    <p>Agora, com tudo pronto, era momento de levar o projeto para o Demo Day.</p>
+
+                </section>
+
+                <section id="demo-day">
+                    <h2>Demo Day</h2>
+                    <p>O Demo Day é o dia de demonstração de todos os projetos desenvolvidos na disciplina, onde os visitantes têm a chance de testar e usar os trabalhos de todos os alunos.</p>
+                    <p>Para expor o aplicativo, utilizei um tablet Samsung por considerar que a tela maior tornaria mais fácil a experiência no dia. O problema é que a tela do tablet tem uma proporção diferente da tela do celular que vinha sendo usado até então, o que deixou alguns dos elementos da tela em tamanhos inadequados. Para contornar esse problema, foi feita uma versão especial para telas grandes, na qual algumas medidas dos elementos da interface foram alterados, sendo a principal a quantidade de linhas no grid de objetos, que passou de 2 para 3 linhas.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/demo-01.png" alt="grid com 3 linhas">
+                            <figcaption>Grid com 3 linhas para melhor aproveitamento do espaço de tela.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Uma das partes mais importantes do conceito do projeto é poder visualizar as imaginações de cada pessoa em uma galeria, reunindo a individualidade de cada pessoa em um grupo. A exportação de uma foto da praça já estava funcionando corretamente, então era preciso desenvolver uma maneira de agrupar todas essas imagens para uma visualização única.</p>
+                    <p>Uma das opções consideradas foi o backup automático do Google Fotos, que manteria um álbum com as capturas de tela, exibindo esse álbum em um computador na mesa do Demo Day. O problema é que essa ideia deixaria a interface do Google Fotos ali, sempre visível, o que não seria a solução mais elegante possível.</p>
+                    <p>A solução escolhida então foi desenvolver um site especial, mantendo todas as fotos exportadas em uma página online acessível de qualquer dispositivo. O site foi desenvolvido seguindo o tutorial <a target="_blank" class="texto-azul" href="https://youtu.be/vQc3EmFCWRw?list=PLCOzf8y6EcVUg-MDtpnV67aQQRBGnnpdr">Build an Image Gallery with Vanilla HTML, CSS, and JavaScript</a>, do James Q Quick.</p>
+                    <p>O principal problema de desenvolver o site era descobrir uma forma de subir as imagens para ele durante o dia do Demo Day, de modo que os visitantes pudessem ver a galeria sendo atualizada ao longo do evento. Se as imagens fossem escritas diretamente no código HTML, usando uma tag <img> para cada foto, eu teria que subir o arquivo e editar o código do site, escrevendo uma <img> nova para cada arquivo, repetindo isso diversas vezes durante o evento, o que não seria ideal. Nessa parte entra o tutorial: como ele usa Javascript para adicionar as imagens na página, ele possibilita que eu apenas envie os arquivos de foto para o servidor do site diretamente do tablet, enquanto o Javascript fica responsável por adicioná-los na página ao longo do dia.</p>
+                    <p>O código do site está disponível no <a target="_blank" class="texto-azul" href="https://github.com/Feliperpvieira/rePraca/tree/gh-pages/demoday/galeria">GitHub</a>.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/demo-02.png" alt="site galeria">
+                            <figcaption>Site com a galeria de praças.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Por fim, a última etapa de preparo para a exposição foi a criação de uma prancha sobre o projeto. Aqui, a proposta foi de fazer um mini-tutorial, em uma folha A4, para servir de guia aos usuários que chegassem na mesa durante minha ausência.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/demo-03.jpg" alt="guia impresso">
+                            <figcaption>Prancha A4 feita para o Demo Day.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Os arquivos instaláveis do aplicativo para Android estão disponíveis para download: <a target="_blank" class="texto-azul" href="https://github.com/Feliperpvieira/rePraca/releases/tag/v0.2.0-beta">https://github.com/Feliperpvieira/rePraca/releases/tag/v0.2.0-beta</a></p>
+                    <p>O site com a galeria de todas as praças imaginadas pode ser acessado em: <a class="texto-azul" href="demoday/galeria/index.html">https://feliperpv.com/repraca/demoday/galeria/</a></p>
+                    <p>Além disso, também está disponível uma versão web, acessível pelo computador, do rePraça, que pode ser acessada <a class="texto-azul" href="demoday/web/index.html">neste link</a>. Vale ressaltar que, como o foco do aplicativo são plataformas mobile, com telas de toque, essa versão para computadores é apenas demonstrativa e não deve ser usada para avaliar a experiência final. O uso de mouse e teclado gera alguns problemas que não ocorrem no celular, como a velocidade baixa da rolagem das telas, interferência entre navegação na interface e movimentação da câmera, entre outras questões. De qualquer modo, a versão web é uma ótima maneira de ter uma percepção geral de como o projeto funciona sem nenhum download.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/demo-04.jpg" alt="mesa">
+                            <figcaption>Mesa de exposição do projeto rePraça.</figcaption>
+                        </figure>
+                    </div>
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/demo-05.png" alt="usuario">
+                            <figcaption>Visitante usando o projeto. No computador é possível ver a galeria com todas as praças.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Durante a exposição, diversos usuários começaram a posicionar objetos apenas na área bege, entendendo que os jardins, verdes, não estavam disponíveis. Posteriormente, alguns deles perceberam sozinhos que também dava para posicionar itens na parte de grama, enquanto outros só repararam nisso ao olhar para a galeria de praças e ver que os demais usuários tinham usado todo o terreno e não só a parte de areia.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="demoday/galeria/images/praca_BaraoDeCorumba-topo (13).png" alt="usuario">
+                            <figcaption>Uma das praças com objetos apenas na área bege.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Isso mostra a importância da galeria de praças como impulsionador do processo criativo. Apenas a possibilidade de ver, brevemente, ideias daqueles que usaram antes o aplicativo já foi suficiente para despertar novas propostas pelos visitantes seguintes.</p>
+                    <p>Ao longo de toda a manhã, nenhuma pessoa que eu tenha visto leu a prancha com o mini guia de como usar o aplicativo. Algumas dúvidas surgiram durante o uso, mas quase todas foram respondidas pelos próprios usuários ao continuar experimentando a plataforma. Além disso, nenhuma pessoa clicou no símbolo de informações, nem para ler os dados sobre a praça nem para ler sobre o aplicativo. Acredito que isso indique que a interface alcançou um nível satisfatório de clareza, tendo sido explorada de forma intuitiva por todos que a testaram.</p>
+                    <p>No rePraça, ao selecionar um objeto que já está posicionado, aparecem dois botões na parte inferior: o de lápis, que permite editar sua posição, e o botão com o nome do item, que, na teoria, permitiria que o usuário abrisse a ficha de informações da mobília.</p>
+                    <p>Entretanto, essa função não ficou pronta a tempo e, ao ser clicado, o botão não faz nada. Mesmo assim, isso não gerou problemas pois nenhuma pessoa tentou usar essa função durante todos os testes, o que mostra que ela talvez não seja desejada ou sua utilidade não seja tão grande quanto eu acreditava que seria.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="img/relatorio/demo-06.jpeg" alt="botoes">
+                            <figcaption>Botões na parte inferior da tela ao selecionar um objeto.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Nas impressões positivas, a mudança de ângulo de câmera e de iluminação entre dia e noite foram muito elogiadas pelos visitantes. Muitos deles não esperavam que essas funções existissem e ficaram positivamente surpreendidos ao ver as animações acontecendo. Vários usaram o momento noturno para posicionar os postes na cena.</p>
+                    <p>Por fim, foi interessante perceber como algumas pessoas transformaram o ato de montar a praça em uma brincadeira. A praça a seguir, por exemplo, foi feita por uma dupla, que ria e brincava entre si enquanto montava um exército de estátuas.</p>
+
+                    <div class="image-gallery single-image">
+                        <figure>
+                            <img src="demoday/galeria/images/praca_BaraoDeCorumba-topo (6).png" alt="usuario">
+                            <figcaption>Grupo de estátuas encara a cesta de basquete.</figcaption>
+                        </figure>
+                    </div>
+
+                    <p>Com pouco mais de vinte praças montadas ao longo do Demo Day, a visão geral dos usuários foi positiva e não apareceu nenhum problema grande ou marcante. As funções de mudar câmera e iluminação geraram uma boa surpresa nos usuários e as peças do mobiliário foram elogiadas pelo visual. Algumas dúvidas e pedidos de ajustes na interface foram feitos, mas foram apenas isso: pequenos ajustes para deixar as telas ainda mais claras. No geral, o resultado foi extremamente satisfatório, tendo sido possível obter feedback e validado o interesse do público pelas ideias da plataforma.</p>
+                    <p>Confira todas as 22 praças imaginadas durante o Demo Day na <a class="texto-azul" href="demoday/galeria/index.html">Galeria de Praças</a></p>
+
+                </section>
+                
+                <section id="conclusao">
+                    <h2>Conclusão</h2>
+                    <p>Assim, chega ao fim todo o ciclo de projeto que foi desenvolvido ao longo do ano.</p>
+                    <p>Na pesquisa inicial, um dos primeiros trabalhos analisados foi a obra <i>I Wish This Was</i>, da artista Candy Chang. A obra chamou atenção principalmente pela visualização dos dados obtidos em uma grid de adesivos que, ao mesmo tempo que respeitava as imaginações individuais, também as reunia em uma única visualização. Isso faz com que qualquer pessoa possa ver de forma geral o todo, porém continue sendo capaz de analisar a fundo cada ideia em particular.</p>
+                    <p>Essa proposta foi transportada com sucesso para o projeto aqui descrito, com o uso da galeria de praças sendo utilizado para o mesmo ideal: reunir as individualidades e expor as imaginações como inspiração para os demais usuários. Essa vontade foi também comprovada durante o Demo Day, quando diversos visitantes tiveram novas ideias justamente ao olharem a galeria de praças.</p>
+
+                    <div class="image-gallery">
+                        <figure>
+                            <img src="img/relatorio/i-wish-this-was-mural.jpg" alt="Painel da obra I wish this was">
+                        </figure>
+                        <figure>
+                            <img src="img/relatorio/demo-02.png" alt="Tela da galeria de praças do projeto">
+                        </figure>
+                        <figcaption>Obra da Candy Chang e galeria de praças lado a lado.</figcaption>
+
+                        <p>Com os resultados obtidos no Demo Day, é possível também constatar que o projeto obteve sucesso no tema de incentivar a imaginação das pessoas. Por diversas vezes os visitantes brincaram com as possibilidades dos objetos na praça, tornando a tarefa de imaginar o espaço em uma atividade lúdica.</p>
+                        <p>A praça, que por muitas vezes é tratada apenas como um ambiente que está ali, no nosso cotidiano, virou personagem central de uma experiência que permite questionar o formato das coisas já existentes. Durante os testes ficou claro como essa proposta foi bem aproveitada pelos usuários, que exploraram a criatividade e formaram diversas combinações de objetos que, normalmente, não são vistas nos espaços reais. Não há como saber se esse questionamento dos formatos vai ser levado para frente por alguma pessoa, gerando reflexões mais profundas sobre o tópico, ou se ficará apenas na brincadeira do momento, sem resultar em grandes questionamentos. No entanto, esse ambiente virtual dá lugar à liberdade criativa e traz resultados concretos: as fotos das praças imaginadas. Além disso, também garante que os jogadores se sintam livres o suficiente para testar e experimentar novas combinações que, se não forem práticas, seriam no mínimo divertidas de serem vistas no mundo real.</p>
+                        <p>Pessoalmente, acredito que essa é a principal conquista do projeto: permitir que o cenário real e burocrático do planejamento urbano possa ser levado de forma divertida, em uma brincadeira que traz reflexões e novas propostas de uso para os espaços públicos trabalhados.</p>
+                        <p>Também são nessas novas propostas que vive um outro ponto alto do trabalho: a capacidade de gerar ideias para o planejamento urbano de forma colaborativa. Ao gerar os arquivos finalizados de cada praça imaginada, o que estamos produzindo na verdade é uma grande base de dados do interesse da população quanto ao uso daquele espaço. Se a maior parte das pessoas criar um parquinho infantil em uma praça que nem sequer brinquedos possui, por exemplo, esse fato pode indicar uma demanda reprimida por itens infantis naquela região. É possível então usar essas informações para estudos mais aprofundados, gerando sugestões ao poder público quanto a reformas e propostas de melhorias para as praças da cidade.</p>
+
+                        <div class="subtitulo-pracas single-subtitle">
+                            <h3 class="numeracao"><b>Para o futuro</b></h3>
+                        </div>
+
+                        <p>Um desenvolvimento futuro do rePraça teria como prioridade atender o feedback obtido durante os testes, como, por exemplo, o de possibilitar que o painel de informações seja minimizado enquanto navega pela grid de objetos. Além disso, seria necessário também modelar e adicionar mais itens de mobiliário, expandindo as possibilidades e dando maior escolha aos usuários.</p>
+                        <p>Durante o Demo Day, a montagem da galeria de praças foi feita de forma manual. Cada vez que uma pessoa terminava de montar sua praça, eu ia até o tablet e enviava cada arquivo das imagens produzidas ao site. No futuro, para o rePraça ser publicado em uma loja de aplicativos, sendo instalado em diversos aparelhos diferentes e fora do meu controle, um ponto crucial seria a conexão da plataforma com um banco de dados virtual, de modo a poder receber as informações e imagens das praças imaginadas vindas de cada aparelho remotamente.</p>
+                    </div>
+
+
+                </section>
+
+                <section class="repraca-def">
+                    <div class="logo-3r">
+                        <img src="img/repraca-icone.png" width="178" alt="Ícone do aplicativo rePraça">
+                        <div>
+                            <h3><b><span class="texto-azul">Repense</span>,</b></h3>
+                            <h3><b><span class="texto-azul">reimagine</span>,</b></h3>
+                            <h3 class="texto-azul"><b>rePraça</b></h3>
+                        </div>
+                    </div>
+
+                    <a href='https://play.google.com/store/apps/details?id=com.frpv.rePraca'>
+                        <img width="200" alt='Disponível no Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png'/>
+                    </a>
+                </section>
+                
+            </div>
+            
+
+    
+        
+
+            <footer> 
+                <a href="https://feliperpv.com"><img src="https://feliperpv.com/img/frpv-logo.svg" width="134" alt="frpv logo"></a>
+
+                <div class="contato">
+                    <p>Entre em contato:</p>
+                    <a href="mailto:repraca@feliperpv.com">repraca@feliperpv.com</a>
+                </div>
+
+                <div class="termos-legais">
+                    <p>© 2023 rePraça - Todos os direitos reservados</p>
+                    <a href="privacidade.html">Política de Privacidade</a>
+                    <p class="github">Código fonte disponível no <a href="https://github.com/Feliperpvieira/rePraca">Github</a></p>
+                    <p>Google Play e o logotipo do Google Play são marcas registradas da Google LLC.</p>
+                </div>       
+            </footer>
+       </main>
+    </body>
+</html>
