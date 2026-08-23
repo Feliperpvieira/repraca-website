@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/layout.astro';
+import Download from '../components/logo-download.astro';
 ---
 
 <Layout
@@ -18,18 +19,16 @@ import Layout from '../layouts/layout.astro';
 
                 <h1 class="texto-azul">Erro 404</h1>
 
-                <h2 class="texto-marrom" style="text-align: center; margin-top: 10px;">Essa praça foi imaginada em outro lugar :(</h2>
+                <h2 class="texto-marrom" style="text-align: center; margin-top: 10px;">Esta praça foi imaginada em outro lugar :(</h2>
 
                 <p class="texto-centro" style="margin: 32px 0 72px 0; font-size: 1.2rem;"><a class="texto-azul" href="/">Voltar para a tela inicial</a></p>
             </section>
 
-            <p class="texto-centro">Acredita que a aparição dessa página é um erro?</p>
+            <p class="texto-centro">Acredita que este erro não deveria ter ocorrido?</p>
             <p class="texto-centro">Entre em contacto pelo <a class="texto-azul" href="mailto:repraca@feliperpv.com">repraca@feliperpv.com</a></p>
     
             
-            <a class="btn-play" href='https://play.google.com/store/apps/details?id=com.frpv.rePraca'>
-                <img width="200" alt='Disponível no Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png'/>
-            </a>
+            <Download />
 
         </main>
 </Layout>
