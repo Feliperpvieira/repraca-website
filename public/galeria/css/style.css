@@ -15,13 +15,6 @@ body {
     font-family: 'Cabin', sans-serif;
 }
 
-header { 
-    background-color: var(--azul); 
-    border-radius: 0 0 30px 30px; 
-    text-align: 
-    center; padding: 20px; 
-}
-
 .img-logo { 
     max-width: 100%; 
     height: auto; 
@@ -572,6 +565,43 @@ header {
 
 .radar-container canvas {
     max-width: 100%;
+}
+
+/* lista de mudanças por item no cabeçalho de info de cada praça */
+.toggle-lista-itens {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.75rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: var(--bege);
+}
+
+.toggle-seta {
+    transition: transform 0.2s ease;
+}
+
+.toggle-lista-itens[aria-expanded="true"] .toggle-seta {
+    transform: rotate(180deg);
+}
+
+/* truque de grid pra animar altura sem JS calculando pixels */
+.lista-itens-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.lista-itens-wrapper.aberto {
+    grid-template-rows: 1fr;
+}
+
+.lista-itens-wrapper > .lista-categorias {
+    overflow: hidden;
+    min-height: 0;
 }
 
 /* Lista comparativa por item, dentro de cada categoria */

@@ -77,7 +77,20 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
             <div class="radar-container">
                 <canvas id="radarComparativoPraca"></canvas>
             </div>
-            <div id="pracaListaItens" class="lista-categorias"></div>
+
+            <button
+                type="button"
+                class="toggle-lista-itens"
+                aria-expanded="false"
+                aria-controls="pracaListaItensWrapper"
+            >
+                <span class="toggle-texto">Ver mudanças por item</span>
+                <span class="toggle-seta" aria-hidden="true">▾</span>
+            </button>
+
+            <div id="pracaListaItensWrapper" class="lista-itens-wrapper">
+                <div id="pracaListaItens" class="lista-categorias"></div>
+            </div>
         </div>
     </section>
 
@@ -109,7 +122,7 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
                 <button>
                     <selectedcontent></selectedcontent>
                 </button>
-                <option value="todos">Qualquer item</option>
+                <option value="todos">Todos</option>
             </select>
         </div>
     </section>
@@ -120,3 +133,17 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
     <!-- OBSERVADOR PARA O SCROLL INFINITO -->
     <div id="fim-da-pagina" class="loading-spinner">A carregar mais praças...</div>
 </GaleriaLayout>
+
+<script>
+  const btnToggle = document.querySelector<HTMLButtonElement>('.toggle-lista-itens');
+  const wrapper = document.getElementById('pracaListaItensWrapper');
+
+  btnToggle?.addEventListener('click', () => {
+    const expandido = btnToggle.getAttribute('aria-expanded') === 'true';
+    btnToggle.setAttribute('aria-expanded', String(!expandido));
+    wrapper?.classList.toggle('aberto', !expandido);
+    btnToggle.querySelector('.toggle-texto')!.textContent = expandido
+      ? 'Ver mudanças por item'
+      : 'Ocultar mudanças por item';
+  });
+</script>
