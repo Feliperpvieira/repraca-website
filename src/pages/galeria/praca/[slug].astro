@@ -17,17 +17,18 @@ import fs from "node:fs";
 import path from "node:path";
 import GaleriaLayout from "../../../layouts/GaleriaLayout.astro";
 
-const PASTA_PRACAS = path.resolve("./public/galeria/dados/pracas");
-
 export async function getStaticPaths() {
-    const arquivos = fs.readdirSync(PASTA_PRACAS).filter(f => f.endsWith(".json"));
+  const PASTA_PRACAS = path.resolve("./public/galeria/dados/pracas");
 
-    return arquivos.map(arquivo => {
-        const slug = arquivo.replace(/\.json$/, "");
-        const dados = JSON.parse(fs.readFileSync(path.join(PASTA_PRACAS, arquivo), "utf-8"));
-        return { params: { slug }, props: { slug, dados } };
-    });
+  const arquivos = fs.readdirSync(PASTA_PRACAS).filter(arquivo => arquivo.endsWith('.json'));
+
+  return arquivos.map(arquivo => {
+    const slug = arquivo.replace(/\.json$/, '');
+    const dados = JSON.parse(fs.readFileSync(path.join(PASTA_PRACAS, arquivo), 'utf-8'));
+    return { params: { slug }, props: { slug, dados } };
+  });
 }
+
 
 const { slug, dados } = Astro.props;
 const itensOriginais = dados.itens || {};
@@ -39,6 +40,11 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
     canonical={`https://repraca.feliperpv.com/galeria/praca/${slug}/`}
     pracaSlug={slug}
     pracaNome={dados.nome}
+
+    stylesheets={[
+        "/css/index.css",
+        "/css/privacidade.css"
+    ]}
 >
     <!-- Itens originais embutidos pro app.js montar o radar comparativo,
          sem precisar de um fetch extra (os dados já estão aqui no HTML). -->
