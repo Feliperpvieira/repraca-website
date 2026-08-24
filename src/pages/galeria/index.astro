@@ -1,51 +1,43 @@
 ---
 // src/pages/galeria/index.astro
+//
+// A "central": só leva pra cada praça-base. Não mostra mais uma grade
+// geral com criações de TODAS as praças misturadas — isso virou papel
+// de cada página /galeria/praca/<slug>/, que já filtra pela cena certa
+// do Unity. Conteúdo daqui pra frente ainda em aberto (talvez destaques,
+// contagem total, etc.) — por enquanto é só o essencial: a lista.
+//
+// A lista é montada a partir dos mesmos arquivos que geram as páginas
+// de praça (getStaticPaths em praca/[slug].astro), pra nunca ficar
+// desatualizada — adicionar um .json novo já basta, sem editar aqui.
+
+import fs from "node:fs";
+import path from "node:path";
 import GaleriaLayout from "../../layouts/GaleriaLayout.astro";
+
+const PASTA_PRACAS = path.resolve("./public/galeria/dados/pracas");
+
+const pracas = fs
+    .readdirSync(PASTA_PRACAS)
+    .filter(f => f.endsWith(".json"))
+    .map(arquivo => {
+        const slug = arquivo.replace(/\.json$/, "");
+        const dados = JSON.parse(fs.readFileSync(path.join(PASTA_PRACAS, arquivo), "utf-8"));
+        return { slug, nome: dados.nome || slug };
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
 ---
-<GaleriaLayout title="rePraça - Galeria"
-title="rePraça — Galeria da Praça"
-    description="Galeria da praça X."
-    canonical="https://repraca.feliperpv.com/galeria/praca/"
-    stylesheets={[
-        "/css/index.css",
-        "/css/privacidade.css"
-    ]}>
-    <!-- BARRA DE FILTROS -->
-    <section class="filtros-container">
-        <div class="filtro-grupo">
-            <label for="filtroOrdem">Ordenar por:</label>
-            <select id="filtroOrdem">
-                <option value="recentes">Mais Recentes</option>
-                <option value="antigas">Mais Antigas</option>
-                <option value="likes">Mais Likes</option>
-            </select>
-        </div>
-
-        <div class="filtro-grupo">
-            <label for="filtroItens">Mínimo de itens:</label>
-            <select id="filtroItens">
-                <option value="3" selected>Pelo menos 3 (Ocultar vazias)</option>
-                <option value="10">Mais de 10 itens</option>
-                <option value="0">Mostrar Todas</option>
-            </select>
-        </div>
-
-        <div class="filtro-grupo">
-            <label for="filtroEspecifico">Contém o item:</label>
-            <select id="filtroEspecifico">
-                <button>
-                    <selectedcontent></selectedcontent>
-                </button>
-                <option value="todos">Qualquer item</option>
-                <!-- As demais opções são preenchidas pelo app.js, a partir
-                     do mesmo dicionário usado pros ícones (iconePorNome) -->
-            </select>
-        </div>
+<GaleriaLayout
+    title="rePraça — Galeria"
+    ogDescription="Veja e crie praças reimaginadas no rePraça."
+    canonical="https://repraca.feliperpv.com/galeria/"
+>
+    <section class="praca-lista">
+        <h2>Praças</h2>
+        <ul>
+            {pracas.map(praca => (
+                <li><a href={`/galeria/praca/${praca.slug}/`}>{praca.nome}</a></li>
+            ))}
+        </ul>
     </section>
-
-    <!-- A GRID ONDE OS CARDS VÃO APARECER -->
-    <section id="gallery" class="grid-galeria"></section>
-
-    <!-- OBSERVADOR PARA O SCROLL INFINITO -->
-    <div id="fim-da-pagina" class="loading-spinner">A carregar mais praças...</div>
 </GaleriaLayout>

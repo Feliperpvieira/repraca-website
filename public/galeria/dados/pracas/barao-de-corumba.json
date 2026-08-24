@@ -1,6 +1,8 @@
 {
     "nome": "Barão de Corumbá",
 
+    "descricao": "<p>Escreva aqui a apresentação da praça original — onde fica, quando foi feita, o que ela tem hoje. HTML normal funciona: parágrafos, <b>negrito</b>, etc.</p>",
+
     "itens": {
         "Banco de concreto": 2,
         "Mesa de xadrez": 3,

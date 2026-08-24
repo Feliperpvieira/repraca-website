@@ -13,17 +13,22 @@ const {
     title = "rePraça — reimagine sua praça",
     ogDescription = "Veja e crie praças reimaginadas no rePraça.",
     ogImage = "https://repraca.feliperpv.com/img/repraca-logo-horiz.png",
-    description,
+    description = ogDescription,
     canonical,
     stylesheet,
-    stylesheets = []
+    stylesheets = [],
+    // Só preenchidos pela página de uma praça específica
+    // (src/pages/galeria/praca/[slug].astro). Viram data-attributes no
+    // <body> pra o app.js ler sem precisar reler a URL — ver seção 1e
+    // do app.js.
+    pracaSlug,
+    pracaNome,
 } = Astro.props;
 
 const cssFiles = [
     ...(stylesheet ? [stylesheet] : []),
     ...stylesheets
 ];
-
 ---
 
 <!DOCTYPE html>
@@ -32,33 +37,32 @@ const cssFiles = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {canonical && <link rel="canonical" href={canonical} />}
 
-    <!-- Fallback genérico — a página de uma praça específica sobrescreve
-         isto via JS (document.title, e futuramente as próprias meta tags)
-         assim que o JSON da praça-base carrega. -->
+    <!-- Fallback genérico — a página de uma praça específica passa seu
+         próprio title/description/canonical/ogImage já prontos. -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={ogDescription} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:type" content="website" />
+    {canonical && <meta property="og:url" content={canonical} />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&display=swap" rel="stylesheet" />
 
-    <!-- CSS adicional -->
+    <!-- CSS adicional (páginas fora da galeria) -->
     {cssFiles.map((css: string) => (
         <link rel="stylesheet" href={css}>
     ))}
-    
+
     <!-- Caminho ABSOLUTO de propósito: index e praça ficam em profundidades
          de URL diferentes (/galeria/ vs /galeria/praca/<slug>/), então um
          caminho relativo (ex: "css/style.css") quebraria numa das duas. -->
     <link rel="stylesheet" href="/galeria/css/style.css" />
-    
-    
-
 </head>
-<body>
+<body data-praca-slug={pracaSlug} data-praca-nome={pracaNome}>
     <Header />
 
     <main class="container">
@@ -145,9 +149,9 @@ const cssFiles = [
     </div>
 
     <!-- Import do Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" is:inline></script>
     <!-- Chart.Js pras tabelas no popup de cada praça -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4" is:inline></script>
     <!-- Caminho absoluto pelo mesmo motivo do CSS acima -->
     <script src="/galeria/js/app.js" is:inline></script>
 </body>
