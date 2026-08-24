@@ -1,0 +1,149 @@
+---
+// src/pages/galeria/praca/[slug].astro
+//
+// Gera uma página ESTÁTICA por praça-base, uma pra cada arquivo em
+// public/galeria/dados/pracas/*.json — no build, não em runtime. Por
+// isso o nome, a descrição e a contagem de itens originais já saem
+// prontos no HTML (funcionam até com JS desligado); só a média das
+// reimaginações e a grade de cards continuam dependendo do Supabase
+// (isso sim é dado vivo, não dá pra "travar" no build).
+//
+// Os arquivos continuam em public/ (não em src/data/) de propósito: o
+// popup de cada criação individual também busca esse mesmo JSON em
+// runtime via fetch (pra comparar UMA reimaginação com o original) — não
+// faz sentido manter os dados duplicados em dois lugares.
+
+import fs from "node:fs";
+import path from "node:path";
+import GaleriaLayout from "../../../layouts/GaleriaLayout.astro";
+
+export async function getStaticPaths() {
+  const PASTA_PRACAS = path.resolve("./public/galeria/dados/pracas");
+
+  const arquivos = fs.readdirSync(PASTA_PRACAS).filter(arquivo => arquivo.endsWith('.json'));
+
+  return arquivos.map(arquivo => {
+    const slug = arquivo.replace(/\.json$/, '');
+    const dados = JSON.parse(fs.readFileSync(path.join(PASTA_PRACAS, arquivo), 'utf-8'));
+    return { params: { slug }, props: { slug, dados } };
+  });
+}
+
+
+const { slug, dados } = Astro.props;
+const itensOriginais = dados.itens || {};
+const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => soma + qtd, 0);
+---
+<GaleriaLayout
+    title={`${dados.nome} — rePraça`}
+    ogDescription={`Veja as reimaginações da praça ${dados.nome} no rePraça.`}
+    canonical={`https://repraca.feliperpv.com/galeria/praca/${slug}/`}
+    pracaSlug={slug}
+    pracaNome={dados.nome}
+
+    stylesheets={[
+        "/css/index.css",
+        "/css/privacidade.css"
+    ]}
+>
+    <!-- Itens originais embutidos pro app.js montar o radar comparativo,
+         sem precisar de um fetch extra (os dados já estão aqui no HTML). -->
+    <script type="application/json" id="dados-itens-originais" set:html={JSON.stringify(itensOriginais)} />
+
+    <!-- CABEÇALHO DA PRAÇA-BASE — nome, descrição e contagem original
+         renderizados aqui mesmo pelo Astro (funcionam sem JS). Só os
+         dois stat-boxes de baixo (média/reimaginações) e o radar
+         dependem do Supabase, preenchidos pelo app.js depois. -->
+    <section class="praca-cabecalho">
+        <h1>{dados.nome}</h1>
+        {dados.descricao && <div class="praca-intro" set:html={dados.descricao} />}
+
+        <div class="estatisticas-praca">
+            <div class="stat-box">
+                <span class="stat-numero">{totalItensOriginais}</span>
+                <span class="stat-label">Itens na praça original</span>
+            </div>
+            <div class="stat-box">
+                <span id="statMedia" class="stat-numero">-</span>
+                <span class="stat-label">Média por reimaginação</span>
+            </div>
+            <div class="stat-box">
+                <span id="statTotal" class="stat-numero">-</span>
+                <span class="stat-label">Reimaginações</span>
+            </div>
+        </div>
+
+        <div class="praca-comparativo">
+            <div class="radar-container">
+                <canvas id="radarComparativoPraca"></canvas>
+            </div>
+
+            <button
+                type="button"
+                class="toggle-lista-itens"
+                aria-expanded="false"
+                aria-controls="pracaListaItensWrapper"
+            >
+                <span class="toggle-texto">Ver mudanças por item</span>
+                <span class="toggle-seta" aria-hidden="true">▾</span>
+            </button>
+
+            <div id="pracaListaItensWrapper" class="lista-itens-wrapper">
+                <div id="pracaListaItens" class="lista-categorias"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BARRA DE FILTROS — filtra só dentro das reimaginações desta
+         praça-base (carregarPracas() em app.js usa data-praca-nome
+         do <body> pra isso). -->
+    <section class="filtros-container">
+        <div class="filtro-grupo">
+            <label for="filtroOrdem">Ordenar por:</label>
+            <select id="filtroOrdem">
+                <option value="recentes">Mais Recentes</option>
+                <option value="antigas">Mais Antigas</option>
+                <option value="likes">Mais Likes</option>
+            </select>
+        </div>
+
+        <div class="filtro-grupo">
+            <label for="filtroItens">Mínimo de itens:</label>
+            <select id="filtroItens">
+                <option value="3" selected>Pelo menos 3 (Ocultar vazias)</option>
+                <option value="10">Mais de 10 itens</option>
+                <option value="0">Mostrar Todas</option>
+            </select>
+        </div>
+
+        <div class="filtro-grupo">
+            <label for="filtroEspecifico">Contém o item:</label>
+            <select id="filtroEspecifico">
+                <button>
+                    <selectedcontent></selectedcontent>
+                </button>
+                <option value="todos">Todos</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- A GRID ONDE OS CARDS VÃO APARECER — só as reimaginações DESTA praça -->
+    <section id="gallery" class="grid-galeria"></section>
+
+    <!-- OBSERVADOR PARA O SCROLL INFINITO -->
+    <div id="fim-da-pagina" class="loading-spinner">A carregar mais praças...</div>
+</GaleriaLayout>
+
+<script>
+  const btnToggle = document.querySelector<HTMLButtonElement>('.toggle-lista-itens');
+  const wrapper = document.getElementById('pracaListaItensWrapper');
+
+  btnToggle?.addEventListener('click', () => {
+    const expandido = btnToggle.getAttribute('aria-expanded') === 'true';
+    btnToggle.setAttribute('aria-expanded', String(!expandido));
+    wrapper?.classList.toggle('aberto', !expandido);
+    btnToggle.querySelector('.toggle-texto')!.textContent = expandido
+      ? 'Ver mudanças por item'
+      : 'Ocultar mudanças por item';
+  });
+</script>

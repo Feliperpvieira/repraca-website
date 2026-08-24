@@ -1,0 +1,48 @@
+---
+// src/pages/galeria/index.astro
+//
+// A "central": só leva pra cada praça-base. Não mostra mais uma grade
+// geral com criações de TODAS as praças misturadas — isso virou papel
+// de cada página /galeria/praca/<slug>/, que já filtra pela cena certa
+// do Unity. Conteúdo daqui pra frente ainda em aberto (talvez destaques,
+// contagem total, etc.) — por enquanto é só o essencial: a lista.
+//
+// A lista é montada a partir dos mesmos arquivos que geram as páginas
+// de praça (getStaticPaths em praca/[slug].astro), pra nunca ficar
+// desatualizada — adicionar um .json novo já basta, sem editar aqui.
+
+import fs from "node:fs";
+import path from "node:path";
+import GaleriaLayout from "../../layouts/GaleriaLayout.astro";
+
+const PASTA_PRACAS = path.resolve("./public/galeria/dados/pracas");
+
+const pracas = fs
+    .readdirSync(PASTA_PRACAS)
+    .filter(f => f.endsWith(".json"))
+    .map(arquivo => {
+        const slug = arquivo.replace(/\.json$/, "");
+        const dados = JSON.parse(fs.readFileSync(path.join(PASTA_PRACAS, arquivo), "utf-8"));
+        return { slug, nome: dados.nome || slug };
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
+---
+<GaleriaLayout
+    title="rePraça — Galeria"
+    ogDescription="Veja e crie praças reimaginadas no rePraça."
+    canonical="https://repraca.feliperpv.com/galeria/"
+
+    stylesheets={[
+        "/css/index.css",
+        "/css/privacidade.css"
+    ]}
+>
+    <section class="praca-lista">
+        <h2>Praças</h2>
+        <ul>
+            {pracas.map(praca => (
+                <li><a href={`/galeria/praca/${praca.slug}/`}>{praca.nome}</a></li>
+            ))}
+        </ul>
+    </section>
+</GaleriaLayout>

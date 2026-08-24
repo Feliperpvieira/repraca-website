@@ -15,13 +15,6 @@ body {
     font-family: 'Cabin', sans-serif;
 }
 
-header { 
-    background-color: var(--azul); 
-    border-radius: 0 0 30px 30px; 
-    text-align: 
-    center; padding: 20px; 
-}
-
 .img-logo { 
     max-width: 100%; 
     height: auto; 
@@ -574,6 +567,43 @@ header {
     max-width: 100%;
 }
 
+/* lista de mudanças por item no cabeçalho de info de cada praça */
+.toggle-lista-itens {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.75rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: var(--bege);
+}
+
+.toggle-seta {
+    transition: transform 0.2s ease;
+}
+
+.toggle-lista-itens[aria-expanded="true"] .toggle-seta {
+    transform: rotate(180deg);
+}
+
+/* truque de grid pra animar altura sem JS calculando pixels */
+.lista-itens-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.lista-itens-wrapper.aberto {
+    grid-template-rows: 1fr;
+}
+
+.lista-itens-wrapper > .lista-categorias {
+    overflow: hidden;
+    min-height: 0;
+}
+
 /* Lista comparativa por item, dentro de cada categoria */
 .lista-comparativa {
     display: flex;
@@ -721,4 +751,126 @@ header {
     .tabs-conteudo { 
         overflow-y: visible; 
     }
+}
+
+/* ==========================================
+   CABEÇALHO DA PÁGINA DE UMA PRAÇA-BASE (praca.html)
+   ========================================== */
+
+.praca-cabecalho {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.praca-cabecalho h1 {
+    margin: 0 0 12px;
+    font-weight: normal;
+    color: var(--azul-marinho);
+}
+
+.praca-intro {
+    color: #444;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.praca-intro p {
+    margin-bottom: 10px;
+}
+
+.praca-intro p:last-child {
+    margin-bottom: 0;
+}
+
+.estatisticas-praca {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.estatisticas-praca .stat-box {
+    background: var(--bege);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    flex: 1;
+}
+
+.estatisticas-praca .stat-numero {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--azul-marinho);
+}
+
+.estatisticas-praca .stat-label {
+    font-size: 0.75rem;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* O radar (desenharRadar) e a lista comparativa (criarListaComparativa)
+   usam cores pensadas pra ficar em cima do fundo azul-marinho — é o mesmo
+   visual de dentro do popup de cada praça — então aqui a gente recria
+   esse fundo escuro pra combinar, sem precisar duplicar nenhum CSS deles. */
+.praca-comparativo {
+    background: var(--azul-marinho);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .estatisticas-praca {
+        flex-wrap: wrap;
+    }
+
+    .estatisticas-praca .stat-box {
+        flex: 1 1 calc(50% - 8px);
+    }
+}
+
+/* ==========================================
+   LISTA DE PRAÇAS-BASE (hub da galeria geral)
+   ========================================== */
+
+.praca-lista {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.praca-lista h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--azul-marinho);
+    margin-bottom: 10px;
+}
+
+.praca-lista ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.praca-lista a {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: var(--bege);
+    color: var(--azul-marinho);
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.praca-lista a:hover {
+    background: var(--azul);
+    color: white;
 }

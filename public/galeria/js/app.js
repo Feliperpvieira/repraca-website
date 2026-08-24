@@ -18,7 +18,7 @@ let catalogoItens = {};
 // Carrega o catálogo UMA VEZ quando o site inicia.
 async function carregarCatalogoItens() {
     try {
-        const resposta = await fetch("dados/itens.json");
+        const resposta = await fetch("/galeria/dados/itens.json");
         if (!resposta.ok) throw new Error("Não foi possível carregar dados/itens.json");
         catalogoItens = await resposta.json();
     } catch (erro) {
@@ -27,7 +27,7 @@ async function carregarCatalogoItens() {
 }
 
 function iconeParaItem(nome) {
-    return "icones/" + (catalogoItens[nome]?.icone || "generico.png");
+    return "/galeria/icones/" + (catalogoItens[nome]?.icone || "generico.png");
 }
 
 function categoriaDoItem(nome) {
@@ -37,6 +37,7 @@ function categoriaDoItem(nome) {
 // Preenche o <select id="filtroEspecifico"> a partir do catálogo carregado.
 function preencherFiltroDeItens() {
     const select = document.getElementById("filtroEspecifico");
+    if (!select) return; // página sem grade de galeria (ex.: hub /galeria/)
 
     // Mantém a opção "todos" e limpa as demais caso seja chamada de novo.
     select.querySelectorAll("option:not([value='todos'])").forEach(opt => opt.remove());
@@ -84,7 +85,7 @@ async function carregarDadosDaPraca(nomeBase) {
     }
 
     try {
-        const resposta = await fetch("dados/pracas/" + arquivo);
+        const resposta = await fetch("/galeria/dados/pracas/" + arquivo);
 
         if (!resposta.ok) {
             console.warn("Não existe JSON para a praça:", nomeBase);
@@ -110,7 +111,11 @@ async function carregarDadosDaPraca(nomeBase) {
 // (0% a 100%). Praça original em terracota, praça imaginada em verde.
 // As categorias vêm do itens.json.
 
-let graficoRadar = null;
+// Um Chart.js por canvas — hoje só existe #radarPraca (dentro do popup),
+// mas a página de uma praça-base tem um segundo radar (#radarComparativoPraca)
+// comparando original vs. média de todas as reimaginações, então precisa
+// de mais de uma instância viva ao mesmo tempo.
+const graficosRadar = {};
 
 // Cores lidas do CSS uma única vez (o valor não muda em runtime).
 const coresGrafico = (() => {
@@ -172,10 +177,16 @@ function contarItensImaginados(itens) {
     return resultado;
 }
 
-function desenharRadar(dadosOriginais, dadosImaginados) {
-    const canvas = document.getElementById("radarPraca");
+function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
+    const {
+        canvasId = "radarPraca",
+        labelOriginal = "Praça original",
+        labelComparacao = "Sua praça",
+    } = opcoes;
+
+    const canvas = document.getElementById(canvasId);
     if (!canvas) {
-        console.warn("Canvas #radarPraca não encontrado.");
+        console.warn(`Canvas #${canvasId} não encontrado.`);
         return;
     }
     if (typeof Chart === "undefined") {
@@ -183,9 +194,9 @@ function desenharRadar(dadosOriginais, dadosImaginados) {
         return;
     }
 
-    if (graficoRadar) {
-        graficoRadar.destroy();
-        graficoRadar = null;
+    if (graficosRadar[canvasId]) {
+        graficosRadar[canvasId].destroy();
+        delete graficosRadar[canvasId];
     }
 
     const categorias = [...new Set([
@@ -275,14 +286,14 @@ function desenharRadar(dadosOriginais, dadosImaginados) {
         },
     };
 
-    graficoRadar = new Chart(canvas, {
+    graficosRadar[canvasId] = new Chart(canvas, {
         plugins: [valoresColoridosPlugin],
         type: "radar",
         data: {
             labels: categorias,
             datasets: [
                 {
-                    label: "Praça original",
+                    label: labelOriginal,
                     data: categorias.map(c => percentuaisOriginais[c] || 0),
                     borderColor: corTerracota,
                     backgroundColor: "rgba(183, 111, 81, 0.14)",
@@ -293,7 +304,7 @@ function desenharRadar(dadosOriginais, dadosImaginados) {
                     pointHoverBorderColor: corBege,
                 },
                 {
-                    label: "Sua praça",
+                    label: labelComparacao,
                     data: categorias.map(c => percentuaisImaginados[c] || 0),
                     borderColor: corVerde,
                     backgroundColor: "rgba(152, 171, 86, 0.18)",
@@ -368,8 +379,12 @@ function desenharRadar(dadosOriginais, dadosImaginados) {
 
 // Lista comparativa por item, ex:
 // "Banco de Madeira — Na sua praça: 5, Original: 2, +3"
-function criarListaComparativa(dadosImaginados, dadosOriginais) {
-    const lista = document.getElementById("modalListaItens");
+// Reaproveitada tanto no popup (comparando 1 criação com o original) quanto
+// no cabeçalho da página de uma praça-base (comparando a MÉDIA com o original).
+function criarListaComparativa(dadosImaginados, dadosOriginais, opcoes = {}) {
+    const { containerId = "modalListaItens", rotuloComparacao = "Na sua praça" } = opcoes;
+
+    const lista = document.getElementById(containerId);
     if (!lista) return;
 
     lista.innerHTML = "";
@@ -416,7 +431,7 @@ function criarListaComparativa(dadosImaginados, dadosOriginais) {
                     <span>${nome}</span>
                 </div>
                 <div class="item-comparativo-dados">
-                    <span><small>Na sua praça</small><strong>${quantidadeAtual}</strong></span>
+                    <span><small>${rotuloComparacao}</small><strong>${quantidadeAtual}</strong></span>
                     <span><small>Original</small><strong>${quantidadeOriginal}</strong></span>
                     <span class="badge-diferenca ${classe}">${sinal}${diferenca}</span>
                 </div>
@@ -426,6 +441,108 @@ function criarListaComparativa(dadosImaginados, dadosOriginais) {
 
         grupo.appendChild(itensContainer);
         lista.appendChild(grupo);
+    });
+}
+
+// ==========================================
+// 1e. ESTATÍSTICAS AGREGADAS DA PÁGINA DE UMA PRAÇA-BASE
+// ==========================================
+// Título, descrição e "itens na praça original" agora são renderizados
+// direto pelo Astro em build-time (src/pages/galeria/praca/[slug].astro)
+// — funcionam até com JS desligado. O que sobra pra fazer aqui é só o que
+// depende de dado vivo no Supabase: média de itens de todas as
+// reimaginações, o radar comparativo, e a lista de itens da galeria
+// filtrada por essa praça (isso carregarPracas() já cuida via
+// nomeDaPracaAtual, lá embaixo).
+//
+// slug e nome vêm como data-attributes no <body>, escritos pelo Astro
+// (ver GaleriaLayout.astro); os itens originais (pro radar) vêm de um
+// <script type="application/json"> embutido pela própria página da praça.
+
+const slugPracaAtual = document.body.dataset.pracaSlug || null;
+let nomeDaPracaAtual = document.body.dataset.pracaNome || null;
+
+function itensOriginaisEmbutidos() {
+    const el = document.getElementById("dados-itens-originais");
+    if (!el) return {};
+    try {
+        return JSON.parse(el.textContent);
+    } catch (erro) {
+        console.warn("JSON de itens originais embutido na página é inválido:", erro);
+        return {};
+    }
+}
+
+async function carregarEstatisticasDaPraca(nomeDaPraca, itensOriginais) {
+    const { data, error } = await db
+        .from('city_creations')
+        .select('layout_data')
+        .eq('nome_da_cena', nomeDaPraca);
+
+    if (error) {
+        console.error("Erro ao buscar reimaginações da praça:", error);
+        return;
+    }
+
+    const totalReimaginacoes = data.length;
+    const itensOriginaisPorCategoria = organizarItensOriginais(itensOriginais || {});
+
+    // Soma os itens de TODAS as reimaginações por categoria/item. A % de
+    // cada categoria calculada em cima da SOMA é idêntica à calculada em
+    // cima da MÉDIA (dividir tudo pelo mesmo número não muda a proporção
+    // entre categorias) — então o radar usa a soma direto, sem precisar
+    // dividir por totalReimaginacoes.
+    const somaItensPorCategoria = {};
+    let somaTotalItens = 0;
+
+    data.forEach(linha => {
+        let itens = [];
+        try {
+            itens = JSON.parse(linha.layout_data)?.layoutDaPraca || [];
+        } catch (erro) {
+            console.warn("layout_data inválido numa criação, ignorando:", erro);
+        }
+
+        const porCategoria = contarItensImaginados(itens);
+        for (const categoria in porCategoria) {
+            if (!somaItensPorCategoria[categoria]) somaItensPorCategoria[categoria] = {};
+            for (const nome in porCategoria[categoria]) {
+                somaItensPorCategoria[categoria][nome] =
+                    (somaItensPorCategoria[categoria][nome] || 0) + porCategoria[categoria][nome];
+                somaTotalItens += porCategoria[categoria][nome];
+            }
+        }
+    });
+
+    const mediaTotalItens = totalReimaginacoes > 0 ? somaTotalItens / totalReimaginacoes : 0;
+
+    // --- Os dois números que dependem de dado vivo ---
+    const statMedia = document.getElementById("statMedia");
+    const statTotal = document.getElementById("statTotal");
+    if (statMedia) statMedia.innerText = mediaTotalItens.toFixed(1);
+    if (statTotal) statTotal.innerText = totalReimaginacoes;
+
+    // --- Radar: praça original vs. média de todas as reimaginações ---
+    desenharRadar(itensOriginaisPorCategoria, somaItensPorCategoria, {
+        canvasId: "radarComparativoPraca",
+        labelOriginal: "Praça original",
+        labelComparacao: "Média das reimaginações",
+    });
+
+    // --- Lista por item: original vs. média (arredondada pra 1 casa) ---
+    const mediaItensPorCategoria = {};
+    for (const categoria in somaItensPorCategoria) {
+        mediaItensPorCategoria[categoria] = {};
+        for (const nome in somaItensPorCategoria[categoria]) {
+            mediaItensPorCategoria[categoria][nome] = totalReimaginacoes > 0
+                ? Math.round((somaItensPorCategoria[categoria][nome] / totalReimaginacoes) * 10) / 10
+                : 0;
+        }
+    }
+
+    criarListaComparativa(mediaItensPorCategoria, itensOriginaisPorCategoria, {
+        containerId: "pracaListaItens",
+        rotuloComparacao: "Média",
     });
 }
 
@@ -444,9 +561,13 @@ const loader = document.getElementById("fim-da-pagina");
 
 async function carregarPracas() {
     if (carregando || chegouAoFim) return;
+
+    const elOrdem = document.getElementById("filtroOrdem");
+    if (!elOrdem) return; // página sem grade de galeria (ex.: hub /galeria/)
+
     carregando = true;
 
-    const ordem = document.getElementById("filtroOrdem").value;
+    const ordem = elOrdem.value;
     const minItens = parseInt(document.getElementById("filtroItens").value);
     const itemEspecifico = document.getElementById("filtroEspecifico").value;
 
@@ -465,6 +586,7 @@ async function carregarPracas() {
         : db.from('city_creations').select(colunas);
 
     query = query.gte('total_objects', minItens);
+    if (nomeDaPracaAtual) query = query.eq('nome_da_cena', nomeDaPracaAtual);
 
     if (ordem === "recentes") query = query.order('created_at', { ascending: false });
     if (ordem === "antigas") query = query.order('created_at', { ascending: true });
@@ -509,10 +631,13 @@ function desenharCards(pracas) {
 }
 
 // Dispara carregarPracas() quando o loader entra na tela (scroll infinito)
-const observer = new IntersectionObserver(entradas => {
-    if (entradas[0].isIntersecting) carregarPracas();
-});
-observer.observe(loader);
+// — só existe em páginas com grade de galeria (a hub /galeria/ não tem).
+if (loader) {
+    const observer = new IntersectionObserver(entradas => {
+        if (entradas[0].isIntersecting) carregarPracas();
+    });
+    observer.observe(loader);
+}
 
 // ==========================================
 // 3. RECARREGAR AO MUDAR OS FILTROS
@@ -526,9 +651,9 @@ function aplicarFiltros() {
     carregarPracas();
 }
 
-document.getElementById("filtroOrdem").addEventListener("change", aplicarFiltros);
-document.getElementById("filtroItens").addEventListener("change", aplicarFiltros);
-document.getElementById("filtroEspecifico").addEventListener("change", aplicarFiltros);
+document.getElementById("filtroOrdem")?.addEventListener("change", aplicarFiltros);
+document.getElementById("filtroItens")?.addEventListener("change", aplicarFiltros);
+document.getElementById("filtroEspecifico")?.addEventListener("change", aplicarFiltros);
 
 // ==========================================
 // 4. SISTEMA DE ROTEAMENTO POR QUERY STRING (?id=)
@@ -841,6 +966,11 @@ async function enviarLikeParaSupabase(id) {
 async function iniciarGaleria() {
     await carregarCatalogoItens();
     preencherFiltroDeItens();
+
+    if (slugPracaAtual && nomeDaPracaAtual) {
+        await carregarEstatisticasDaPraca(nomeDaPracaAtual, itensOriginaisEmbutidos());
+    }
+
     lidarComNavegacao();
     carregarPracas();
 }

@@ -1,51 +1,21 @@
-<!DOCTYPE html>
-<html lang="pt">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Relatório de pesquisa e desenvolvimento do projeto rePraça, com todas as etapas detalhadas desde as primeiras ideias a conclusão final.">
-       
-        
-        <!-- Title -->
-        <title>Pesquisa e desenvolvimento - rePraça</title>
+---
+import Layout from '../layouts/layout.astro';
+import Download from '../components/logo-download.astro';
+---
 
-        <link rel="icon" type="image/x-icon" href="../favicon.ico">
+<Layout
+    title="Pesquisa e desenvolvimento - rePraça"
+    description="Relatório de pesquisa e desenvolvimento do projeto rePraça, com todas as etapas detalhadas desde as primeiras ideias a conclusão final."
+    canonical="https://repraca.feliperpv.com/relatorio/"
+    stylesheets={[
+        "/css/index.css",
+        "/css/privacidade.css",
+        "/css/arquivos.css",
+        "/css/desenvolvimento.css"
+    ]}
+>
 
-        <!-- Social media preview -->
-        <meta property="og:title" content="Pesquisa e desenvolvimento - rePraça">
-        <meta property="og:type" content="website">
-        <meta property="og:image" content="https://feliperpv.com/repraca/img/social-preview.jpg">
-        <meta property="og:image:width" content="1200">
-        <meta property="og:image:height" content="600">
-        <meta property="og:description" content="Relatório de pesquisa e desenvolvimento do projeto rePraça.">
-        <meta property="og:url" content="https://feliperpv.com/repraca/relatorio.html">
-
-        <!-- Google Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com"> 
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-        <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&display=swap" rel="stylesheet">
-
-        <!-- CSS -->
-        <link rel="stylesheet" href="css/index.css">
-        <link rel="stylesheet" href="css/privacidade.css">
-        <link rel="stylesheet" href="css/arquivos.css">
-        <link rel="stylesheet" href="css/desenvolvimento.css">
-    </head>
-
-    <body>
-        <header>
-            <a class="nav-frpv" href="https://feliperpv.com">
-                <img src="https://feliperpv.com/img/frpv-logo.svg" alt="frpv logo" width="86">
-            </a>
-
-            <a class="logo" href="https://feliperpv.com/repraca/">
-                <img class="img-logo" src="img/repraca-logo-horiz.png" width="800" alt="Logo do projeto rePraça">
-            </a>
-        </header>
-            
-        
-        <main>
+    <main>
             <div class="texto-termos">
                 <h1 class="texto-azul">Relatório de projeto</h1>
                 <h3 class="texto-marrom"><b>Observação, pesquisa e desenvolvimento</b></h3>
@@ -54,7 +24,7 @@
                     <h2>Resumo</h2>
                     <p>rePraça é um projeto sobre a imaginação de espaços públicos no Rio de Janeiro.</p>
                     <p>A ideia surge da mistura entre a pesquisa sobre os espaços urbanos com o meu interesse pessoal sobre trabalhar a imaginação desses lugares. Com o foco em praças devido às suas características únicas, o trabalho se desenvolve na reimaginação desses locais pelos usuários por meio de uma plataforma virtual. Desse modo, é possível saber se as características daquele lugar atendem aos desejos da maioria e quais usos que as pessoas imaginam que diferem dos atuais.</p>
-                    <p><a target="_blank" class="texto-azul" href="arquivos/relatorio.pdf">Download do relatório em versão PDF</a></p>
+                    <p><a target="_blank" class="texto-azul" href="/arquivos/relatorio.pdf">Download do relatório em versão PDF</a></p>
                 </section>
 
                 <section id="sumario">
@@ -100,10 +70,10 @@
                     
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/screen-1746-1.jpg" alt="Interface do aplicativo 1746">
+                            <img src="/img/relatorio/screen-1746-1.jpg" alt="Interface do aplicativo 1746">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/screen-1746-2.jpg" alt="Interface do aplicativo 1746">
+                            <img src="/img/relatorio/screen-1746-2.jpg" alt="Interface do aplicativo 1746">
                         </figure>
                         <figcaption>Aplicativo 1746 - Google Play Store.</figcaption>
                     </div>
@@ -113,13 +83,13 @@
 
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="img/relatorio/screen-colab-1.jpg" alt="Interface do aplicativo 1746">
+                            <img src="/img/relatorio/screen-colab-1.jpg" alt="Interface do aplicativo 1746">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/screen-colab-2.jpg" alt="Interface do aplicativo 1746">
+                            <img src="/img/relatorio/screen-colab-2.jpg" alt="Interface do aplicativo 1746">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/screen-colab-3.jpg" alt="Interface do aplicativo 1746">
+                            <img src="/img/relatorio/screen-colab-3.jpg" alt="Interface do aplicativo 1746">
                         </figure>
                         <figcaption>Aplicativo Colab - Google Play Store.</figcaption>
                     </div>
@@ -130,7 +100,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/i-wish-this-was-mural.jpg" alt="Painel da instalação I Wish This Was, em New Orleans">
+                            <img src="/img/relatorio/i-wish-this-was-mural.jpg" alt="Painel da instalação I Wish This Was, em New Orleans">
                             <figcaption>Painel da instalação "I Wish This Was", em New Orleans.</figcaption>
                         </figure>
                     </div>
@@ -141,7 +111,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/liberte-seus-sonhos-painel.jpg" alt="Painel da instalação Liberte seus sonhos, no Rio de Janeiro">
+                            <img src="/img/relatorio/liberte-seus-sonhos-painel.jpg" alt="Painel da instalação Liberte seus sonhos, no Rio de Janeiro">
                             <figcaption>Painel da instalação Liberte seus sonhos, no Rio de Janeiro.</figcaption>
                         </figure>
                     </div>
@@ -157,7 +127,7 @@
                     <p>Assim, juntando o interesse pessoal por cidades com a oportunidade de trabalhar a imaginação, vindo dos projetos similares, o tema do projeto foi definido como:</p>
 
                     <div class="frase-tema">
-                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="50">
+                        <img src="/img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="50">
                         <h4>Incentivo à <b>imaginação</b> utilizando os <b>espaços da cidade</b> como cenário.</h4>
                     </div>
 
@@ -172,17 +142,17 @@
                     <p>Nessa linha de raciocínio foram consideradas algumas novas alternativas, sendo elas:</p>
 
                     <div class="alternativas">
-                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
+                        <img src="/img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
                         <p>Uma <b class="texto-marrom">galeria pública de arte virtual</b>, em que usuários poderiam projetar obras em 3D e instalá-las digitalmente no mundo real ao seu redor;</p>
                     </div>
 
                     <div class="alternativas">
-                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
+                        <img src="/img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
                         <p>Um <b class="texto-marrom">jogo simulador de cidade</b>, em que o cenário surgiria a partir do mapa real daquele lugar e o jogador poderia editar os pontos próximos a ele;</p>
                     </div>
 
                     <div class="alternativas">
-                        <img src="img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
+                        <img src="/img/relatorio/icone-seta-sombreada.png" alt="Icone de seta" width="20">
                         <p>Um <b class="texto-marrom">jogo de modelo narrativo</b>, em que os usuários controlariam times de personagens fictícios e batalhariam pelo controle de bairros da cidade.</p>
                     </div>
 
@@ -200,7 +170,7 @@
                     
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/screen-minecraft.jpg" alt="Captura de tela do jogo Minecraft">
+                            <img src="/img/relatorio/screen-minecraft.jpg" alt="Captura de tela do jogo Minecraft">
                             <figcaption>Minecraft, da Mojang.</figcaption>
                         </figure>
                     </div>
@@ -209,7 +179,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/screen-the-sims.jpg" alt="Tela de edição de casas em The Sims">
+                            <img src="/img/relatorio/screen-the-sims.jpg" alt="Tela de edição de casas em The Sims">
                             <figcaption>Tela de edição de casas em The Sims.</figcaption>
                         </figure>
                     </div>
@@ -219,7 +189,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/screen-streetmix.jpg" alt="Edição das estruturas viárias no Streetmix">
+                            <img src="/img/relatorio/screen-streetmix.jpg" alt="Edição das estruturas viárias no Streetmix">
                             <figcaption>Edição das estruturas viárias no Streetmix.</figcaption>
                         </figure>
                     </div>
@@ -229,7 +199,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/screen-townscaper.jpg" alt="Cenário criado no jogo Townscaper">
+                            <img src="/img/relatorio/screen-townscaper.jpg" alt="Cenário criado no jogo Townscaper">
                             <figcaption>Exemplo de cenário criado no jogo Townscaper.</figcaption>
                         </figure>
                     </div>
@@ -252,10 +222,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-1-1.jpg" alt="Lago na praça">
+                            <img src="/img/relatorio/nossa-senhora-1-1.jpg" alt="Lago na praça">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-1-2.jpg" alt="Mapa com o tamanho da praça destacado">
+                            <img src="/img/relatorio/nossa-senhora-1-2.jpg" alt="Mapa com o tamanho da praça destacado">
                         </figure>
                         <figcaption>Visão geral e localização em mapa da praça.</figcaption>
                     </div>
@@ -266,19 +236,19 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-2-1.jpg" alt="Escorrega em brinquedão">
+                            <img src="/img/relatorio/nossa-senhora-2-1.jpg" alt="Escorrega em brinquedão">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-2-2.jpg" alt="Escorrega na praça">
+                            <img src="/img/relatorio/nossa-senhora-2-2.jpg" alt="Escorrega na praça">
                         </figure>
                     </div>
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-2-3.jpg" alt="Brinquedo em globo">
+                            <img src="/img/relatorio/nossa-senhora-2-3.jpg" alt="Brinquedo em globo">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-2-4.jpg" alt="Balanços na praça">
+                            <img src="/img/relatorio/nossa-senhora-2-4.jpg" alt="Balanços na praça">
                         </figure>
                         <figcaption>Alguns dos brinquedos infantis disponíveis na Praça Nossa Senhora da Paz.</figcaption>
                     </div>
@@ -287,20 +257,20 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-3-1.jpg" alt="Aparelho de exercício ao ar livre">
+                            <img src="/img/relatorio/nossa-senhora-3-1.jpg" alt="Aparelho de exercício ao ar livre">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-3-2.jpg" alt="Bancos cobertos por flores com pessoas sentadas">
+                            <img src="/img/relatorio/nossa-senhora-3-2.jpg" alt="Bancos cobertos por flores com pessoas sentadas">
                         </figure>
                         <figcaption>Da esquerda para direita: aparelho de ginástica e caramanchão com bancos sob as plantas.</figcaption>
                     </div>
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-3-3.jpg" alt="Banco de madeira">
+                            <img src="/img/relatorio/nossa-senhora-3-3.jpg" alt="Banco de madeira">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-3-4.jpg" alt="Mesinha de xadrez">
+                            <img src="/img/relatorio/nossa-senhora-3-4.jpg" alt="Mesinha de xadrez">
                         </figure>
                         <figcaption>Da esquerda para direita: banco de madeira e mesa de mosaico para dama e xadrez.</figcaption>
                     </div>
@@ -309,7 +279,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-4.jpg" alt="Lago com banco de concreto ao redor">
+                            <img src="/img/relatorio/nossa-senhora-4.jpg" alt="Lago com banco de concreto ao redor">
                             <figcaption>Banco de concreto, na esquerda da foto, margeando o lago, era um dos lugares com mais gente na praça.</figcaption>
                         </figure>
                     </div>
@@ -318,26 +288,26 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-5-1.jpg" alt="Escultura no lago">
+                            <img src="/img/relatorio/nossa-senhora-5-1.jpg" alt="Escultura no lago">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-5-2.jpg" alt="Busto">
+                            <img src="/img/relatorio/nossa-senhora-5-2.jpg" alt="Busto">
                         </figure>
                     </div>
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-5-3.jpg" alt="Placa comemorativa">
+                            <img src="/img/relatorio/nossa-senhora-5-3.jpg" alt="Placa comemorativa">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-5-4.jpg" alt="Placa em vidro">
+                            <img src="/img/relatorio/nossa-senhora-5-4.jpg" alt="Placa em vidro">
                         </figure>
                         <figcaption>Esculturas e placas comemorativas espalhadas ao redor da praça.</figcaption>
                     </div>
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-5-5.jpg" alt="Monumento central na praça">
+                            <img src="/img/relatorio/nossa-senhora-5-5.jpg" alt="Monumento central na praça">
                             <figcaption>Principal e maior dos monumentos, o bloco em homenagem a um político fica bem no meio da praça.</figcaption>
                         </figure>
                     </div>
@@ -353,10 +323,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-1-1.jpg" alt="Vista chafariz e praça">
+                            <img src="/img/relatorio/xavier-1-1.jpg" alt="Vista chafariz e praça">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-1-2.jpg" alt="Mapa praça">
+                            <img src="/img/relatorio/xavier-1-2.jpg" alt="Mapa praça">
                         </figure>
                     </div>
 
@@ -365,13 +335,13 @@
 
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="img/relatorio/xavier-2-1.jpg" alt="Ponto de taxi">
+                            <img src="/img/relatorio/xavier-2-1.jpg" alt="Ponto de taxi">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-2-2.jpg" alt="estação de bicicleta bike itau">
+                            <img src="/img/relatorio/xavier-2-2.jpg" alt="estação de bicicleta bike itau">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-2-3.jpg" alt="ponto de ônibus">
+                            <img src="/img/relatorio/xavier-2-3.jpg" alt="ponto de ônibus">
                         </figure>
                         <figcaption>Ponto de Táxi é a única estrutura na praça; estação de bicicleta de aluguel e ponto de ônibus ficam próximos.</figcaption>
                     </div>
@@ -381,10 +351,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-3-1.jpg" alt="Parque de cachorros">
+                            <img src="/img/relatorio/xavier-3-1.jpg" alt="Parque de cachorros">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-3-2.jpg" alt="Parque de cachorros">
+                            <img src="/img/relatorio/xavier-3-2.jpg" alt="Parque de cachorros">
                         </figure>
                         <figcaption>Área para cachorros é cercada e possui alguns brinquedos.</figcaption>
                     </div>
@@ -393,10 +363,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-3-3.jpg" alt="Parque de cachorros">
+                            <img src="/img/relatorio/xavier-3-3.jpg" alt="Parque de cachorros">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-3-4.jpg" alt="Parque de cachorros">
+                            <img src="/img/relatorio/xavier-3-4.jpg" alt="Parque de cachorros">
                         </figure>
                         <figcaption>Árvores do parque são adaptadas para segurar mochilas enquanto os donos permanecem no local e oferecer sacolas plásticas para a limpeza de fezes.</figcaption>
                     </div>
@@ -405,7 +375,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/xavier-4.jpg" alt="Parque infantil">
+                            <img src="/img/relatorio/xavier-4.jpg" alt="Parque infantil">
                             <figcaption>Parque infantil é cercado e possui boa cobertura de árvores, que garantem sombra nos brinquedos.</figcaption>
                         </figure>
                     </div>
@@ -414,10 +384,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-5-1.jpg" alt="Teatro de bonecos">
+                            <img src="/img/relatorio/xavier-5-1.jpg" alt="Teatro de bonecos">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-5-2.jpg" alt="Teatro de bonecos">
+                            <img src="/img/relatorio/xavier-5-2.jpg" alt="Teatro de bonecos">
                         </figure>
                         <figcaption>Teatro de Guignol foi reinaugurado no início de 2022.</figcaption>
                     </div>
@@ -426,10 +396,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-6-1.jpg" alt="ATI">
+                            <img src="/img/relatorio/xavier-6-1.jpg" alt="ATI">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-6-2.jpg" alt="Grade">
+                            <img src="/img/relatorio/xavier-6-2.jpg" alt="Grade">
                         </figure>
                         <figcaption>Esquerda: pessoas se exercitando na ATI. Direita: estrutura de metal ao redor do parquinho é utilizada para atividades de alongamento.</figcaption>
                     </div>
@@ -438,7 +408,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/xavier-7.jpg" alt="quadra de bocha abandonada">
+                            <img src="/img/relatorio/xavier-7.jpg" alt="quadra de bocha abandonada">
                             <figcaption>A quadra de bocha parece não ser muito usada.</figcaption>
                         </figure>
                     </div>
@@ -447,13 +417,13 @@
 
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="img/relatorio/xavier-8-1.jpg" alt="Bancos protegidos por telhado">
+                            <img src="/img/relatorio/xavier-8-1.jpg" alt="Bancos protegidos por telhado">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-8-2.jpg" alt="Banco em tronco de arvore">
+                            <img src="/img/relatorio/xavier-8-2.jpg" alt="Banco em tronco de arvore">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-8-3.jpg" alt="Homem deitado descansando num banco">
+                            <img src="/img/relatorio/xavier-8-3.jpg" alt="Homem deitado descansando num banco">
                         </figure>
                         <figcaption>Telhado protege algumas das mesinhas de sol e chuva; Bancos de diferentes formatos complementam as opções de descanso na praça. Na direita, um rapaz aproveita de um banco de tábuas de madeira para deitar e descansar.</figcaption>
                     </div>
@@ -462,7 +432,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/xavier-9-1.jpg" alt="grupo em cadeiras de praia do lado de mesas vazias na praça">
+                            <img src="/img/relatorio/xavier-9-1.jpg" alt="grupo em cadeiras de praia do lado de mesas vazias na praça">
                             <figcaption>Um grupo trouxe cadeiras de praia mesmo com a vasta quantidade de banquinhos livres na praça.</figcaption>
                         </figure>
                     </div>
@@ -471,10 +441,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-9-2.jpg" alt="busto coronel">
+                            <img src="/img/relatorio/xavier-9-2.jpg" alt="busto coronel">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-9-3.jpg" alt="chafariz">
+                            <img src="/img/relatorio/xavier-9-3.jpg" alt="chafariz">
                         </figure>
                         <figcaption>Busto do Coronel Xavier de Brito e grande chafariz no meio da praça.</figcaption>
                     </div>
@@ -483,10 +453,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-9-4.jpg" alt="banheiros fechados">
+                            <img src="/img/relatorio/xavier-9-4.jpg" alt="banheiros fechados">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/xavier-9-5.jpg" alt="jardim usado como banheiro">
+                            <img src="/img/relatorio/xavier-9-5.jpg" alt="jardim usado como banheiro">
                         </figure>
                         <figcaption>Banheiros interditados, na esquerda, e espaço no meio do jardim que funciona como banheiro improvisado, à direita.</figcaption>
                     </div>
@@ -495,7 +465,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/xavier-9-6.jpg" alt="esquema mostrando banheiro e banheiro improvisado na praça">
+                            <img src="/img/relatorio/xavier-9-6.jpg" alt="esquema mostrando banheiro e banheiro improvisado na praça">
                             <figcaption>Posição do banheiro e banheiro improvisado na visão de satélite do Google Maps.</figcaption>
                         </figure>
                     </div>
@@ -514,10 +484,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/barao-1-1.jpg" alt="Vista praça e igreja ao fundo">
+                            <img src="/img/relatorio/barao-1-1.jpg" alt="Vista praça e igreja ao fundo">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/barao-1-2.jpg" alt="Mapa praça">
+                            <img src="/img/relatorio/barao-1-2.jpg" alt="Mapa praça">
                         </figure>
                     </div>
 
@@ -527,19 +497,19 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/barao-2-1.jpg" alt="Mesa no centro">
+                            <img src="/img/relatorio/barao-2-1.jpg" alt="Mesa no centro">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/barao-2-2.jpg" alt="Mesa no centro">
+                            <img src="/img/relatorio/barao-2-2.jpg" alt="Mesa no centro">
                         </figure>
                     </div>
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/barao-2-3.jpg" alt="Mesa no canto, cercada de grama">
+                            <img src="/img/relatorio/barao-2-3.jpg" alt="Mesa no canto, cercada de grama">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/barao-2-4.jpg" alt="Vista geral da praça">
+                            <img src="/img/relatorio/barao-2-4.jpg" alt="Vista geral da praça">
                         </figure>
                         <figcaption>Todas as estruturas existentes na praça são duas mesas de mosaico de xadrez, dois bancos de madeira e um banco de concreto comprido.</figcaption>
                     </div>
@@ -548,7 +518,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/barao-2-5.jpg" alt="esquema mostrando rota de corrida">
+                            <img src="/img/relatorio/barao-2-5.jpg" alt="esquema mostrando rota de corrida">
                             <figcaption>A praça fica bem no caminho de uma rota de corrida, pintada de laranja, muito usada por quem mora no local. No mapa, a praça é representada pelo círculo branco.</figcaption>
                         </figure>
                     </div>
@@ -558,7 +528,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/barao-3.jpg" alt="antigo berçario já não existente">
+                            <img src="/img/relatorio/barao-3.jpg" alt="antigo berçario já não existente">
                             <figcaption>A Praça Barão de Corumbá já teve um berçário e um orelhão, hoje retirados.  Imagem: Tijuca-RJ.</figcaption>
                         </figure>
                     </div>
@@ -567,10 +537,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/barao-4-1.jpg" alt="poste de ventilação do subsolo">
+                            <img src="/img/relatorio/barao-4-1.jpg" alt="poste de ventilação do subsolo">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/barao-4-2.jpg" alt="pedra que tinha uma placa">
+                            <img src="/img/relatorio/barao-4-2.jpg" alt="pedra que tinha uma placa">
                         </figure>
                         <figcaption>Poste de ventilação de subsolo e pedra onde ficava placa comemorativa.</figcaption>
                     </div>
@@ -579,7 +549,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/barao-5.jpg" alt="print de reviews no google maps">
+                            <img src="/img/relatorio/barao-5.jpg" alt="print de reviews no google maps">
                             <figcaption>Avaliações da praça no Google Maps comentam sobre como ela tinha potencial para ser melhor do que o seu estado atual.</figcaption>
                         </figure>
                     </div>
@@ -595,10 +565,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/gabriel-1-1.jpg" alt="Vista praça">
+                            <img src="/img/relatorio/gabriel-1-1.jpg" alt="Vista praça">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/gabriel-1-2.jpg" alt="Mapa praça">
+                            <img src="/img/relatorio/gabriel-1-2.jpg" alt="Mapa praça">
                         </figure>
                     </div>
 
@@ -607,10 +577,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/gabriel-2-1.jpg" alt="poste de ventilação do subsolo">
+                            <img src="/img/relatorio/gabriel-2-1.jpg" alt="poste de ventilação do subsolo">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/gabriel-2-2.jpg" alt="pedra que tinha uma placa">
+                            <img src="/img/relatorio/gabriel-2-2.jpg" alt="pedra que tinha uma placa">
                         </figure>
                         <figcaption>Um dos pontos de táxi fica em um largo ao lado da praça. O bicicletário complementa as opções do local.</figcaption>
                     </div>
@@ -619,10 +589,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/barao-3-1.jpg" alt="balanço">
+                            <img src="/img/relatorio/barao-3-1.jpg" alt="balanço">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/barao-3-2.jpg" alt="gangorra">
+                            <img src="/img/relatorio/barao-3-2.jpg" alt="gangorra">
                         </figure>
                         <figcaption>Balanço e gangorra formam as opções de brinquedos infantis da praça.</figcaption>
                     </div>
@@ -632,7 +602,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/gabriel-4.jpg" alt="aparelhos de exercicios">
+                            <img src="/img/relatorio/gabriel-4.jpg" alt="aparelhos de exercicios">
                             <figcaption>Aparelhos de ginástica são simples mas cumprem sua função.</figcaption>
                         </figure>
                     </div>
@@ -641,7 +611,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/gabriel-5.jpg" alt="pessoas sentadas em banco">
+                            <img src="/img/relatorio/gabriel-5.jpg" alt="pessoas sentadas em banco">
                             <figcaption>Pessoas descansam em mesa de mosaico. Ao fundo, uma viatura da polícia garante a segurança do local.</figcaption>
                         </figure>
                     </div>
@@ -660,7 +630,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/tabela-escolha-praca.jpg" alt="tabela de comparação entre as praças">
+                            <img src="/img/relatorio/tabela-escolha-praca.jpg" alt="tabela de comparação entre as praças">
                             <figcaption>Planilha de comparação entre as praças.</figcaption>
                         </figure>
                     </div>
@@ -676,7 +646,7 @@
                     
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/mobiliario-geral.jpg" alt="Painel com itens do mobiliário urbano separados em categorias">
+                            <img src="/img/relatorio/mobiliario-geral.jpg" alt="Painel com itens do mobiliário urbano separados em categorias">
                             <figcaption>Painel com itens do mobiliário urbano separados em categorias.</figcaption>
                         </figure>
                     </div>
@@ -688,10 +658,10 @@
                     <h6><b class="texto-marrom">Infantil</b> – Brinquedos e itens de parquinho para crianças</h6>
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/mobiliario-infantil-1.jpg" alt="gangorra">
+                            <img src="/img/relatorio/mobiliario-infantil-1.jpg" alt="gangorra">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-2-2.jpg" alt="escorrega">
+                            <img src="/img/relatorio/nossa-senhora-2-2.jpg" alt="escorrega">
                         </figure>
                         <figcaption>Gangorra, balanço e escorrega são alguns exemplos dos itens infantis mapeados.</figcaption>
                     </div>
@@ -700,10 +670,10 @@
                     <h6><b class="texto-marrom">Atividades físicas</b> – Aparelhos de ginástica e Academias da Terceira Idade</h6>
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-6-1.jpg" alt="ati">
+                            <img src="/img/relatorio/xavier-6-1.jpg" alt="ati">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/gabriel-4.jpg" alt="academia">
+                            <img src="/img/relatorio/gabriel-4.jpg" alt="academia">
                         </figure>
                         <figcaption>Academia da Terceira Idade e aparelhos de ginástica são os itens mais comuns de atividade física.</figcaption>
                     </div>
@@ -712,13 +682,13 @@
                     <h6><b class="texto-marrom">Infraestrutura</b> – Lixeiras, postes, sinalização, relógios, etc.</h6>
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="img/relatorio/mobiliario-infra-3-1.jpg" alt="relogio">
+                            <img src="/img/relatorio/mobiliario-infra-3-1.jpg" alt="relogio">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-infra-3-2.jpg" alt="placa sinalizacao">
+                            <img src="/img/relatorio/mobiliario-infra-3-2.jpg" alt="placa sinalizacao">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-infra-3-3.jpg" alt="poste com lixeira">
+                            <img src="/img/relatorio/mobiliario-infra-3-3.jpg" alt="poste com lixeira">
                         </figure>
                         <figcaption>Relógio de rua, placas de sinalização e toda a infraestrutura que garante o bom funcionamento do espaço.</figcaption>
                     </div>
@@ -727,13 +697,13 @@
                     <h6><b class="texto-marrom">Paisagem e Jardins</b> – Vegetação, jardins, caminhos e monumentos</h6>
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="img/relatorio/xavier-9-3.jpg" alt="chafariz">
+                            <img src="/img/relatorio/xavier-9-3.jpg" alt="chafariz">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-paisagem-4-2.jpg" alt="busto">
+                            <img src="/img/relatorio/mobiliario-paisagem-4-2.jpg" alt="busto">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-paisagem-4-3.jpg" alt="arvore">
+                            <img src="/img/relatorio/mobiliario-paisagem-4-3.jpg" alt="arvore">
                         </figure>
                         <figcaption>Chafariz, monumentos e árvores, a categoria engloba importantes objetos de embelezamento e sombra.</figcaption>
                     </div>
@@ -743,10 +713,10 @@
                     <h6><b class="texto-marrom">Lazer e Descanso</b> – Mesas e bancos para descanso</h6>
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/nossa-senhora-3-2.jpg" alt="banco">
+                            <img src="/img/relatorio/nossa-senhora-3-2.jpg" alt="banco">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/barao-2-1.jpg" alt="mesa">
+                            <img src="/img/relatorio/barao-2-1.jpg" alt="mesa">
                         </figure>
                         <figcaption>Banquinhos e mesas que podem ser usados para descanso ou atividades de lazer.</figcaption>
                     </div>
@@ -756,10 +726,10 @@
                     <h6><b class="texto-marrom">Animais de estimação</b> – Parque para cachorros e estruturas para animais</h6>
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/xavier-3-1.jpg" alt="parcão">
+                            <img src="/img/relatorio/xavier-3-1.jpg" alt="parcão">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-animais-5-3.jpg" alt="parcão">
+                            <img src="/img/relatorio/mobiliario-animais-5-3.jpg" alt="parcão">
                         </figure>
                         <figcaption>“Parcão” e toda estrutura destinada a animais de estimação.</figcaption>
                     </div>
@@ -769,13 +739,13 @@
                     <h6><b class="texto-marrom">Transporte</b> – Bicicletário, bicicleta de aluguel, ponto de táxi e ônibus, metrô</h6>
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="img/relatorio/mobiliario-transporte-7-1.jpg" alt="bike itau">
+                            <img src="/img/relatorio/mobiliario-transporte-7-1.jpg" alt="bike itau">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-transporte-7-2.jpg" alt="ponto de onibus">
+                            <img src="/img/relatorio/mobiliario-transporte-7-2.jpg" alt="ponto de onibus">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-transporte-7-3.jpg" alt="ponto de taxi">
+                            <img src="/img/relatorio/mobiliario-transporte-7-3.jpg" alt="ponto de taxi">
                         </figure>
                         <figcaption>Bicicletas de aluguel, pontos de ônibus e de táxi são algumas das estruturas de transporte mais comuns.</figcaption>
                     </div>
@@ -785,10 +755,10 @@
                     <h6><b class="texto-marrom">Comércio</b> – Banca de jornal, vendedor de flores, pipoca, churros, etc.</h6>
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/mobiliario-comercio-8-2.jpg" alt="banca de jornal">
+                            <img src="/img/relatorio/mobiliario-comercio-8-2.jpg" alt="banca de jornal">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/mobiliario-comercio-8-1.jpg" alt="barraca de churros">
+                            <img src="/img/relatorio/mobiliario-comercio-8-1.jpg" alt="barraca de churros">
                         </figure>
                         <figcaption>Vendinhas de churros, comida árabe, flores e bancas de jornal funcionam nas praças e arredores.</figcaption>
                     </div>
@@ -804,7 +774,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/fluxograma.svg" alt="Fluxograma do projeto">
+                            <img src="/img/relatorio/fluxograma.svg" alt="Fluxograma do projeto">
                             <figcaption>Fluxograma do projeto.</figcaption>
                         </figure>
                     </div>
@@ -813,7 +783,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/wireframe-1-home.png" alt="tela inicial">
+                            <img src="/img/relatorio/wireframe-1-home.png" alt="tela inicial">
                             <figcaption>Wireframe da tela inicial, com botão para escolher uma nova praça e logo do projeto no centro da tela.</figcaption>
                         </figure>
                     </div>
@@ -822,7 +792,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/wireframe-2-ficha.png" alt="ficha informações de praça">
+                            <img src="/img/relatorio/wireframe-2-ficha.png" alt="ficha informações de praça">
                             <figcaption>Exemplo de como poderia ser a ficha da praça, com algumas informações e fotos do local para situar o usuário antes dele iniciar a edição.</figcaption>
                         </figure>
                     </div>
@@ -831,7 +801,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/wireframe-3-mobiliario.png" alt="inventário de itens do mobiliário urbano">
+                            <img src="/img/relatorio/wireframe-3-mobiliario.png" alt="inventário de itens do mobiliário urbano">
                             <figcaption>Inventário de mobiliário urbano, com todas as opções de objetos e suas respectivas informações.</figcaption>
                         </figure>
                     </div>
@@ -841,7 +811,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/wireframe-4-ficha-mobiliario.png" alt="ficha de informações de mobília">
+                            <img src="/img/relatorio/wireframe-4-ficha-mobiliario.png" alt="ficha de informações de mobília">
                             <figcaption>Uma das possibilidades de organização da ficha de mobiliário, que mostra as principais informações do objeto escolhido.</figcaption>
                         </figure>
                     </div>
@@ -852,7 +822,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/wireframe-5-fork.png" alt="fork de praças">
+                            <img src="/img/relatorio/wireframe-5-fork.png" alt="fork de praças">
                             <figcaption>Exemplo do "fork de praças", que mostra a praça imaginada original e todas as outras imaginações que surgiram a partir dela.</figcaption>
                         </figure>
                     </div>
@@ -869,7 +839,7 @@
                     
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-arrasa.png" alt="arrasa quarteirao no unity">
+                            <img src="/img/relatorio/dev-arrasa.png" alt="arrasa quarteirao no unity">
                             <figcaption>Jogo <a target="_blank" class="texto-azul" href="https://feliperpv.com/arrasaquarteirao/">Arrasa Quarteirão</a>, desenvolvido na disciplina Computação para Jogos. A experiência adquirida desenvolvendo esse jogo no Unity foi aproveitada para esse projeto.</figcaption>
                         </figure>
                     </div>
@@ -878,7 +848,7 @@
                     
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-git-project.png" alt="project no github">
+                            <img src="/img/relatorio/dev-git-project.png" alt="project no github">
                             <figcaption>Project do Github, que organiza as tarefas a serem realizadas (Issues) em maneira similar ao Trello.</figcaption>
                         </figure>
                     </div>
@@ -889,7 +859,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-calendario.png" alt="cronograma de projeto">
+                            <img src="/img/relatorio/dev-calendario.png" alt="cronograma de projeto">
                             <figcaption>Planilha com planejamento do desenvolvimento durante o semestre.</figcaption>
                         </figure>
                     </div>
@@ -923,10 +893,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-01-turorial01.png" alt="formas posicionadas">
+                            <img src="/img/relatorio/dev-01-turorial01.png" alt="formas posicionadas">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-01-turorial02.png" alt="forma selecionada após posicionada">
+                            <img src="/img/relatorio/dev-01-turorial02.png" alt="forma selecionada após posicionada">
                         </figure>
                         <figcaption>Mapa para posicionamento dos objetos e, na direita, menu de seleção de um item já posicionado.</figcaption>
                     </div>
@@ -942,7 +912,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-02-gangorra.png" alt="balança">
+                            <img src="/img/relatorio/dev-02-gangorra.png" alt="balança">
                             <figcaption>Gangorra modelada no Blender, ainda sem cores.</figcaption>
                         </figure>
                     </div>
@@ -954,10 +924,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-02-poste01.png" alt="poste de cima">
+                            <img src="/img/relatorio/dev-02-poste01.png" alt="poste de cima">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-02-poste02.png" alt="poste de baixo">
+                            <img src="/img/relatorio/dev-02-poste02.png" alt="poste de baixo">
                         </figure>
                         <figcaption>Poste duplo visto por cima e por baixo.</figcaption>
                     </div>
@@ -966,7 +936,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-02-xadrez.png" alt="mesa de xadrez no blender">
+                            <img src="/img/relatorio/dev-02-xadrez.png" alt="mesa de xadrez no blender">
                             <figcaption>Mesa de xadrez com um banco em cada lado.</figcaption>
                         </figure>
                     </div>
@@ -976,7 +946,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-02-icone.jpeg" alt="icone do app">
+                            <img src="/img/relatorio/dev-02-icone.jpeg" alt="icone do app">
                             <figcaption>Ícone do aplicativo instalado em um celular Android.</figcaption>
                         </figure>
                     </div>
@@ -985,10 +955,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-02-banco01.png" alt="banco">
+                            <img src="/img/relatorio/dev-02-banco01.png" alt="banco">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-02-banco02.png" alt="banco com encosto">
+                            <img src="/img/relatorio/dev-02-banco02.png" alt="banco com encosto">
                         </figure>
                         <figcaption>Banco simples de concreto e, na direita, versão com encosto para as costas.</figcaption>
                     </div>
@@ -997,10 +967,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-02-lixo01.png" alt="lixeira">
+                            <img src="/img/relatorio/dev-02-lixo01.png" alt="lixeira">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-02-lixo02.png" alt="wireframe da lixeira">
+                            <img src="/img/relatorio/dev-02-lixo02.png" alt="wireframe da lixeira">
                         </figure>
                         <figcaption>Lixeira da Comlurb em versão sólida e wireframe mostrando a estrutura do modelo 3D.</figcaption>
                     </div>
@@ -1009,7 +979,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-02-maple.png" alt="arvore maple">
+                            <img src="/img/relatorio/dev-02-maple.png" alt="arvore maple">
                             <figcaption>Árvore de Maple baixada no site Sketchfab.</figcaption>
                         </figure>
                     </div>
@@ -1018,7 +988,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-02-print.png" alt="print do app">
+                            <img src="/img/relatorio/dev-02-print.png" alt="print do app">
                             <figcaption>Praça com todos os objetos modelados até agora, com a proporção de tamanho entre cada um deles ainda a ser ajustada.</figcaption>
                         </figure>
                     </div>
@@ -1032,7 +1002,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-02-the-sims.jpeg" alt="print do the sims">
+                            <img src="/img/relatorio/dev-02-the-sims.jpeg" alt="print do the sims">
                             <figcaption>Tela do jogo The Sims Grátis para Jogar, para celular, em que os botões acompanham o objeto selecionado.</figcaption>
                         </figure>
                     </div>
@@ -1041,7 +1011,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-print-teste.png" alt="print da UI">
+                            <img src="/img/relatorio/dev-03-print-teste.png" alt="print da UI">
                             <figcaption>Menu dos botões Posicionar e Girar acompanham a posição do objeto sendo editado.</figcaption>
                         </figure>
                     </div>
@@ -1055,10 +1025,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-03-print-ui01.png" alt="ui atualizada com botões na lateral">
+                            <img src="/img/relatorio/dev-03-print-ui01.png" alt="ui atualizada com botões na lateral">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-03-print-ui02.png" alt="ui atualizada com objeto selecionado">
+                            <img src="/img/relatorio/dev-03-print-ui02.png" alt="ui atualizada com objeto selecionado">
                         </figure>
                         <figcaption>Interface atualizada para os primeiros testes. Na direita, tela com a mesa de xadrez sendo editada.</figcaption>
                     </div>
@@ -1073,7 +1043,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-nome.png" alt="nome do app">
+                            <img src="/img/relatorio/dev-03-nome.png" alt="nome do app">
                             <figcaption>Esquema com alguns dos temas e conceitos usados no processo de naming do projeto.</figcaption>
                         </figure>
                     </div>
@@ -1099,7 +1069,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-daniel-01.jpeg" alt="ui">
+                            <img src="/img/relatorio/dev-03-daniel-01.jpeg" alt="ui">
                             <figcaption>Menu dos objetos foi confuso para alguns usuários.</figcaption>
                         </figure>
                     </div>
@@ -1111,7 +1081,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-daniel-02.jpeg" alt="praça montada">
+                            <img src="/img/relatorio/dev-03-daniel-02.jpeg" alt="praça montada">
                             <figcaption>Praça final montada pelo Daniel.</figcaption>
                         </figure>
                     </div>
@@ -1127,7 +1097,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-leo.jpeg" alt="praça montada">
+                            <img src="/img/relatorio/dev-03-leo.jpeg" alt="praça montada">
                             <figcaption>Praça final montada pelo Leonardo.</figcaption>
                         </figure>
                     </div>
@@ -1145,7 +1115,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-gui.jpeg" alt="praça montada">
+                            <img src="/img/relatorio/dev-03-gui.jpeg" alt="praça montada">
                             <figcaption>Praça final montada pelo Guilherme.</figcaption>
                         </figure>
                     </div>
@@ -1162,7 +1132,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-jessica.jpeg" alt="praça montada">
+                            <img src="/img/relatorio/dev-03-jessica.jpeg" alt="praça montada">
                             <figcaption>Praça final montada pela Jessica.</figcaption>
                         </figure>
                     </div>
@@ -1177,7 +1147,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-03-luisa.jpeg" alt="praça montada">
+                            <img src="/img/relatorio/dev-03-luisa.jpeg" alt="praça montada">
                             <figcaption>Praça final montada pela Luísa.</figcaption>
                         </figure>
                     </div>
@@ -1207,10 +1177,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-04-ui-01.jpeg" alt="teste cores">
+                            <img src="/img/relatorio/dev-04-ui-01.jpeg" alt="teste cores">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-04-ui-02.jpeg" alt="teste cores">
+                            <img src="/img/relatorio/dev-04-ui-02.jpeg" alt="teste cores">
                         </figure>
                         <figcaption>Primeiro rascunho de interface desenvolvido.</figcaption>
                     </div>
@@ -1219,10 +1189,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-04-ui-03.jpeg" alt="teste cores">
+                            <img src="/img/relatorio/dev-04-ui-03.jpeg" alt="teste cores">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-04-ui-04.jpeg" alt="teste cores">
+                            <img src="/img/relatorio/dev-04-ui-04.jpeg" alt="teste cores">
                         </figure>
                         <figcaption>Uso do azul nos ícones e bege como fundo do botão.</figcaption>
                     </div>
@@ -1231,7 +1201,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-ui-05.jpeg" alt="teste botao">
+                            <img src="/img/relatorio/dev-04-ui-05.jpeg" alt="teste botao">
                             <figcaption>Tela de edição de objeto.</figcaption>
                         </figure>
                     </div>
@@ -1242,7 +1212,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-paleta-cores.png" alt="paleta de cores">
+                            <img src="/img/relatorio/dev-04-paleta-cores.png" alt="paleta de cores">
                             <figcaption>Paleta de cores e gradientes.</figcaption>
                         </figure>
                     </div>
@@ -1251,7 +1221,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-paleta-contraste.png" alt="contraste entre cores">
+                            <img src="/img/relatorio/dev-04-paleta-contraste.png" alt="contraste entre cores">
                             <figcaption>Validação do contraste entre o bege e azul marinho.</figcaption>
                         </figure>
                     </div>
@@ -1260,7 +1230,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-icones.png" alt="icones">
+                            <img src="/img/relatorio/dev-04-icones.png" alt="icones">
                             <figcaption>Iconografia utilizada na plataforma.</figcaption>
                         </figure>
                     </div>
@@ -1269,7 +1239,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-fonte.png" alt="fonte">
+                            <img src="/img/relatorio/dev-04-fonte.png" alt="fonte">
                         </figure>
                     </div>
 
@@ -1277,10 +1247,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-04-logo-01.png" alt="logo antigo">
+                            <img src="/img/relatorio/dev-04-logo-01.png" alt="logo antigo">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-04-logo-01.png" alt="logo atualizado">
+                            <img src="/img/relatorio/dev-04-logo-01.png" alt="logo atualizado">
                         </figure>
                         <figcaption>Versão anterior e versão com modelo e iluminação atualizados.</figcaption>
                     </div>
@@ -1307,7 +1277,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-tela-01.jpeg" alt="tela">
+                            <img src="/img/relatorio/dev-04-tela-01.jpeg" alt="tela">
                             <figcaption>Tela com o objeto selecionado, em que é possível clicar no lápis para editá-lo.</figcaption>
                         </figure>
                     </div>
@@ -1316,7 +1286,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-tela-02.jpeg" alt="tela">
+                            <img src="/img/relatorio/dev-04-tela-02.jpeg" alt="tela">
                             <figcaption>Tela de edição do objeto, com os botões é possível deletar, rotacionar e posicionar, respectivamente.</figcaption>
                         </figure>
                     </div>
@@ -1325,7 +1295,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-fluxo.jpeg" alt="fluxo">
+                            <img src="/img/relatorio/dev-04-fluxo.jpeg" alt="fluxo">
                             <figcaption>Tela inicial > Inventário de itens > Edição de objetos > Tela inicial. A tela de objeto selecionado não aparece nesse fluxo.</figcaption>
                         </figure>
                     </div>
@@ -1336,7 +1306,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-04-tela-03.jpeg" alt="tela">
+                            <img src="/img/relatorio/dev-04-tela-03.jpeg" alt="tela">
                             <figcaption>Simulação de interface com a praça à noite.</figcaption>
                         </figure>
                     </div>
@@ -1358,10 +1328,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-05-angulo-01.jpeg" alt="vista de cima">
+                            <img src="/img/relatorio/dev-05-angulo-01.jpeg" alt="vista de cima">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-05-angulo-02.jpeg" alt="vista em 45 graus">
+                            <img src="/img/relatorio/dev-05-angulo-02.jpeg" alt="vista em 45 graus">
                         </figure>
                         <figcaption>Visão de topo e visão em ângulo, respectivamente.</figcaption>
                     </div>
@@ -1374,7 +1344,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-05-iluminacao.png" alt="luzes">
+                            <img src="/img/relatorio/dev-05-iluminacao.png" alt="luzes">
                             <figcaption>Modelo do poste com as luzes.</figcaption>
                         </figure>
                     </div>
@@ -1383,10 +1353,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-05-noite-01.png" alt="vista de dia">
+                            <img src="/img/relatorio/dev-05-noite-01.png" alt="vista de dia">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-05-noite-02.png" alt="vista de noite">
+                            <img src="/img/relatorio/dev-05-noite-02.png" alt="vista de noite">
                         </figure>
                         <figcaption>Iluminação da mesma cena de dia e de noite.</figcaption>
                     </div>
@@ -1396,7 +1366,7 @@
                     <p>Além disso, nesse momento também foram adicionados dois novos objetos: o escorrega, para expandir os itens da categoria infantil, e um bicicletário, para adicionar o primeiro objeto de transportes, ambas áreas que foram comentadas durante os testes iniciais.</p>
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-05-itens.png" alt="novos itens">
+                            <img src="/img/relatorio/dev-05-itens.png" alt="novos itens">
                             <figcaption>Escorrega e bicicletário foram adicionados; a câmera em ângulo ajuda a visualizá-los.</figcaption>
                         </figure>
                     </div>
@@ -1406,10 +1376,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-05-icon-01.png" alt="motorola">
+                            <img src="/img/relatorio/dev-05-icon-01.png" alt="motorola">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-05-icon-02.jpeg" alt="samsung">
+                            <img src="/img/relatorio/dev-05-icon-02.jpeg" alt="samsung">
                         </figure>
                         <figcaption>Celular da Motorola e Samsung, respectivamente, apresentam o ícone de formas diferentes.</figcaption>
                     </div>
@@ -1419,10 +1389,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/dev-05-icon-03.png" alt="icone">
+                            <img src="/img/relatorio/dev-05-icon-03.png" alt="icone">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/dev-05-icon-04.png" alt="fundo">
+                            <img src="/img/relatorio/dev-05-icon-04.png" alt="fundo">
                         </figure>
                         <figcaption>Símbolo e fundo do ícone do rePraça, que são montados pelo sistema em cada celular.</figcaption>
                     </div>
@@ -1431,7 +1401,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-05-icon-05.png" alt="novo icone">
+                            <img src="/img/relatorio/dev-05-icon-05.png" alt="novo icone">
                             <figcaption>Ícone do aplicativo passou a ser exibido corretamente mesmo em formatos diferentes.</figcaption>
                         </figure>
                     </div>
@@ -1445,7 +1415,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-grid-01.png" alt="grid itens">
+                            <img src="/img/relatorio/dev-06-grid-01.png" alt="grid itens">
                             <figcaption>Estado do inventário de objetos nesse momento do desenvolvimento.</figcaption>
                         </figure>
                     </div>
@@ -1455,7 +1425,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-grid-02.png" alt="scriptable object">
+                            <img src="/img/relatorio/dev-06-grid-02.png" alt="scriptable object">
                             <figcaption>Exemplo do arquivo Objetos Data do Bicicletário, com os valores preenchidos.</figcaption>
                         </figure>
                     </div>
@@ -1465,14 +1435,14 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-grid-03.png" alt="scriptable object">
+                            <img src="/img/relatorio/dev-06-grid-03.png" alt="scriptable object">
                             <figcaption>Na direita, o array "Lista Todos Dados" preenchido com os Scriptable Objects; no centro da tela, a grid de botões está vazia no ambiente de desenvolvimento do Unity.</figcaption>
                         </figure>
                     </div>
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-grid-04.jpeg" alt="scriptable object">
+                            <img src="/img/relatorio/dev-06-grid-04.jpeg" alt="scriptable object">
                             <figcaption>O código preenche a grid de objetos automaticamente ao executar o aplicativo.</figcaption>
                         </figure>
                     </div>
@@ -1486,7 +1456,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-grid-05.jpeg" alt="tela informacoes">
+                            <img src="/img/relatorio/dev-06-grid-05.jpeg" alt="tela informacoes">
                             <figcaption>Versão final do painel.</figcaption>
                         </figure>
                     </div>
@@ -1500,7 +1470,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-concluir-01.jpeg" alt="tela concluir">
+                            <img src="/img/relatorio/dev-06-concluir-01.jpeg" alt="tela concluir">
                             <figcaption>Tela de conclusão de edição, com botão para salvar uma captura da praça.</figcaption>
                         </figure>
                     </div>
@@ -1509,7 +1479,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-praca-exp.png" alt="praça exportada">
+                            <img src="/img/relatorio/dev-06-praca-exp.png" alt="praça exportada">
                             <figcaption>Imagem exportada da praça.</figcaption>
                         </figure>
                     </div>
@@ -1518,7 +1488,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-concluir-03.jpeg" alt="icone novo">
+                            <img src="/img/relatorio/dev-06-concluir-03.jpeg" alt="icone novo">
                             <figcaption>Ícone do botão de concluir atualizado para uma seta.</figcaption>
                         </figure>
                     </div>
@@ -1528,7 +1498,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-info-01.jpeg" alt="infos">
+                            <img src="/img/relatorio/dev-06-info-01.jpeg" alt="infos">
                             <figcaption>Tela de informações da praça.</figcaption>
                         </figure>
                     </div>
@@ -1537,7 +1507,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-info-02.jpeg" alt="configurações">
+                            <img src="/img/relatorio/dev-06-info-02.jpeg" alt="configurações">
                             <figcaption>Tela de ajuda do aplicativo.</figcaption>
                         </figure>
                     </div>
@@ -1546,7 +1516,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-splash.png" alt="splash screen">
+                            <img src="/img/relatorio/dev-06-splash.png" alt="splash screen">
                             <figcaption>Nova splash screen do aplicativo.</figcaption>
                         </figure>
                     </div>
@@ -1555,7 +1525,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-home.jpeg" alt="home screen">
+                            <img src="/img/relatorio/dev-06-home.jpeg" alt="home screen">
                             <figcaption>Tela inicial do aplicativo.</figcaption>
                         </figure>
                     </div>
@@ -1568,7 +1538,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-novos-itens-01.png" alt="novos itens">
+                            <img src="/img/relatorio/dev-06-novos-itens-01.png" alt="novos itens">
                             <figcaption>Novos itens posicionados um do lado do outro.</figcaption>
                         </figure>
                     </div>
@@ -1579,7 +1549,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-novos-itens-02.jpeg" alt="novos itens">
+                            <img src="/img/relatorio/dev-06-novos-itens-02.jpeg" alt="novos itens">
                             <figcaption>Diversos ângulos da lixeira da Comlurb, remodelada, dentro da plataforma.</figcaption>
                         </figure>
                     </div>
@@ -1588,7 +1558,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-novos-itens-03.png" alt="novos itens">
+                            <img src="/img/relatorio/dev-06-novos-itens-03.png" alt="novos itens">
                             <figcaption>Modelo de lixeira da Comlurb antes e depois de ser totalmente refeito.</figcaption>
                         </figure>
                     </div>
@@ -1601,7 +1571,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/dev-06-novos-itens-04.png" alt="novos itens">
+                            <img src="/img/relatorio/dev-06-novos-itens-04.png" alt="novos itens">
                             <figcaption>Última leva de novos itens adicionados.</figcaption>
                         </figure>
                     </div>
@@ -1610,58 +1580,58 @@
 
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="arquivos/renders/banco-de-concreto.png" alt="banco de concreto">
+                            <img src="/arquivos/renders/banco-de-concreto.png" alt="banco de concreto">
                         </figure>
                         <figure>
-                            <img src="arquivos/renders/banco-de-madeira.png" alt="banco de madeira">
+                            <img src="/arquivos/renders/banco-de-madeira.png" alt="banco de madeira">
                         </figure>
                         <figure>
-                            <img src="arquivos/renders/barra-fixa.png" alt="barra fixa">
-                        </figure>
-                    </div>
-
-                    <div class="image-gallery three-columns">
-                        <figure>
-                            <img src="arquivos/renders/bicicletario-u-x2.png" alt="bicicletario">
-                        </figure>
-                        <figure>
-                            <img src="arquivos/renders/cereja-do-mato.png" alt="cereja do mato">
-                        </figure>
-                        <figure>
-                            <img src="arquivos/renders/cesta-basquuete.png" alt="cesta de basquete">
+                            <img src="/arquivos/renders/barra-fixa.png" alt="barra fixa">
                         </figure>
                     </div>
 
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="arquivos/renders/escorrega.png" alt="escorrega">
+                            <img src="/arquivos/renders/bicicletario-u-x2.png" alt="bicicletario">
                         </figure>
                         <figure>
-                            <img src="arquivos/renders/gangorra.png" alt="gangorra">
+                            <img src="/arquivos/renders/cereja-do-mato.png" alt="cereja do mato">
                         </figure>
                         <figure>
-                            <img src="arquivos/renders/lixeira-comlurb.png" alt="lixeira">
-                        </figure>
-                    </div>
-
-                    <div class="image-gallery three-columns">
-                        <figure>
-                            <img src="arquivos/renders/mesa-de-xadrez.png" alt="mesa de xadrez">
-                        </figure>
-                        <figure>
-                            <img src="arquivos/renders/monumento-estatua.png" alt="estatua">
-                        </figure>
-                        <figure>
-                            <img src="arquivos/renders/mupi.png" alt="mupi">
+                            <img src="/arquivos/renders/cesta-basquuete.png" alt="cesta de basquete">
                         </figure>
                     </div>
 
                     <div class="image-gallery three-columns">
                         <figure>
-                            <img src="arquivos/renders/palmeira.png" alt="palmeira">
+                            <img src="/arquivos/renders/escorrega.png" alt="escorrega">
                         </figure>
                         <figure>
-                            <img src="arquivos/renders/poste-duplo.png" alt="poste duplo">
+                            <img src="/arquivos/renders/gangorra.png" alt="gangorra">
+                        </figure>
+                        <figure>
+                            <img src="/arquivos/renders/lixeira-comlurb.png" alt="lixeira">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="/arquivos/renders/mesa-de-xadrez.png" alt="mesa de xadrez">
+                        </figure>
+                        <figure>
+                            <img src="/arquivos/renders/monumento-estatua.png" alt="estatua">
+                        </figure>
+                        <figure>
+                            <img src="/arquivos/renders/mupi.png" alt="mupi">
+                        </figure>
+                    </div>
+
+                    <div class="image-gallery three-columns">
+                        <figure>
+                            <img src="/arquivos/renders/palmeira.png" alt="palmeira">
+                        </figure>
+                        <figure>
+                            <img src="/arquivos/renders/poste-duplo.png" alt="poste duplo">
                         </figure>
                         <figure>
                             
@@ -1683,7 +1653,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/demo-01.png" alt="grid com 3 linhas">
+                            <img src="/img/relatorio/demo-01.png" alt="grid com 3 linhas">
                             <figcaption>Grid com 3 linhas para melhor aproveitamento do espaço de tela.</figcaption>
                         </figure>
                     </div>
@@ -1696,7 +1666,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/demo-02.png" alt="site galeria">
+                            <img src="/img/relatorio/demo-02.png" alt="site galeria">
                             <figcaption>Site com a galeria de praças.</figcaption>
                         </figure>
                     </div>
@@ -1705,24 +1675,24 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/demo-03.jpg" alt="guia impresso">
+                            <img src="/img/relatorio/demo-03.jpg" alt="guia impresso">
                             <figcaption>Prancha A4 feita para o Demo Day.</figcaption>
                         </figure>
                     </div>
 
                     <p>Os arquivos instaláveis do aplicativo para Android estão disponíveis para download: <a target="_blank" class="texto-azul" href="https://github.com/Feliperpvieira/rePraca/releases/tag/v0.2.0-beta">https://github.com/Feliperpvieira/rePraca/releases/tag/v0.2.0-beta</a></p>
-                    <p>O site com a galeria de todas as praças imaginadas pode ser acessado em: <a class="texto-azul" href="demoday/galeria/index.html">https://feliperpv.com/repraca/demoday/galeria/</a></p>
+                    <p>O site com a galeria de todas as praças imaginadas pode ser acessado em: <a class="texto-azul" href="/demoday/galeria/index.html">https://feliperpv.com/repraca/demoday/galeria/</a></p>
                     <p>Além disso, também está disponível uma versão web, acessível pelo computador, do rePraça, que pode ser acessada <a class="texto-azul" href="demoday/web/index.html">neste link</a>. Vale ressaltar que, como o foco do aplicativo são plataformas mobile, com telas de toque, essa versão para computadores é apenas demonstrativa e não deve ser usada para avaliar a experiência final. O uso de mouse e teclado gera alguns problemas que não ocorrem no celular, como a velocidade baixa da rolagem das telas, interferência entre navegação na interface e movimentação da câmera, entre outras questões. De qualquer modo, a versão web é uma ótima maneira de ter uma percepção geral de como o projeto funciona sem nenhum download.</p>
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/demo-04.jpg" alt="mesa">
+                            <img src="/img/relatorio/demo-04.jpg" alt="mesa">
                             <figcaption>Mesa de exposição do projeto rePraça.</figcaption>
                         </figure>
                     </div>
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/demo-05.png" alt="usuario">
+                            <img src="/img/relatorio/demo-05.png" alt="usuario">
                             <figcaption>Visitante usando o projeto. No computador é possível ver a galeria com todas as praças.</figcaption>
                         </figure>
                     </div>
@@ -1731,7 +1701,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="demoday/galeria/images/praca_BaraoDeCorumba-topo (13).png" alt="usuario">
+                            <img src="/demoday/galeria/images/praca_BaraoDeCorumba-topo (13).png" alt="usuario">
                             <figcaption>Uma das praças com objetos apenas na área bege.</figcaption>
                         </figure>
                     </div>
@@ -1743,7 +1713,7 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="img/relatorio/demo-06.jpeg" alt="botoes">
+                            <img src="/img/relatorio/demo-06.jpeg" alt="botoes">
                             <figcaption>Botões na parte inferior da tela ao selecionar um objeto.</figcaption>
                         </figure>
                     </div>
@@ -1753,13 +1723,13 @@
 
                     <div class="image-gallery single-image">
                         <figure>
-                            <img src="demoday/galeria/images/praca_BaraoDeCorumba-topo (6).png" alt="usuario">
+                            <img src="/demoday/galeria/images/praca_BaraoDeCorumba-topo (6).png" alt="usuario">
                             <figcaption>Grupo de estátuas encara a cesta de basquete.</figcaption>
                         </figure>
                     </div>
 
                     <p>Com pouco mais de vinte praças montadas ao longo do Demo Day, a visão geral dos usuários foi positiva e não apareceu nenhum problema grande ou marcante. As funções de mudar câmera e iluminação geraram uma boa surpresa nos usuários e as peças do mobiliário foram elogiadas pelo visual. Algumas dúvidas e pedidos de ajustes na interface foram feitos, mas foram apenas isso: pequenos ajustes para deixar as telas ainda mais claras. No geral, o resultado foi extremamente satisfatório, tendo sido possível obter feedback e validado o interesse do público pelas ideias da plataforma.</p>
-                    <p>Confira todas as 22 praças imaginadas durante o Demo Day na <a class="texto-azul" href="demoday/galeria/index.html">Galeria de Praças</a></p>
+                    <p>Confira todas as 22 praças imaginadas durante o Demo Day na <a class="texto-azul" href="/demoday/galeria/index.html">Galeria de Praças</a></p>
 
                 </section>
                 
@@ -1771,10 +1741,10 @@
 
                     <div class="image-gallery">
                         <figure>
-                            <img src="img/relatorio/i-wish-this-was-mural.jpg" alt="Painel da obra I wish this was">
+                            <img src="/img/relatorio/i-wish-this-was-mural.jpg" alt="Painel da obra I wish this was">
                         </figure>
                         <figure>
-                            <img src="img/relatorio/demo-02.png" alt="Tela da galeria de praças do projeto">
+                            <img src="/img/relatorio/demo-02.png" alt="Tela da galeria de praças do projeto">
                         </figure>
                         <figcaption>Obra da Candy Chang e galeria de praças lado a lado.</figcaption>
 
@@ -1794,42 +1764,10 @@
 
                 </section>
 
-                <section class="repraca-def">
-                    <div class="logo-3r">
-                        <img src="img/repraca-icone.png" width="178" alt="Ícone do aplicativo rePraça">
-                        <div>
-                            <h3><b><span class="texto-azul">Repense</span>,</b></h3>
-                            <h3><b><span class="texto-azul">reimagine</span>,</b></h3>
-                            <h3 class="texto-azul"><b>rePraça</b></h3>
-                        </div>
-                    </div>
-
-                    <a href='https://play.google.com/store/apps/details?id=com.frpv.rePraca'>
-                        <img width="200" alt='Disponível no Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png'/>
-                    </a>
-                </section>
+                <Download />
                 
             </div>
             
-
-    
-        
-
-            <footer> 
-                <a href="https://feliperpv.com"><img src="https://feliperpv.com/img/frpv-logo.svg" width="134" alt="frpv logo"></a>
-
-                <div class="contato">
-                    <p>Entre em contato:</p>
-                    <a href="mailto:repraca@feliperpv.com">repraca@feliperpv.com</a>
-                </div>
-
-                <div class="termos-legais">
-                    <p>© 2023 rePraça - Todos os direitos reservados</p>
-                    <a href="privacidade.html">Política de Privacidade</a>
-                    <p class="github">Código fonte disponível no <a href="https://github.com/Feliperpvieira/rePraca">Github</a></p>
-                    <p>Google Play e o logotipo do Google Play são marcas registradas da Google LLC.</p>
-                </div>       
-            </footer>
        </main>
-    </body>
-</html>
+
+</Layout>
