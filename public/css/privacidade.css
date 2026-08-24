@@ -28,10 +28,26 @@ header .logo:hover img{
     color: #F9EFE7;
 }
 
+.politica h5{
+    font-size: 24px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
 .politica ul{
     list-style-type: disc;
-    line-height: 200%;
     list-style-position: inside;
+
+    margin-bottom: 16px;
+}
+
+.politica ul, .politica p{
+    line-height: 150%;
+}
+
+.politica ul li{
+    font-size: 17px;
+    margin-top: 8px;
 }
 
 .politica .atualizacao{
@@ -56,12 +72,17 @@ header .logo:hover img{
     margin: 24px 0;
 }
 
-.btn-play{
-    display: block; 
-    text-align:center; 
-    margin: 48px 0;
+h2.old-politica{
+    margin-top: 8rem;
 }
 
+details{
+    margin-top: 2rem;
+}
+
+.summary{
+    cursor: pointer;
+}
 
 
 /* remove a margem excessiva no repense, reimagine, repraça no fim das paginas */

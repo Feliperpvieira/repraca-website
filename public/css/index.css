@@ -12,6 +12,7 @@ html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,ifr
 /* body font */
 body{
     font-family: 'Cabin', sans-serif;
+    background-color: #F9EFE7;;
 }
 
 main{
