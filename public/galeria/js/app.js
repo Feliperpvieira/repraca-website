@@ -230,64 +230,81 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
     // NOTA: 34 é uma distância estimada além do nome da categoria — não
     // dá pra testar isto sem renderizar de verdade, então é bem provável
     // que precise ajustar esse número depois de ver ao vivo no site.
-    const DISTANCIA_EXTRA_VALORES = 34;
+    const DISTANCIA_EXTRA_VALORES = 32;
 
     const valoresColoridosPlugin = {
-        id: 'valoresColoridos',
-        afterDraw(chart) {
-            const escala = chart.scales.r;
-            if (!escala) return;
+    id: 'valoresColoridos',
+    afterDraw(chart) {
+        const escala = chart.scales.r;
+        if (!escala) return;
 
-            const { ctx } = chart;
-            const centroX = escala.xCenter;
+        const { ctx } = chart;
 
-            ctx.save();
-            ctx.textBaseline = "middle";
-            ctx.font = "bold 12px Cabin";
+        ctx.save();
+        ctx.textBaseline = "top";
+        ctx.font = "bold 12px Cabin";
 
-            categorias.forEach((_, index) => {
-                const distancia = escala.drawingArea + DISTANCIA_EXTRA_VALORES;
-                const { x, y } = escala.getPointPosition(index, distancia);
+        categorias.forEach((_, index) => {
+            const original = Math.round(percentuaisOriginais[categorias[index]] || 0);
+            const imaginada = Math.round(percentuaisImaginados[categorias[index]] || 0);
 
-                const original = Math.round(percentuaisOriginais[categorias[index]] || 0);
-                const imaginada = Math.round(percentuaisImaginados[categorias[index]] || 0);
+            const textoOriginal = `${original}%`;
+            const textoBarra = " / ";
+            const textoImaginada = `${imaginada}%`;
 
-                const textoOriginal = `${original}%`;
-                const textoBarra = " / ";
-                const textoImaginada = `${imaginada}%`;
+            const larguraOriginal = ctx.measureText(textoOriginal).width;
+            const larguraBarra = ctx.measureText(textoBarra).width;
+            const larguraImaginada = ctx.measureText(textoImaginada).width;
+            const larguraTotal = larguraOriginal + larguraBarra + larguraImaginada;
 
-                const larguraTotal = ctx.measureText(textoOriginal).width
-                    + ctx.measureText(textoBarra).width
-                    + ctx.measureText(textoImaginada).width;
+            // Obtém as coordenadas exatas do rótulo da categoria desenhado pelo Chart.js
+            const labelItem = escala._pointLabelItems?.[index];
 
-                // Mesma lógica de alinhamento que o Chart.js usa pros
-                // rótulos: centralizado no topo/base, alinhado à direita
-                // do lado esquerdo do círculo, à esquerda do lado direito.
-                let cursorX;
-                if (x < centroX - 1) cursorX = x - larguraTotal;
-                else if (x > centroX + 1) cursorX = x;
-                else cursorX = x - larguraTotal / 2;
+            let posX, posY;
+            if (labelItem) {
+                // Centraliza horizontalmente com o texto do título e posiciona logo abaixo dele
+                posX = (labelItem.left + labelItem.right) / 2;
+                posY = labelItem.bottom + 4; // Distância (em px) abaixo do título
+            } else {
+                // Fallback caso a propriedade interna não esteja disponível
+                const pos = escala.getPointPosition(index, escala.drawingArea + 36);
+                posX = pos.x;
+                posY = pos.y + 14;
+            }
 
-                ctx.textAlign = "left";
+            let cursorX = posX - larguraTotal / 2;
 
-                ctx.fillStyle = corTerracota;
-                ctx.fillText(textoOriginal, cursorX, y);
-                cursorX += ctx.measureText(textoOriginal).width;
+            ctx.textAlign = "left";
 
-                ctx.fillStyle = corBege;
-                ctx.fillText(textoBarra, cursorX, y);
-                cursorX += ctx.measureText(textoBarra).width;
+            ctx.fillStyle = corTerracota;
+            ctx.fillText(textoOriginal, cursorX, posY);
+            cursorX += larguraOriginal;
 
-                ctx.fillStyle = corVerde;
-                ctx.fillText(textoImaginada, cursorX, y);
-            });
+            ctx.fillStyle = corBege;
+            ctx.fillText(textoBarra, cursorX, posY);
+            cursorX += larguraBarra;
 
-            ctx.restore();
-        },
-    };
+            ctx.fillStyle = corVerde;
+            ctx.fillText(textoImaginada, cursorX, posY);
+        });
+
+        ctx.restore();
+    },
+};
+
+const espacamentoLegendaPlugin = {
+    id: 'espacamentoLegenda',
+    beforeInit(chart) {
+        const fitOriginal = chart.legend.fit;
+        chart.legend.fit = function fit() {
+            fitOriginal.bind(chart.legend)();
+            this.height += 16; // Ajuste aqui: quanto maior o número, mais o gráfico desce
+        };
+    },
+};
 
     graficosRadar[canvasId] = new Chart(canvas, {
-        plugins: [valoresColoridosPlugin],
+        plugins: [valoresColoridosPlugin, espacamentoLegendaPlugin],
         type: "radar",
         data: {
             labels: categorias,
@@ -319,7 +336,8 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            layout: { padding: { top: 4, right: 24, bottom: 12, left: 24 } },
+            // padding interna do canvas do grafico
+            layout: { padding: { top: -16, right: 24, bottom: 22, left: 24 } },
             scales: {
                 r: {
                     min: 0,
@@ -328,6 +346,7 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
                     // Só mostra 25/50/75/100% — o 0% fica escondido pra não
                     // competir visualmente com o centro do gráfico.
                     ticks: {
+                        display: false,
                         stepSize: 25,
                         color: "rgba(249, 239, 231, 0.72)",
                         font: { ...fonteBase, size: 10, weight: "500" },
@@ -341,7 +360,7 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
                     pointLabels: {
                         color: corBege,
                         padding: 14,
-                        font: { ...fonteBase, size: 12, weight: "600" },
+                        font: { ...fonteBase, size: 14, weight: "400" },
                     },
                 },
             },
@@ -351,12 +370,12 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
                     position: "top",
                     labels: {
                         color: corBege,
-                        padding: 8,
+                        padding: 32,
                         usePointStyle: true,
                         pointStyle: "rectRounded",
                         boxWidth: 18,
-                        boxHeight: 7,
-                        font: { ...fonteBase, size: 11, weight: "600" },
+                        boxHeight: 10,
+                        font: { ...fonteBase, size: 14, weight: "400" },
                     },
                 },
                 tooltip: {
@@ -366,8 +385,8 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
                     borderColor: "rgba(249, 239, 231, 0.25)",
                     borderWidth: 1,
                     padding: 10,
-                    titleFont: { ...fonteBase, weight: "600" },
-                    bodyFont: { ...fonteBase, size: 12 },
+                    titleFont: { ...fonteBase, weight: "400" },
+                    bodyFont: { ...fonteBase, size: 14 },
                     callbacks: {
                         label: context => `${context.dataset.label}: ${Number(context.raw || 0).toFixed(0)}%`,
                     },

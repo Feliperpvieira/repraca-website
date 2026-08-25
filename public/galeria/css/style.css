@@ -9,18 +9,7 @@
     --terracota: #B76F51;
 }
 
-body { 
-    background-color: var(--bege); 
-    color: black; 
-    font-family: 'Cabin', sans-serif;
-}
-
-.img-logo { 
-    max-width: 100%; 
-    height: auto; 
-}
-
-.container { 
+.container { /*  container branco que ocupa a horizontal toda da tela */
     max-width: 1200px; 
     padding: 40px 20px; 
     margin: 0 auto; 
@@ -226,23 +215,33 @@ body {
     left: 50%; 
     transform: translateX(-50%); 
     display: flex; 
-    gap: 8px; 
+    gap: 16px; 
 }
 
 .btn-vista { 
     padding: 8px 16px; 
+    width: 72px;
     border: none; 
-    border-radius: 20px; 
-    background: rgba(255,255,255,0.85); 
-    color: #0A6EB6; font-size: 0.85rem; 
+    border-radius: 42px; 
+    background: var(--bege); 
+    color: var(--azul);;
+    font-size: 0.85rem; 
     font-weight: bold; 
     cursor: pointer; 
     transition: 0.2s; 
 }
 
+.btn-vista img{
+    filter: brightness(0) saturate(100%) invert(28%) sepia(99%) saturate(759%) hue-rotate(173deg) brightness(105%) contrast(103%);
+    height: 28px;
+}
+
 .btn-vista.ativo { 
-    background: #0A6EB6; 
-    color: white; 
+    background: linear-gradient(154deg, rgba(10, 110, 182, 0.70) 31.41%, rgba(10, 110, 182, 0.70) 44.7%, rgba(19, 28, 59, 0.70) 102.06%), linear-gradient(151deg, rgba(249, 239, 231, 0.70) 12.97%, rgba(183, 111, 81, 0.70) 100%), #131C3B;
+}
+
+.btn-vista.ativo img{ 
+    filter: brightness(0) saturate(100%) invert(91%) sepia(3%) saturate(1171%) hue-rotate(40deg) brightness(113%) contrast(95%);
 }
 
 /* SIDEBAR: header fixo em cima + abas embaixo */
@@ -271,6 +270,8 @@ body {
 .sidebar-topo h2{
     margin: 0;
     font-weight: normal;
+    text-align: left;
+    font-size: 1.6rem;
 }
 
 .praca-numero { 
@@ -278,10 +279,11 @@ body {
     letter-spacing: 0.5px; 
     /* margin-bottom: 4px;  */
     margin: 0;
+    font-size: 0.9rem;
 }
 
 .praca-base { 
-    font-size: 0.85rem; 
+    font-size: 0.9rem; 
     color: #757575; 
     margin-top: 2px; 
 }
@@ -559,7 +561,7 @@ body {
 .radar-container {
     position: relative;
     width: 100%;
-    height: 340px;
+    height: 360px;
     margin-bottom: 16px;
 }
 
@@ -726,6 +728,19 @@ body {
 
 /* Para telemóveis, o modal empilha a foto e os dados */
 @media (max-width: 768px) {
+    .btn-vista { 
+        width: 54px;
+        padding: 6px 10px;
+    }
+
+    .btn-vista img{
+        height: 20px;
+    }
+
+    .toggle-vista {
+        bottom: 10px;
+    }
+
     .popup-content { 
         flex-direction: column; 
         aspect-ratio: auto; 
@@ -832,6 +847,11 @@ body {
         flex: 1 1 calc(50% - 8px);
     }
 }
+
+
+
+
+
 
 /* ==========================================
    LISTA DE PRAÇAS-BASE (hub da galeria geral)
