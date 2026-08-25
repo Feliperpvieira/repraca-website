@@ -456,11 +456,12 @@ function criarListaComparativa(dadosImaginados, dadosOriginais, opcoes = {}) {
 // nomeDaPracaAtual, lá embaixo).
 //
 // slug e nome vêm como data-attributes no <body>, escritos pelo Astro
-// (ver GaleriaLayout.astro); os itens originais (pro radar) vêm de um
-// <script type="application/json"> embutido pela própria página da praça.
+// (ver GaleriaLayout.astro). O slug é o que importa pra filtrar dados
+// (bate com mapa_id no Supabase); o nome é só informativo por aqui, já
+// que título/descrição na tela já vêm prontos do Astro.
 
 const slugPracaAtual = document.body.dataset.pracaSlug || null;
-let nomeDaPracaAtual = document.body.dataset.pracaNome || null;
+const nomeDaPracaAtual = document.body.dataset.pracaNome || null; // não usado pra filtrar nada
 
 function itensOriginaisEmbutidos() {
     const el = document.getElementById("dados-itens-originais");
@@ -473,11 +474,11 @@ function itensOriginaisEmbutidos() {
     }
 }
 
-async function carregarEstatisticasDaPraca(nomeDaPraca, itensOriginais) {
+async function carregarEstatisticasDaPraca(slugDaPraca, itensOriginais) {
     const { data, error } = await db
         .from('city_creations')
         .select('layout_data')
-        .eq('nome_da_cena', nomeDaPraca);
+        .eq('mapa_id', slugDaPraca);
 
     if (error) {
         console.error("Erro ao buscar reimaginações da praça:", error);
@@ -586,7 +587,7 @@ async function carregarPracas() {
         : db.from('city_creations').select(colunas);
 
     query = query.gte('total_objects', minItens);
-    if (nomeDaPracaAtual) query = query.eq('nome_da_cena', nomeDaPracaAtual);
+    if (slugPracaAtual) query = query.eq('mapa_id', slugPracaAtual);
 
     if (ordem === "recentes") query = query.order('created_at', { ascending: false });
     if (ordem === "antigas") query = query.order('created_at', { ascending: true });
@@ -765,10 +766,17 @@ async function preencherModal(praca) {
     // --- Dados da praça imaginada ---
     const jsonConvertido = JSON.parse(praca.layout_data);
     const itens = jsonConvertido.layoutDaPraca || [];
-    const nomeBase = praca.nome_da_cena || jsonConvertido.nomeDaCena || "";
+
+    // "mapaId" (ex: "barao-de-corumba") é o identificador estável que liga
+    // essa criação à praça-base certa — bate com o nome do arquivo em
+    // dados/pracas/*.json. "nomeDaCena" é só o nome de exibição; não dá
+    // mais pra usar a coluna nome_da_cena da linha pra isso (agora é
+    // sempre "Jogo", já que todas as praças carregam a mesma cena de UI).
+    const slugBase = jsonConvertido.mapaId || "";
+    const nomeBase = jsonConvertido.nomeDaCena || "";
 
     const itensPorCategoria = contarItensImaginados(itens);
-    const dadosPracaOriginal = await carregarDadosDaPraca(nomeBase);
+    const dadosPracaOriginal = await carregarDadosDaPraca(slugBase);
     const itensOriginais = organizarItensOriginais(dadosPracaOriginal.itens || {});
 
     desenharRadar(itensOriginais, itensPorCategoria);
@@ -967,8 +975,8 @@ async function iniciarGaleria() {
     await carregarCatalogoItens();
     preencherFiltroDeItens();
 
-    if (slugPracaAtual && nomeDaPracaAtual) {
-        await carregarEstatisticasDaPraca(nomeDaPracaAtual, itensOriginaisEmbutidos());
+    if (slugPracaAtual) {
+        await carregarEstatisticasDaPraca(slugPracaAtual, itensOriginaisEmbutidos());
     }
 
     lidarComNavegacao();
