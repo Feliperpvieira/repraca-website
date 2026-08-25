@@ -292,15 +292,33 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
     },
 };
 
+//Espaço ABAIXO da legenda do radar
+// const espacamentoLegendaPlugin = {
+//     id: 'espacamentoLegenda',
+//     beforeInit(chart) {
+//         const fitOriginal = chart.legend.fit;
+//         chart.legend.fit = function fit() {
+//             fitOriginal.bind(chart.legend)();
+//             this.height += 16; // Ajuste aqui: quanto maior o número, mais o gráfico desce
+//         };
+//     },
+// };
+
+//Espaço ACIMA da legenda - pra quando a legenda estiver no bottom
 const espacamentoLegendaPlugin = {
     id: 'espacamentoLegenda',
     beforeInit(chart) {
         const fitOriginal = chart.legend.fit;
         chart.legend.fit = function fit() {
             fitOriginal.bind(chart.legend)();
-            this.height += 16; // Ajuste aqui: quanto maior o número, mais o gráfico desce
+            this.height += 32; // 1. Reserva o espaço extra no layout
         };
     },
+    afterLayout(chart) {
+        if (chart.legend && chart.legend.options.position === 'bottom') {
+            chart.legend.top += 32; // 2. Desloca a legenda para baixo, deixando o vão no topo
+        }
+    }
 };
 
     graficosRadar[canvasId] = new Chart(canvas, {
@@ -337,7 +355,7 @@ const espacamentoLegendaPlugin = {
             responsive: true,
             maintainAspectRatio: false,
             // padding interna do canvas do grafico
-            layout: { padding: { top: -16, right: 24, bottom: 22, left: 24 } },
+            layout: { padding: { top: 6, right: 24, bottom: 0, left: 24 } },
             scales: {
                 r: {
                     min: 0,
@@ -355,7 +373,7 @@ const espacamentoLegendaPlugin = {
                         padding: 2,
                         callback: valor => (valor === 0 ? "" : valor + "%"),
                     },
-                    grid: { color: "rgba(249, 239, 231, 0.14)", lineWidth: 1 },
+                    grid: { color: "rgba(249, 239, 231, 0.3)", lineWidth: 1 },
                     angleLines: { color: "rgba(249, 239, 231, 0.11)", lineWidth: 1 },
                     pointLabels: {
                         color: corBege,
@@ -367,10 +385,10 @@ const espacamentoLegendaPlugin = {
             plugins: {
                 legend: {
                     display: true,
-                    position: "top",
+                    position: "bottom",
                     labels: {
                         color: corBege,
-                        padding: 32,
+                        padding: 22,
                         usePointStyle: true,
                         pointStyle: "rectRounded",
                         boxWidth: 18,
