@@ -60,10 +60,10 @@ export default {
 
       const titulo = praca.titulo
         ? `${praca.titulo} — rePraça`
-        : "Praça Reimaginada — rePraça";
+        : "Praça re-imaginada — rePraça";
 
       const descricao = nomeDaPracaBase
-        ? `Uma criação com ${praca.total_objects} itens, baseada na praça ${nomeDaPracaBase}. Vem ver no rePraça!`
+        ? `Uma criação baseada na praça ${nomeDaPracaBase}. Vem ver no rePraça!`
         : `Uma criação com ${praca.total_objects} itens no rePraça. Vem ver!`;
 
       return new HTMLRewriter()
