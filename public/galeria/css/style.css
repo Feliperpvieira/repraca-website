@@ -337,7 +337,7 @@
      overflow-y: auto; 
      display: flex; 
      flex-direction: column; 
-     background: #fdfdfd; 
+     background: var(--bege); 
     }
 
 .texto-dica { 
@@ -858,7 +858,6 @@
     .popup-sidebar { 
         flex: 1 1 auto; 
         min-height: 0; 
-        background-color: var(--bege);
     }
 
     /* No mobile o espaço é curto demais pra ter cabeçalho fixo + scroll
