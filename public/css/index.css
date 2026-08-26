@@ -705,7 +705,9 @@ footer > div{
     }
     
     .img-logo{
-        width: 75%;
+        width: auto;
+        max-width: 75%;
+        max-height: 160px;
     }
 
     /* capa google play */

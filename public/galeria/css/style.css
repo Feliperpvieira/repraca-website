@@ -86,6 +86,51 @@
     object-fit: contain; 
 }
 
+
+/* filtro slider e checkboxes e remix */
+.filtro-grupo--slider {
+    min-width: 220px;
+}
+
+.filtro-grupo--slider input[type="range"] {
+    width: 100%;
+    accent-color: var(--azul, #131C3B); /* cor do "thumb" e da trilha preenchida */
+    cursor: pointer;
+}
+
+.filtro-grupo--checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filtro-grupo--checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--azul, #131C3B);
+}
+
+/* Selo "↻ remix" no canto do card — só aparece quando a praça tem
+    praca_pai_id preenchido (ver desenharCards() em app.js) */
+.card-praca {
+    position: relative;
+}
+
+.card-remix-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(19, 28, 59, 0.82);
+    color: #F9EFE7;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    pointer-events: none;
+}
+
 /* GRID E CARDS */
 .grid-galeria { 
     display: grid; 
@@ -125,8 +170,11 @@
 }
 
 .card-likes { 
+    display: inline-flex;
+    align-items: center;
+    gap: 4px; /* espaçamento entre o ícone e o número */
     font-weight: bold; 
-    color: #e63946; 
+    color: var(--terracota); 
 }
 
 .loading-spinner { 
@@ -219,29 +267,65 @@
 }
 
 .btn-vista { 
-    padding: 8px 16px; 
-    width: 72px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 76px;
+    height: 48px;
+    padding: 0;
+
     border: none; 
     border-radius: 42px; 
-    background: var(--bege); 
-    color: var(--azul);;
-    font-size: 0.85rem; 
-    font-weight: bold; 
+    /* 1. Fundo base (inativo) fica sempre fixo aqui */
+    background: linear-gradient(163deg, #FFF -41.94%, #FEF2E0 124.59%); 
+    color: var(--azul);
     cursor: pointer; 
-    transition: 0.2s; 
+
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1;
 }
 
-.btn-vista img{
-    filter: brightness(0) saturate(100%) invert(28%) sepia(99%) saturate(759%) hue-rotate(173deg) brightness(105%) contrast(103%);
-    height: 28px;
-}
-
-.btn-vista.ativo { 
+/* 2. Camada ativa (fica por cima e transiciona a opacidade de 0 a 1 e de 1 a 0) */
+.btn-vista::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
     background: linear-gradient(154deg, rgba(10, 110, 182, 0.70) 31.41%, rgba(10, 110, 182, 0.70) 44.7%, rgba(19, 28, 59, 0.70) 102.06%), linear-gradient(151deg, rgba(249, 239, 231, 0.70) 12.97%, rgba(183, 111, 81, 0.70) 100%), #131C3B;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
-.btn-vista.ativo img{ 
-    filter: brightness(0) saturate(100%) invert(91%) sepia(3%) saturate(1171%) hue-rotate(40deg) brightness(113%) contrast(95%);
+/* 3. ATENÇÃO: Nunca declare "background:" aqui dentro */
+.btn-vista.ativo::before { 
+    opacity: 1;
+}
+
+/* Efeito de Squish */
+.btn-vista:active {
+    transform: scale(0.92, 0.86);
+}
+
+.btn-vista svg {
+    height: 24px;
+    width: auto;
+    max-width: 36px;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.btn-vista svg path {
+    fill: var(--azul);
+    transition: fill 0.3s ease;
+}
+
+.btn-vista.ativo svg path {
+    fill: var(--bege);
 }
 
 /* SIDEBAR: header fixo em cima + abas embaixo */
@@ -332,6 +416,22 @@
 
 .btn-like:hover svg path, .btn-like.curtido svg path { 
     fill: white; 
+}
+
+/* Animação com rotação e "pop" elástico */
+@keyframes dancaCoracao {
+    0%   { transform: scale(1) rotate(0deg); }
+    20%  { transform: scale(0.75) rotate(-16deg); }
+    45%  { transform: scale(1.35) rotate(14deg); }
+    70%  { transform: scale(1.1) rotate(-8deg); }
+    85%  { transform: scale(1.18) rotate(8deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Dispara a dancinha apenas no SVG do botão */
+.btn-like.animar svg {
+    animation: dancaCoracao 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center;
 }
 
 .btn-remix { 
@@ -484,7 +584,7 @@
     flex: 1; 
     padding: 25px; 
     color: white; 
-    overflow-y: auto; 
+    overflow-y: visible; 
 
     z-index: 1;
 }
@@ -763,9 +863,9 @@
     /* No mobile o espaço é curto demais pra ter cabeçalho fixo + scroll
        separado dentro da aba — deixa tudo (header + abas + conteúdo)
        rolar junto, como um painel só. */
-    .tabs-conteudo { 
+    /* .tabs-conteudo { 
         overflow-y: visible; 
-    }
+    } */
 }
 
 /* ==========================================

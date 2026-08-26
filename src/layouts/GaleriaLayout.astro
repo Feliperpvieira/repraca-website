@@ -73,7 +73,7 @@ const cssFiles = [
 
     <Footer />
 
-    <!-- O MODAL (POPUP) QUE ABRE VIA ?id= NA URL — igual nas duas páginas -->
+    <!-- O MODAL (POPUP) QUE ABRE VIA ?id= NA URL -->
     <div id="popup" class="escondido">
         <div class="popup-content">
             <button id="btnFecharModal" class="btn-fechar">X</button>
@@ -82,10 +82,14 @@ const cssFiles = [
                 <img src="" alt="Vista da praça" id="selectedImage" />
                 <div class="toggle-vista">
                     <button id="btnVistaTopo" class="btn-vista ativo" title="Vista de topo">
-                        <img src="/img/icone-camera-topo.svg" height="50" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="40" viewBox="0 0 27 40" fill="none">
+                            <path d="M3.375 26.6667C1.512 26.6667 4.44159e-07 25.1733 5.24588e-07 23.3333L1.39882e-06 3.33333C1.47932e-06 1.49167 1.512 -1.11412e-06 3.375 -1.03268e-06L23.625 -1.47526e-07C25.488 -6.60916e-08 27 1.49167 27 3.33333L27 23.3333C27 25.1733 25.488 26.6667 23.625 26.6667L3.375 26.6667ZM21.9995 40C23.805 40 24.6863 37.7967 23.3788 36.5516L17.078 30.5516C16.7061 30.1975 16.2123 30 15.6988 30L11.3012 30C10.7877 30 10.2939 30.1975 9.92202 30.5516L3.62123 36.5516C2.31374 37.7967 3.19497 40 5.00045 40L21.9995 40Z" fill="#F9EFE7"/>
+                        </svg>
                     </button>
                     <button id="btnVistaAngulo" class="btn-vista" title="Vista de ângulo">
-                        <img src="/img/icone-camera-angulo.svg" height="50" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="39" viewBox="0 0 45 39" fill="none">
+                        <path d="M23.551 32.5689C22.6195 34.1823 20.5703 34.745 18.9768 33.825L1.65628 23.825C0.0613534 22.9042 -0.474468 20.849 0.457032 19.2355L10.582 1.69853C11.5135 0.0851261 13.5614 -0.478471 15.1563 0.442362L32.4768 10.4424C34.0703 11.3624 34.6075 13.4185 33.676 15.0319L23.551 32.5689ZM44.4103 23.1062C45.3131 21.5426 43.8456 19.6778 42.1136 20.1876L33.767 22.6442C33.2744 22.7892 32.8564 23.1181 32.5997 23.5629L30.4009 27.3712C30.1442 27.8159 30.0683 28.3424 30.189 28.8415L32.2348 37.2981C32.6593 39.053 35.008 39.3915 35.9108 37.8279L44.4103 23.1062Z" fill="#0A6EB6"/>
+                        </svg>
                     </button>
                 </div>
             </div>

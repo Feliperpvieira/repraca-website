@@ -57,6 +57,26 @@ function preencherFiltroDeItens() {
     });
 }
 
+// Preenche o <select id="filtroCategoria"> com as categorias únicas do
+// catálogo (mesma fonte de dados do filtro "Contém o item" acima).
+function preencherFiltroDeCategorias() {
+    const select = document.getElementById("filtroCategoria");
+    if (!select) return; // página sem grade de galeria (ex.: hub /galeria/)
+
+    select.querySelectorAll("option:not([value='todas'])").forEach(opt => opt.remove());
+
+    const categorias = [...new Set(Object.values(catalogoItens).map(item => item.categoria))]
+        .filter(Boolean)
+        .sort();
+
+    categorias.forEach(categoria => {
+        const opt = document.createElement("option");
+        opt.value = categoria;
+        opt.textContent = categoria;
+        select.appendChild(opt);
+    });
+}
+
 // ==========================================
 // 1c. DADOS DAS PRAÇAS ORIGINAIS
 // ==========================================
@@ -175,6 +195,25 @@ function contarItensImaginados(itens) {
     });
 
     return resultado;
+}
+
+// Acha a categoria com mais itens dentro de uma lista de itens posicionados
+// (mesmo formato de layoutDaPraca). Usada tanto no "Foco" do popup quanto
+// no filtro "Foco principal" da galeria — antes essa conta só existia
+// dentro de preencherModal(), agora fica num só lugar pros dois usarem.
+function categoriaPredominante(itens) {
+    const itensPorCategoria = contarItensImaginados(itens);
+
+    let categoria = "Mista";
+    let max = 0;
+    for (const cat in itensPorCategoria) {
+        const totalNaCategoria = Object.values(itensPorCategoria[cat]).reduce((a, b) => a + b, 0);
+        if (totalNaCategoria > max) {
+            max = totalNaCategoria;
+            categoria = cat;
+        }
+    }
+    return categoria;
 }
 
 function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
@@ -608,9 +647,21 @@ async function carregarPracas() {
     const ordem = elOrdem.value;
     const minItens = parseInt(document.getElementById("filtroItens").value);
     const itemEspecifico = document.getElementById("filtroEspecifico").value;
+    // Filtros novos são opcionais no DOM (?. e || de segurança) pra não
+    // quebrar caso esse arquivo seja usado numa página sem eles.
+    const categoriaSelecionada = document.getElementById("filtroCategoria")?.value || "todas";
+    const soRemixes = document.getElementById("filtroSoRemixes")?.checked || false;
+    const comDescricao = document.getElementById("filtroComDescricao")?.checked || false;
 
     const inicio = paginaAtual * itensPorPagina;
     const fim = inicio + itensPorPagina - 1;
+
+    // "layout_data" só é pedido ao banco quando o filtro de categoria está
+    // ativo — é o único filtro que depende dele, e o campo é relativamente
+    // pesado (guarda a posição de cada objeto da praça inteira), então
+    // evitamos baixá-lo à toa nas consultas normais.
+    let colunas = 'praca_id, image_topo_url, created_at, likes, total_objects, praca_pai_id';
+    if (categoriaSelecionada !== "todas") colunas += ', layout_data';
 
     // Quando filtra por item específico, chamamos uma função SQL (RPC) em
     // vez de montar o filtro com .ilike() direto no client — o Postgres
@@ -618,13 +669,20 @@ async function carregarPracas() {
     // esse cast não é repassado corretamente pelos filtros do PostgREST
     // client-side. A função SQL já faz esse cast por dentro (veja
     // filtrar_pracas_por_item.sql).
-    const colunas = 'praca_id, image_topo_url, created_at, likes, total_objects';
     let query = itemEspecifico !== "todos"
         ? db.rpc('filtrar_pracas_por_item', { item_nome: itemEspecifico }).select(colunas)
         : db.from('city_creations').select(colunas);
 
     query = query.gte('total_objects', minItens);
     if (slugPracaAtual) query = query.eq('mapa_id', slugPracaAtual);
+
+    // "Só remixes": praca_pai_id vem vazio ("") nas criações do zero e
+    // preenchido nas que nasceram de um remix (ver BuildingManager.cs,
+    // idDaPracaPai). Por isso o filtro exclui null E string vazia.
+    if (soRemixes) query = query.not('praca_pai_id', 'is', null).neq('praca_pai_id', '');
+
+    // "Só com descrição": mesma lógica, agora pro campo de comentário.
+    if (comDescricao) query = query.not('comentario', 'is', null).neq('comentario', '');
 
     if (ordem === "recentes") query = query.order('created_at', { ascending: false });
     if (ordem === "antigas") query = query.order('created_at', { ascending: true });
@@ -639,12 +697,30 @@ async function carregarPracas() {
         return;
     }
 
+    // "Chegou ao fim" olha pro tamanho BRUTO devolvido pelo banco, não pro
+    // que sobra depois do filtro de categoria (logo abaixo) — senão a
+    // galeria pararia de buscar páginas cedo demais quando esse filtro
+    // descarta boa parte dos resultados de uma página.
     if (data.length < itensPorPagina) {
         chegouAoFim = true;
         loader.innerText = "Chegou ao fim da galeria!";
     }
 
-    desenharCards(data);
+    // Filtro de categoria: não existe uma coluna pronta pra "foco
+    // principal" no banco (ela depende do catálogo de itens, que só vive
+    // no front-end), então filtramos no cliente depois de buscar a página.
+    // Trade-off aceito: uma "página" pode renderizar poucos cards ou
+    // nenhum quando o filtro é muito específico — o scroll infinito
+    // compensa isso, buscando a página seguinte sozinho enquanto o loader
+    // continuar visível na tela (ver o IntersectionObserver logo abaixo).
+    const pracasParaMostrar = categoriaSelecionada === "todas"
+        ? data
+        : data.filter(praca => {
+            const jsonConvertido = JSON.parse(praca.layout_data);
+            return categoriaPredominante(jsonConvertido.layoutDaPraca || []) === categoriaSelecionada;
+        });
+
+    desenharCards(pracasParaMostrar);
     paginaAtual++;
     carregando = false;
 }
@@ -653,13 +729,23 @@ function desenharCards(pracas) {
     pracas.forEach(praca => {
         const dataFormatada = new Date(praca.created_at).toLocaleDateString('pt-PT');
 
+        // Selo de "remix" só aparece quando a praça nasceu de outra —
+        // mesma coluna usada pelo filtro "Só remixes" acima.
+        const ehRemix = praca.praca_pai_id && praca.praca_pai_id.trim() !== "";
+        const seloRemix = ehRemix ? '<span class="card-remix-badge">↻ remix</span>' : '';
+
         const card = document.createElement("div");
         card.className = "card-praca";
         card.innerHTML = `
+            ${seloRemix}
             <img src="${praca.image_topo_url}" class="card-img" loading="lazy" alt="Praça">
             <div class="card-info">
-                <span class="card-data">📅 ${dataFormatada}</span>
-                <span class="card-likes">❤️ ${praca.likes || 0}</span>
+                <span class="card-data">${dataFormatada}</span>
+                
+                <span class="card-likes">
+                    ${praca.likes || 0}
+                    <img src="/img/icone-coracao.svg" height="20"> 
+                </span>
             </div>
         `;
 
@@ -689,9 +775,29 @@ function aplicarFiltros() {
     carregarPracas();
 }
 
+// Atualiza só o texto do rótulo (ex: "8+") enquanto o slider é arrastado —
+// não busca nada, é uma operação barata que dá feedback imediato de qual
+// valor está selecionado (sem isso o usuário arrasta às cegas).
+const inputFiltroItens = document.getElementById("filtroItens");
+const labelFiltroItens = document.getElementById("filtroItensValor");
+
+function atualizarLabelFiltroItens() {
+    if (!inputFiltroItens || !labelFiltroItens) return;
+    const valor = parseInt(inputFiltroItens.value);
+    labelFiltroItens.textContent = valor >= 30 ? "30+" : valor + "+";
+}
+
+inputFiltroItens?.addEventListener("input", atualizarLabelFiltroItens);
+atualizarLabelFiltroItens(); // roda uma vez no carregamento pra refletir o valor inicial (3+)
+
 document.getElementById("filtroOrdem")?.addEventListener("change", aplicarFiltros);
+// O slider só dispara a busca no "change" (ao soltar o dedo/mouse), igual
+// os selects — evita rodar uma query a cada pixel arrastado.
 document.getElementById("filtroItens")?.addEventListener("change", aplicarFiltros);
 document.getElementById("filtroEspecifico")?.addEventListener("change", aplicarFiltros);
+document.getElementById("filtroCategoria")?.addEventListener("change", aplicarFiltros);
+document.getElementById("filtroSoRemixes")?.addEventListener("change", aplicarFiltros);
+document.getElementById("filtroComDescricao")?.addEventListener("change", aplicarFiltros);
 
 // ==========================================
 // 4. SISTEMA DE ROTEAMENTO POR QUERY STRING (?id=)
@@ -839,17 +945,8 @@ async function preencherModal(praca) {
         "Última edição: " + praca.created_at.substring(0, 10).split('-').reverse().join('/');
     document.getElementById("modalTotalItens").innerText = praca.total_objects;
 
-    // Foco = categoria com mais itens na praça imaginada
-    let categoriaPrincipal = "Mista";
-    let max = 0;
-    for (let cat in itensPorCategoria) {
-        const totalNaCategoria = Object.values(itensPorCategoria[cat]).reduce((a, b) => a + b, 0);
-        if (totalNaCategoria > max) {
-            max = totalNaCategoria;
-            categoriaPrincipal = cat;
-        }
-    }
-    document.getElementById("modalCategoria").innerText = categoriaPrincipal;
+    // Foco = categoria com mais itens na praça imaginada (mesma conta do filtro "Foco principal" da galeria)
+    document.getElementById("modalCategoria").innerText = categoriaPredominante(itens);
 
     const comentarioEl = document.getElementById("modalComentario");
     if (praca.comentario && praca.comentario.trim()) {
@@ -975,6 +1072,7 @@ const btnLike = document.getElementById("btnLikeModal");
 
 function verificarStatusDoLike(id, totalLikes) {
     document.getElementById("modalLikesCount").innerText = totalLikes;
+    btnLike.classList.remove("animar"); // 1. Reseta a animação ao abrir qualquer praça
 
     if (localStorage.getItem("liked_" + id)) {
         btnLike.classList.add("curtido");
@@ -988,6 +1086,7 @@ function verificarStatusDoLike(id, totalLikes) {
 
 async function enviarLikeParaSupabase(id) {
     btnLike.disabled = true;
+    btnLike.classList.add("animar"); // 2. Dispara a dancinha imediatamente ao clicar
 
     const { error } = await db.rpc('dar_like', { id_praca: id });
 
@@ -997,6 +1096,7 @@ async function enviarLikeParaSupabase(id) {
         btnLike.classList.add("curtido");
         localStorage.setItem("liked_" + id, "true");
     } else {
+        btnLike.classList.remove("animar"); // 3. Remove a animação caso ocorra erro
         btnLike.disabled = false;
         alert("Erro ao registar o gosto!");
     }
@@ -1011,6 +1111,7 @@ async function enviarLikeParaSupabase(id) {
 async function iniciarGaleria() {
     await carregarCatalogoItens();
     preencherFiltroDeItens();
+    preencherFiltroDeCategorias();
 
     if (slugPracaAtual) {
         await carregarEstatisticasDaPraca(slugPracaAtual, itensOriginaisEmbutidos());

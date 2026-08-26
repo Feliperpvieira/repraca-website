@@ -107,14 +107,28 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
             </select>
         </div>
 
-        <div class="filtro-grupo">
-            <label for="filtroItens">Mínimo de itens:</label>
-            <select id="filtroItens">
-                <option value="3" selected>Pelo menos 3 (Ocultar vazias)</option>
-                <option value="10">Mais de 10 itens</option>
-                <option value="0">Mostrar Todas</option>
-            </select>
+        <!-- Slider de 0 a 30 (30 = "30 ou mais") no lugar do antigo <select>
+             de 3 opções fixas. A quantidade de itens varia bastante entre
+             praças, então faz mais sentido deixar o usuário explorar a
+             faixa livremente do que travar em degraus fixos. Começa em 3
+             pra esconder as praças vazias por padrão, igual o comportamento
+             antigo. A busca só dispara ao SOLTAR o slider ("change"), não a
+             cada pixel arrastado ("input") — igual os outros filtros, que
+             não têm busca ao vivo (ver app.js, seção 3). -->
+        <div class="filtro-grupo filtro-grupo--slider">
+            <label for="filtroItens">
+                Mínimo de itens: <span id="filtroItensValor">3+</span>
+            </label>
+            <input type="range" id="filtroItens" min="0" max="30" step="1" value="3">
         </div>
+
+        <!-- <div class="filtro-grupo">
+            <label for="filtroCategoria">Foco principal:</label>
+            <select id="filtroCategoria">
+                <option value="todas">Todas as categorias</option>
+                < Opções preenchidas via JS a partir de dados/itens.json (ver preencherFiltroDeCategorias em app.js) >
+            </select>
+        </div> -->
 
         <div class="filtro-grupo">
             <label for="filtroEspecifico">Contém o item:</label>
@@ -124,6 +138,21 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
                 </button>
                 <option value="todos">Todos</option>
             </select>
+        </div>
+
+        <!-- Checkboxes: filtros simples de sim/não, não precisam de select -->
+        <div class="filtro-grupo filtro-grupo--checkbox">
+            <label>
+                <input type="checkbox" id="filtroSoRemixes">
+                Só remixes
+            </label>
+        </div>
+
+        <div class="filtro-grupo filtro-grupo--checkbox">
+            <label>
+                <input type="checkbox" id="filtroComDescricao">
+                Só com descrição
+            </label>
         </div>
     </section>
 
