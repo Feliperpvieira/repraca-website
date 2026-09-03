@@ -184,6 +184,21 @@
     font-style: italic; 
 }
 
+/* Links dos avisos de "sem resultados" / "fim da galeria" (ver
+   mostrarAvisoSemResultados e mostrarAvisoFimDaGaleria em app.js) */
+.loading-spinner a {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--azul);
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.loading-spinner a:hover {
+    color: var(--azul-marinho);
+}
+
 /* MODAL (POPUP) */
 #popup { 
     position: fixed; 

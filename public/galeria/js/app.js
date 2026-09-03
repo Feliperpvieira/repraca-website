@@ -631,6 +631,10 @@ let paginaAtual = 0;
 const itensPorPagina = 12;
 let carregando = false;
 let chegouAoFim = false;
+// Conta quantas praças já apareceram na tela DESDE o último reset de
+// filtro (ver aplicarFiltros()). É o que diferencia "zero resultados com
+// esses filtros" de "chegou ao fim de verdade, depois de mostrar algo".
+let totalCardsRenderados = 0;
 
 const gallery = document.getElementById("gallery");
 const popup = document.getElementById("popup");
@@ -697,13 +701,11 @@ async function carregarPracas() {
         return;
     }
 
-    // "Chegou ao fim" olha pro tamanho BRUTO devolvido pelo banco, não pro
-    // que sobra depois do filtro de categoria (logo abaixo) — senão a
-    // galeria pararia de buscar páginas cedo demais quando esse filtro
-    // descarta boa parte dos resultados de uma página.
+    // Só marca "chegou ao fim" pelo tamanho BRUTO devolvido pelo banco —
+    // a decisão de qual AVISO mostrar (sem resultados vs. fim de verdade)
+    // vem depois, e sim depende do que sobra após o filtro de categoria.
     if (data.length < itensPorPagina) {
         chegouAoFim = true;
-        loader.innerText = "Chegou ao fim da galeria!";
     }
 
     // Filtro de categoria: não existe uma coluna pronta pra "foco
@@ -721,8 +723,19 @@ async function carregarPracas() {
         });
 
     desenharCards(pracasParaMostrar);
+    totalCardsRenderados += pracasParaMostrar.length;
     paginaAtual++;
     carregando = false;
+
+    // Só decide o aviso final quando realmente não há mais nada a buscar.
+    // Duas situações possíveis nesse ponto:
+    // - Nenhuma praça apareceu em NENHUMA página desde o último reset de
+    //   filtro → os filtros escolhidos não batem com nada no banco.
+    // - Pelo menos uma praça já apareceu → é o fim natural da galeria.
+    if (chegouAoFim) {
+        if (totalCardsRenderados === 0) mostrarAvisoSemResultados();
+        else mostrarAvisoFimDaGaleria();
+    }
 }
 
 function desenharCards(pracas) {
@@ -754,6 +767,38 @@ function desenharCards(pracas) {
     });
 }
 
+// Aviso de "filtros não bateram com nada" — só acontece quando a busca
+// chega ao fim SEM ter mostrado nenhum card desde o último reset. Dá um
+// jeito fácil de sair dessa situação (limpar tudo) em vez de deixar a
+// pessoa mexendo filtro por filtro tentando adivinhar qual está travando.
+function mostrarAvisoSemResultados() {
+    loader.innerHTML = `
+        Nenhuma praça com essa combinação ainda. Que tal ser o primeiro a criar?
+        <br>
+        <a href="#" id="linkLimparFiltros">Limpar todos os filtros</a>
+    `;
+
+    document.getElementById("linkLimparFiltros")?.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        limparFiltros();
+    });
+}
+
+// Aviso do fim "de verdade" da galeria — chegou ao fim tendo mostrado pelo
+// menos uma praça na página atual de filtros.
+function mostrarAvisoFimDaGaleria() {
+    loader.innerHTML = `
+        Chegou ao fim das rePraças!
+        <br>
+        <a href="#" id="linkVoltarAoTopo">Voltar ao topo</a>
+    `;
+
+    document.getElementById("linkVoltarAoTopo")?.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+}
+
 // Dispara carregarPracas() quando o loader entra na tela (scroll infinito)
 // — só existe em páginas com grade de galeria (a hub /galeria/ não tem).
 if (loader) {
@@ -771,8 +816,34 @@ function aplicarFiltros() {
     gallery.innerHTML = "";
     paginaAtual = 0;
     chegouAoFim = false;
-    loader.innerText = "A carregar mais praças...";
+    totalCardsRenderados = 0; // recomeça a contagem pro novo conjunto de filtros
+    loader.innerHTML = "A carregar mais praças...";
     carregarPracas();
+}
+
+// Volta todos os filtros pro estado padrão da página e recarrega a
+// galeria. Chamado pelo link "Limpar todos os filtros" do aviso de zero
+// resultados (mostrarAvisoSemResultados, acima).
+function limparFiltros() {
+    const elOrdem = document.getElementById("filtroOrdem");
+    if (elOrdem) elOrdem.value = "recentes";
+
+    if (inputFiltroItens) inputFiltroItens.value = "3";
+    atualizarLabelFiltroItens();
+
+    const elEspecifico = document.getElementById("filtroEspecifico");
+    if (elEspecifico) elEspecifico.value = "todos";
+
+    const elCategoria = document.getElementById("filtroCategoria");
+    if (elCategoria) elCategoria.value = "todas";
+
+    const elSoRemixes = document.getElementById("filtroSoRemixes");
+    if (elSoRemixes) elSoRemixes.checked = false;
+
+    const elComDescricao = document.getElementById("filtroComDescricao");
+    if (elComDescricao) elComDescricao.checked = false;
+
+    aplicarFiltros();
 }
 
 // Atualiza só o texto do rótulo (ex: "8+") enquanto o slider é arrastado —
