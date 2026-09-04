@@ -107,6 +107,16 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
             </select>
         </div>
 
+        <div class="filtro-grupo">
+            <label for="filtroEspecifico">Contém o item:</label>
+            <select id="filtroEspecifico">
+                <button>
+                    <selectedcontent></selectedcontent>
+                </button>
+                <option value="todos">Todos</option>
+            </select>
+        </div>
+
         <!-- Slider de 0 a 30 (30 = "30 ou mais") no lugar do antigo <select>
              de 3 opções fixas. A quantidade de itens varia bastante entre
              praças, então faz mais sentido deixar o usuário explorar a
@@ -122,37 +132,24 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
             <input type="range" id="filtroItens" min="0" max="30" step="1" value="3">
         </div>
 
-        <!-- <div class="filtro-grupo">
-            <label for="filtroCategoria">Foco principal:</label>
-            <select id="filtroCategoria">
-                <option value="todas">Todas as categorias</option>
-                < Opções preenchidas via JS a partir de dados/itens.json (ver preencherFiltroDeCategorias em app.js) >
-            </select>
-        </div> -->
-
-        <div class="filtro-grupo">
-            <label for="filtroEspecifico">Contém o item:</label>
-            <select id="filtroEspecifico">
-                <button>
-                    <selectedcontent></selectedcontent>
-                </button>
-                <option value="todos">Todos</option>
-            </select>
-        </div>
-
-        <!-- Checkboxes: filtros simples de sim/não, não precisam de select -->
-        <div class="filtro-grupo filtro-grupo--checkbox">
-            <label>
-                <input type="checkbox" id="filtroSoRemixes">
-                Só remixes
-            </label>
-        </div>
-
-        <div class="filtro-grupo filtro-grupo--checkbox">
-            <label>
-                <input type="checkbox" id="filtroComDescricao">
-                Só com descrição
-            </label>
+        <!-- Os dois "sim/não" (remix, descrição) viraram switches lado a
+             lado sob um título comum — mais compacto que dois grupos
+             separados e deixa claro que ambos filtram o MESMO tipo de
+             coisa (o que é mostrado na grid, não como ela é ordenada). -->
+        <div class="filtro-grupo filtro-grupo--toggles">
+            <span class="filtro-grupo__titulo">Mostrar praças:</span>
+            <div class="toggles-lista">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="filtroSoRemixes">
+                    <span class="toggle-trilho" aria-hidden="true"></span>
+                    <span class="toggle-texto">Só reMixes</span>
+                </label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="filtroComDescricao">
+                    <span class="toggle-trilho" aria-hidden="true"></span>
+                    <span class="toggle-texto">Só com descrição</span>
+                </label>
+            </div>
         </div>
     </section>
 

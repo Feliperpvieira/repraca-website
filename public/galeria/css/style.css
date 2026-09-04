@@ -7,6 +7,16 @@
     --bege: #F9EFE7;
     --verde: #98AB56;
     --terracota: #B76F51;
+
+    /* Ícones em SVG inline, usados nos selects, no thumb do slider e no
+       checkbox dos filtros (ver seção FILTROS abaixo). Ficam aqui como
+       variável pra não repetir a mesma string enorme em cada regra —
+       trocar a cor ou o desenho é só mudar aqui uma vez. */
+    --icone-select-seta: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none'%3E%3Ccircle cx='11' cy='11' r='11' fill='%230A6EB6'/%3E%3Cpath d='M6 8.5L11 4.5L16 8.5' stroke='%23F9EFE7' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 13.5L11 17.5L16 13.5' stroke='%23F9EFE7' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    /* Mesmo ícone acima, mas o slider usa via `transform: rotate(90deg)`
+       no próprio thumb (ver .filtro-grupo--slider ::-webkit-slider-thumb),
+       não precisa de uma segunda variável só pra isso. */
+    --icone-checkbox-marcado: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='28' viewBox='0 0 34 28' fill='none'%3E%3Cpath d='M30.8674 6.98963C31.3245 7.53446 31.2535 8.34672 30.7086 8.80388L15.8835 21.2433C15.882 21.2446 15.8818 21.2468 15.8831 21.2483C15.8843 21.2498 15.8842 21.2521 15.8826 21.2534L12.5626 24.039C12.0178 24.4961 11.2056 24.425 10.7484 23.8802L3.22292 14.9117C2.76577 14.3669 2.83682 13.5547 3.3816 13.0975L5.71766 11.1372C6.26247 10.68 7.07476 10.751 7.53193 11.2958L11.4371 15.9499C11.8943 16.4947 12.7066 16.5658 13.2514 16.1086L27.0928 4.4946C27.6376 4.03746 28.4498 4.10852 28.907 4.65334L30.8674 6.98963Z' fill='%23B76F51'/%3E%3Cpath d='M25.9809 2.91157C27.2955 1.91742 29.155 2.08009 30.277 3.28743L30.3867 3.41159L32.3473 5.7481C33.49 7.11012 33.3124 9.14066 31.9505 10.2835L17.2414 22.6253C17.204 22.6623 17.1654 22.6987 17.1244 22.7331L13.8042 25.5188C12.4422 26.6615 10.4117 26.4839 9.2688 25.122L1.7432 16.1533C0.600385 14.7913 0.778068 12.7608 2.13999 11.6179L4.47617 9.65758L4.60578 9.55405C5.96422 8.52678 7.90443 8.73472 9.01162 10.0541L12.5029 14.2148L25.8513 3.01479L25.9809 2.91157ZM28.9071 4.6534C28.45 4.10859 27.6376 4.03752 27.0928 4.49467L13.2515 16.1086L13.1996 16.1498C12.6562 16.5608 11.88 16.4777 11.4372 15.9498L7.53203 11.2959C7.07486 10.7511 6.26249 10.68 5.71767 11.1371L3.38181 13.0975C2.83702 13.5546 2.76593 14.367 3.22307 14.9118L10.7484 23.8801C11.1912 24.4079 11.9674 24.4913 12.5108 24.0804L12.5628 24.0389L15.8826 21.2532L15.8835 21.2432L30.7087 8.80393C31.2535 8.34678 31.3246 7.5344 30.8674 6.98958L28.9071 4.6534Z' fill='%23F9EFE7'/%3E%3C/svg%3E");
 }
 
 .container { /*  container branco que ocupa a horizontal toda da tela */
@@ -17,8 +27,11 @@
 
 /* FILTROS */
 .filtros-container { 
-    display: flex; flex-wrap: 
-    wrap; gap: 20px; 
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center; 
+    gap: 20px; 
     margin-bottom: 30px; 
     background: white; 
     padding: 20px; 
@@ -29,22 +42,106 @@
 .filtro-grupo { 
     display: flex; 
     flex-direction: column; 
-    gap: 5px; 
+    gap: 8px; 
 }
 
+.filtro-grupo label,
+.filtro-grupo__titulo {
+    font-weight: 400;
+    color: var(--azul-marinho);
+    font-size: 0.95rem;
+}
+
+/* Estilo "pílula" comum a todos os selects nativos (Ordenar por, e o
+   fallback de Contém o item em navegadores sem appearance: base-select).
+   appearance: none tira a seta padrão do navegador pra dar lugar ao
+   ícone customizado (--icone-select-seta, definido no :root acima). */
 .filtro-grupo select { 
-    padding: 8px; 
-    border-radius: 8px; 
-    border: 1px solid #ccc; 
-    font-size: 1rem; 
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 10px 44px 10px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--azul);
+    background-color: #fff;
+    background-image: var(--icone-select-seta);
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 20px;
+    font: inherit;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--azul-marinho);
+    cursor: pointer;
 }
 
 /* Select "Contém o item" customizado (Chrome/Edge 135+, Safari 27+).
    Em navegadores sem suporte a appearance: base-select, essa regra é
    simplesmente ignorada e o <select> continua um dropdown nativo comum,
-   com o texto das opções (o <img> do ícone é descartado sozinho). */
+   já coberto pela regra ".filtro-grupo select" acima. */
 #filtroEspecifico, #filtroEspecifico::picker(select) {
     appearance: base-select;
+}
+
+#filtroEspecifico {
+    /* width (não max-width): trava o tamanho de verdade, não só um teto —
+       max-width sozinho não impede o conteúdo de empurrar o texto pra uma
+       segunda linha quando ultrapassa o espaço disponível.
+       O resto (border/background/padding) zera o que a regra genérica
+       ".filtro-grupo select" (acima) aplicaria aqui também — sem isso, o
+       <select> por fora E o <button> por dentro ficam com pílula/ícone
+       cada um, duplicando a borda e o ícone visualmente. */
+    width: 180px;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+/* Quando o base-select está ativo, quem aparece de fato "fechado" é o
+   <button> que já está dentro do <select> no HTML — por isso ele recebe
+   a MESMA pílula visual da regra acima, e não o <select> em si. */
+#filtroEspecifico > button {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    /* overflow:hidden aqui + min-width:0 no selectedcontent (abaixo) são
+       o combo que faz o texto cortar com "…" em vez de quebrar linha */
+    overflow: hidden;
+    text-align: left;
+    padding: 10px 44px 10px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--azul);
+    background-color: #fff;
+    background-image: var(--icone-select-seta);
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 20px;
+    font: inherit;
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--azul-marinho);
+    cursor: pointer;
+}
+
+/* selectedcontent espelha o conteúdo da <option> escolhida (ícone + nome
+   do item). display:block (em vez de flex) é de propósito: texto e ícone
+   viram um fluxo inline normal, e SÓ NESSE modelo o text-overflow:ellipsis
+   funciona de verdade — dentro de um flex container o "…" não aparece,
+   só o corte seco (testado, é uma pegadinha real do CSS). */
+#filtroEspecifico > button selectedcontent {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#filtroEspecifico > button selectedcontent .opcao-icone {
+    vertical-align: middle;
+    margin-right: 6px;
 }
 
 #filtroEspecifico::picker(select) {
@@ -84,33 +181,148 @@
     width: 18px; 
     height: 18px; 
     object-fit: contain; 
+    flex-shrink: 0; /* o ícone não pode encolher quando o texto ao lado corta com "…" */
 }
 
 
-/* filtro slider e checkboxes e remix */
+/* filtro slider */
 .filtro-grupo--slider {
     min-width: 220px;
 }
 
+/* Slider nativo estilizado à mão (o "accent-color" sozinho não dá pra
+   fazer a trilha em duas cores nem o thumb em losango, então aqui cada
+   parte do range é montada via -webkit/-moz-*). O visual: trilha azul do
+   início até o thumb, terracota do thumb até o fim — dá a sensação de
+   "abaixo do mínimo" vs "acima do mínimo" só pela cor. */
 .filtro-grupo--slider input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
-    accent-color: var(--azul, #131C3B); /* cor do "thumb" e da trilha preenchida */
+    height: 6px;
+    border-radius: 999px;
+    /* gradiente dividido exatamente na posição do valor atual, atualizado
+       via JS (ver atualizarPreenchimentoSlider() em app.js) */
+    background: linear-gradient(
+        to right,
+        var(--azul) 0%,
+        var(--azul) var(--posicao-slider, 10%),
+        var(--terracota) var(--posicao-slider, 10%),
+        var(--terracota) 100%
+    );
+    cursor: pointer;
+
+    margin-top: 16px;
+    margin-bottom: 18px;
+}
+
+/* Thumb = o mesmo ícone circular do select (--icone-select-seta), só que
+   girado 90°: as setas que apontavam "abrir/fechar" viram "arrasta pra
+   esquerda/direita", o que faz mais sentido num controle horizontal. */
+.filtro-grupo--slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background-image: var(--icone-select-seta);
+    background-repeat: no-repeat;
+    background-size: contain;
+    transform: rotate(90deg);
     cursor: pointer;
 }
 
-.filtro-grupo--checkbox label {
+.filtro-grupo--slider input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: none;
+    background-color: transparent;
+    background-image: var(--icone-select-seta);
+    background-repeat: no-repeat;
+    background-size: contain;
+    transform: rotate(90deg);
+    cursor: pointer;
+}
+
+.filtro-grupo--slider input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: transparent; /* a cor real vem do "background" no seletor base, Firefox só precisa disso transparente pra não desenhar por cima */
+}
+
+/* filtro "Mostrar praças" — os dois toggles lado a lado */
+.filtro-grupo--toggles {
+    justify-content: center; /* alinha o título com os labels dos outros grupos mesmo sendo mais alto */
+}
+
+.toggles-lista {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     cursor: pointer;
+    user-select: none;
+}
+
+/* O checkbox real continua no DOM (funciona com teclado, leitor de tela e
+   o resto do código em app.js, que só olha .checked) — só fica invisível
+   visualmente. O visual inteiro é feito pelo .toggle-trilho ao lado. */
+.toggle-switch input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Apesar do nome (mantido pra não mexer no HTML), isto aqui não é mais
+   uma trilha de switch — é a caixinha do checkbox: borda azul sempre,
+   fundo branco vazio e fundo azul + ícone quando marcado. */
+.toggle-trilho {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    background-color: #fff;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 26px;
+    border: 2px solid var(--azul);
+    transition: background-color 0.15s ease, background-image 0.15s ease;
+
+    margin-top: 6px;
+    margin-bottom: 8px; 
+}
+
+.toggle-switch input:checked + .toggle-trilho {
+    background-color: var(--azul);
+    background-image: var(--icone-checkbox-marcado);
+}
+
+/* Anel de foco visível só na navegação por teclado (Tab), não no clique
+   do mouse — evita o "anel feio" em quem só usa o mouse/touch. */
+.toggle-switch input:focus-visible + .toggle-trilho {
+    outline: 2px solid var(--azul-marinho);
+    outline-offset: 3px;
+}
+
+.toggle-texto {
+    font-weight: 500;
+    color: var(--azul-marinho);
     white-space: nowrap;
 }
 
-.filtro-grupo--checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--azul, #131C3B);
+.praca-comparativo .toggle-texto{
+    color: var(--bege);
 }
 
 /* Selo "↻ remix" no canto do card — só aparece quando a praça tem
@@ -129,6 +341,45 @@
     padding: 3px 8px;
     border-radius: 999px;
     pointer-events: none;
+}
+
+/* MOBILE: em vez de empilhar os filtros em várias linhas (ocupa muita
+   altura) ou escondê-los atrás de um botão "Filtros" (exige um toque
+   extra pra algo que a pessoa costuma ajustar toda hora), a barra vira
+   uma faixa com scroll horizontal. O último grupo fica propositalmente
+   cortado na borda da tela — esse corte É a dica visual de "tem mais pra
+   o lado", sem precisar de texto ou seta explicando. Padrão parecido com
+   os Stories do Instagram ou os chips de filtro do Google. */
+@media (max-width: 780px) {
+    .filtros-container {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 36px; /* deixa o início do último grupo visível, cortado */
+
+        /* barra de rolagem escondida — a rolagem continua funcionando
+           normalmente, só não desenha a barrinha cinza por cima do design */
+        scrollbar-width: none;
+    }
+
+    .filtros-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filtro-grupo {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+    }
+
+    .filtro-grupo select,
+    #filtroEspecifico > button {
+        min-width: 170px;
+    }
+
+    .filtro-grupo--slider {
+        min-width: 200px;
+    }
 }
 
 /* GRID E CARDS */
@@ -352,7 +603,7 @@
      overflow-y: auto; 
      display: flex; 
      flex-direction: column; 
-     background: var(--bege); 
+     background: #fdfdfd; 
     }
 
 .texto-dica { 

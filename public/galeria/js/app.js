@@ -830,6 +830,7 @@ function limparFiltros() {
 
     if (inputFiltroItens) inputFiltroItens.value = "3";
     atualizarLabelFiltroItens();
+    atualizarPreenchimentoSlider();
 
     const elEspecifico = document.getElementById("filtroEspecifico");
     if (elEspecifico) elEspecifico.value = "todos";
@@ -846,9 +847,10 @@ function limparFiltros() {
     aplicarFiltros();
 }
 
-// Atualiza só o texto do rótulo (ex: "8+") enquanto o slider é arrastado —
-// não busca nada, é uma operação barata que dá feedback imediato de qual
-// valor está selecionado (sem isso o usuário arrasta às cegas).
+// Atualiza o texto do rótulo (ex: "8+") e o preenchimento visual da trilha
+// enquanto o slider é arrastado — nenhuma das duas coisas busca dados, são
+// só feedback imediato pro usuário ver o que está selecionando (sem isso
+// ele arrasta às cegas até soltar).
 const inputFiltroItens = document.getElementById("filtroItens");
 const labelFiltroItens = document.getElementById("filtroItensValor");
 
@@ -858,8 +860,28 @@ function atualizarLabelFiltroItens() {
     labelFiltroItens.textContent = valor >= 30 ? "30+" : valor + "+";
 }
 
-inputFiltroItens?.addEventListener("input", atualizarLabelFiltroItens);
-atualizarLabelFiltroItens(); // roda uma vez no carregamento pra refletir o valor inicial (3+)
+// A trilha do slider é pintada com um gradiente CSS que muda de cor
+// exatamente na posição do thumb (ver .filtro-grupo--slider input[type="range"]
+// em style.css). Como CSS puro não sabe "onde" o thumb está, calculamos a
+// posição em % aqui e escrevemos numa custom property que o gradiente lê.
+function atualizarPreenchimentoSlider() {
+    if (!inputFiltroItens) return;
+    const min = parseFloat(inputFiltroItens.min);
+    const max = parseFloat(inputFiltroItens.max);
+    const valor = parseFloat(inputFiltroItens.value);
+    const percentual = ((valor - min) / (max - min)) * 100;
+    inputFiltroItens.style.setProperty("--posicao-slider", percentual + "%");
+}
+
+inputFiltroItens?.addEventListener("input", () => {
+    atualizarLabelFiltroItens();
+    atualizarPreenchimentoSlider();
+});
+
+// Roda uma vez no carregamento pra refletir o valor inicial (3+) tanto no
+// texto quanto na trilha, antes de qualquer interação do usuário.
+atualizarLabelFiltroItens();
+atualizarPreenchimentoSlider();
 
 document.getElementById("filtroOrdem")?.addEventListener("change", aplicarFiltros);
 // O slider só dispara a busca no "change" (ao soltar o dedo/mouse), igual
