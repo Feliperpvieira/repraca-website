@@ -88,14 +88,28 @@
     /* width (não max-width): trava o tamanho de verdade, não só um teto —
        max-width sozinho não impede o conteúdo de empurrar o texto pra uma
        segunda linha quando ultrapassa o espaço disponível.
-       O resto (border/background/padding) zera o que a regra genérica
-       ".filtro-grupo select" (acima) aplicaria aqui também — sem isso, o
-       <select> por fora E o <button> por dentro ficam com pílula/ícone
-       cada um, duplicando a borda e o ícone visualmente. */
+       Border/background/padding NÃO são zerados aqui incondicionalmente —
+       ver o bloco @supports logo abaixo pra entender o porquê. */
     width: 180px;
-    border: none;
-    background: none;
-    padding: 0;
+}
+
+/* Isto só roda em navegadores que REALMENTE reconhecem a declaração
+   "appearance: base-select" (Chrome/Edge mais recentes). Nesses casos, o
+   <button> de dentro passa a ser quem desenha a pílula visível (regra
+   abaixo), e manter a pílula do <select> por fora AO MESMO TEMPO duplicava
+   borda e ícone (bug que já tivemos).
+   Em navegadores sem suporte — Safari atual, Firefox, etc. — este bloco
+   inteiro é ignorado e o <select> continua com a MESMA pílula da regra
+   genérica ".filtro-grupo select" (borda azul, fundo branco, ícone). Sem
+   este @supports, a única opção era escolher UMA borda pros dois casos —
+   e escolher "sem borda" quebrava justamente quem mais precisa dela (o
+   fallback nativo). */
+@supports (appearance: base-select) {
+    #filtroEspecifico {
+        border: none;
+        background: none;
+        padding: 0;
+    }
 }
 
 /* Quando o base-select está ativo, quem aparece de fato "fechado" é o
