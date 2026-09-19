@@ -276,6 +276,13 @@
 }
 
 .toggle-switch {
+    /* position: relative é o que segura o checkbox invisível (position:
+       absolute, abaixo) dentro do próprio label. Sem isso ele é posicionado
+       em relação a um ancestral distante e "escapa" do overflow-x:auto da
+       barra de filtros no mobile, alargando a página inteira — o iOS Safari
+       deixa arrastar pra direita até lá (o overflow-x:hidden do body não
+       segura no iOS). */
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 10px;
