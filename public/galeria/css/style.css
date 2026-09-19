@@ -370,7 +370,7 @@
         overflow-x: auto;
         scroll-snap-type: x proximity;
         -webkit-overflow-scrolling: touch;
-        padding-right: 36px; /* deixa o início do último grupo visível, cortado */
+        gap: 8px;
 
         /* barra de rolagem escondida — a rolagem continua funcionando
            normalmente, só não desenha a barrinha cinza por cima do design */
@@ -384,6 +384,7 @@
     .filtro-grupo {
         flex: 0 0 auto;
         scroll-snap-align: start;
+        padding-left: 16px;
     }
 
     .filtro-grupo select,
@@ -444,9 +445,7 @@
 
 .loading-spinner { 
     text-align: center; 
-    padding: 40px; 
-    color: #666; 
-    font-style: italic; 
+    padding: 40px;  
 }
 
 /* Links dos avisos de "sem resultados" / "fim da galeria" (ver
@@ -943,6 +942,14 @@
     width: 100%;
     height: 390px;
     margin-bottom: 16px;
+
+    box-sizing: border-box;
+    /* cartão bege com borda azul-marinho; a aba da legenda é desenhada
+       dentro do canvas (legendaBarraPlugin) e o overflow arredonda os cantos */
+    background: var(--bege);
+    border: 4px solid var(--azul-marinho);
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .radar-container canvas {
@@ -1140,12 +1147,9 @@
         min-height: 0; 
     }
 
-    /* No mobile o espaço é curto demais pra ter cabeçalho fixo + scroll
-       separado dentro da aba — deixa tudo (header + abas + conteúdo)
-       rolar junto, como um painel só. */
-    /* .tabs-conteudo { 
-        overflow-y: visible; 
-    } */
+    .radar-container {
+        width: 100%;
+    }
 }
 
 /* ==========================================
@@ -1213,10 +1217,132 @@
    visual de dentro do popup de cada praça — então aqui a gente recria
    esse fundo escuro pra combinar, sem precisar duplicar nenhum CSS deles. */
 .praca-comparativo {
+    --altura-radar: 390px;
+    display: flex;
     background: var(--azul-marinho);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 2px;
 }
+
+/* Desktop: radar em 49% da largura e, ao lado, a lista de mudanças por item */
+.praca-comparativo .radar-container {
+    width: 49%;
+    flex: none;
+    height: var(--altura-radar);
+    margin-bottom: 0;
+}
+
+.praca-lista-painel {
+    flex: 1;
+    min-width: 0;
+    height: var(--altura-radar);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 6px 0 28px;
+}
+
+/* No desktop o botão do dropdown vira só o título "Mudanças por item:" */
+.praca-comparativo .toggle-lista-itens {
+    margin: 12px 0 16px;
+    padding: 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-align: left;
+    pointer-events: none;
+    cursor: default;
+}
+
+.praca-comparativo .toggle-lista-itens .toggle-texto {
+    font-weight: 700;
+    white-space: normal;
+}
+
+.praca-comparativo .toggle-lista-itens .toggle-texto::after {
+    content: ":";
+}
+
+.praca-comparativo .toggle-seta {
+    display: none;
+}
+
+/* Lista sempre aberta no desktop, com scroll próprio */
+.praca-comparativo .lista-itens-wrapper {
+    flex: 1;
+    min-height: 0;
+    grid-template-rows: 1fr;
+}
+
+.praca-comparativo .lista-itens-wrapper > .lista-categorias {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(249, 239, 231, 0.5) transparent;
+}
+
+.praca-comparativo .lista-categorias::-webkit-scrollbar {
+    width: 6px;
+}
+
+.praca-comparativo .lista-categorias::-webkit-scrollbar-thumb {
+    background: rgba(249, 239, 231, 0.5);
+    border-radius: 3px;
+}
+
+/* Lista em colunas (criarListaComparativa com emColunas): o cabeçalho de cada
+   categoria e as linhas usam o mesmo gap, padding e largura de colunas,
+   por isso "Original:" e "Média:" ficam alinhados com os números. */
+.lista-colunas .grupo-categoria {
+    margin-bottom: 20px;
+}
+
+.lista-colunas .grupo-categoria-cabecalho {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 0 14px 0 16px;
+    margin-bottom: 8px;
+}
+
+.lista-colunas .grupo-categoria-titulo {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 1rem;
+    color: var(--bege);
+}
+
+.lista-colunas .grupo-categoria-cabecalho .item-comparativo-dados > span {
+    color: var(--bege);
+    font-size: 0.95rem;
+}
+
+.lista-colunas .item-comparativo {
+    border-radius: 999px;
+    padding: 8px 14px 8px 16px;
+}
+
+.lista-colunas .item-comparativo-nome {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.lista-colunas .item-comparativo-dados {
+    display: grid;
+    grid-template-columns: 72px 72px 56px;
+    gap: 0;
+    justify-items: center;
+}
+
+.lista-colunas .num-original,
+.lista-colunas .num-comparacao {
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+
+.lista-colunas .num-original { color: var(--terracota); }
+.lista-colunas .num-comparacao { color: var(--verde); }
 
 @media (max-width: 768px) {
     .estatisticas-praca {
@@ -1226,51 +1352,50 @@
     .estatisticas-praca .stat-box {
         flex: 1 1 calc(50% - 8px);
     }
-}
 
+    /* Radar em cima; embaixo, "Mudanças por item ▾" vira dropdown com
+       scroll interno para a lista não ficar enorme. */
+    .praca-comparativo {
+        flex-direction: column;
+    }
 
+    .praca-comparativo .radar-container {
+        width: 100%;
+    }
 
+    .praca-lista-painel {
+        height: auto;
+        padding: 0 16px;
+    }
 
+    .praca-comparativo .toggle-lista-itens {
+        width: 100%;
+        justify-content: space-between;
+        margin: 0;
+        padding: 16px 0;
+        font-size: 1.125rem;
+        pointer-events: auto;
+        cursor: pointer;
+    }
 
+    .praca-comparativo .toggle-lista-itens .toggle-texto::after {
+        content: none;
+    }
 
-/* ==========================================
-   LISTA DE PRAÇAS-BASE (hub da galeria geral)
-   ========================================== */
+    .praca-comparativo .toggle-seta {
+        display: inline;
+    }
 
-.praca-lista {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    padding: 20px;
-    margin-bottom: 30px;
-}
+    .praca-comparativo .lista-itens-wrapper {
+        flex: none;
+        grid-template-rows: 0fr;
+    }
 
-.praca-lista h2 {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: var(--azul-marinho);
-    margin-bottom: 10px;
-}
+    .praca-comparativo .lista-itens-wrapper.aberto {
+        grid-template-rows: 1fr;
+    }
 
-.praca-lista ul {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.praca-lista a {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: var(--bege);
-    color: var(--azul-marinho);
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.praca-lista a:hover {
-    background: var(--azul);
-    color: white;
+    .praca-comparativo .lista-itens-wrapper > .lista-categorias {
+        max-height: 360px;
+    }
 }

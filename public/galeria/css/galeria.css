@@ -1,0 +1,41 @@
+/* ==========================================
+   LISTA DE PRAÇAS-BASE (hub da galeria geral)
+   ========================================== */
+
+.praca-lista {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.praca-lista h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--azul-marinho);
+    margin-bottom: 10px;
+}
+
+.praca-lista ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.praca-lista a {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: var(--bege);
+    color: var(--azul-marinho);
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.praca-lista a:hover {
+    background: var(--azul);
+    color: white;
+}

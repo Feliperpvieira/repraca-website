@@ -144,8 +144,54 @@ const coresGrafico = (() => {
         verde: estilo.getPropertyValue("--verde").trim(),
         terracota: estilo.getPropertyValue("--terracota").trim(),
         bege: estilo.getPropertyValue("--bege").trim(),
+        azulMarinho: estilo.getPropertyValue("--azul-marinho").trim(),
     };
 })();
+
+// "#B76F51" + 0.5 → "rgba(183, 111, 81, 0.5)". Deriva as cores translúcidas
+// (preenchimento, grade) das variáveis do :root em vez de repetir rgba() à mão.
+function comAlpha(hex, alpha) {
+    const limpo = hex.replace("#", "");
+    const completo = limpo.length === 3 ? limpo.split("").map(c => c + c).join("") : limpo;
+    const n = parseInt(completo, 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+}
+
+// Traça (sem preencher) um polígono com cantos arredondados de raio "raio".
+// Em cada vértice usa arcTo entre os pontos médios das duas arestas. O raio
+// é reduzido automaticamente onde a aresta é curta ou o ângulo é muito agudo
+// (ex.: uma categoria em 100% e as vizinhas em 0%), senão o arco deformaria a forma.
+function tracarPoligonoArredondado(ctx, pontos, raio) {
+    const n = pontos.length;
+    const meio = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+
+    const partida = meio(pontos[n - 1], pontos[0]);
+    ctx.moveTo(partida.x, partida.y);
+
+    for (let i = 0; i < n; i++) {
+        const anterior = pontos[(i - 1 + n) % n];
+        const atual = pontos[i];
+        const seguinte = pontos[(i + 1) % n];
+        const m1 = meio(anterior, atual);
+        const m2 = meio(atual, seguinte);
+
+        const ux = m1.x - atual.x, uy = m1.y - atual.y;
+        const vx = m2.x - atual.x, vy = m2.y - atual.y;
+        const lu = Math.hypot(ux, uy);
+        const lv = Math.hypot(vx, vy);
+
+        let r = 0;
+        if (lu > 0.001 && lv > 0.001) {
+            const cos = Math.max(-1, Math.min(1, (ux * vx + uy * vy) / (lu * lv)));
+            const angulo = Math.acos(cos);
+            r = Math.min(raio, Math.min(lu, lv) * Math.tan(angulo / 2));
+        }
+
+        if (r > 0.01) ctx.arcTo(atual.x, atual.y, m2.x, m2.y, r);
+        else ctx.lineTo(atual.x, atual.y);
+    }
+    ctx.closePath();
+}
 
 function totalDeItens(dados) {
     return Object.values(dados).reduce((total, itens) => {
@@ -246,122 +292,253 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
     const percentuaisOriginais = percentualPorCategoria(dadosOriginais);
     const percentuaisImaginados = percentualPorCategoria(dadosImaginados);
 
-    // Integra visualmente o bloco do gráfico ao painel azul-marinho
-    const radarContainer = canvas.closest(".radar-container");
-    if (radarContainer) {
-        Object.assign(radarContainer.style, {
-            background: "rgba(255, 255, 255, 0.035)",
-            border: "1px solid rgba(249, 239, 231, 0.08)",
-            borderRadius: "16px",
-            padding: "8px",
-            boxSizing: "border-box",
-        });
-    }
-
-    const { verde: corVerde, terracota: corTerracota, bege: corBege } = coresGrafico;
+    const {
+        verde: corVerde,
+        terracota: corTerracota,
+        bege: corBege,
+        azulMarinho: corAzulMarinho,
+    } = coresGrafico;
     const fonteBase = { family: "Cabin" };
 
+    // O cartão (bege + borda azul-marinho) vem do CSS em .radar-container.
+    // Aqui só entra o que é desenhado dentro do canvas.
+    const TAMANHO_FONTE = 16;           // nomes das categorias e valores "0% / 20%"
+    const TAMANHO_FONTE_LEGENDA = 14;   // texto da legenda (fica menor que o do radar)
+    const ALTURA_BARRA_LEGENDA = 36;    // altura da pílula azul-marinho da legenda
+    const MARGEM_INFERIOR_LEGENDA = -4;  // distância da pílula até o fundo do cartão
+    const PADDING_LATERAL_LEGENDA = 24; // folga da barra além do texto, de cada lado
+
+    // Cinza claro da grade, derivado do azul-marinho (não cria cor nova no :root)
+    const corGrade = comAlpha(corAzulMarinho, 0.1);
+
+    // Plugin próprio: hexágono branco por trás da grade (o "100%" do radar) e
+    // o pontinho no centro. O anel do 100% é coberto por um traço branco por
+    // cima da grade, para o hexágono ficar sem contorno cinza.
+    const fundoRadarPlugin = {
+        id: "fundoRadar",
+        beforeDraw(chart) {
+            const escala = chart.scales.r;
+            if (!escala) return;
+
+            const { ctx } = chart;
+            ctx.save();
+            ctx.beginPath();
+            categorias.forEach((_, i) => {
+                const p = escala.getPointPosition(i, escala.drawingArea);
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            });
+            ctx.closePath();
+            ctx.fillStyle = "#fff";
+            ctx.fill();
+            ctx.restore();
+        },
+        beforeDatasetsDraw(chart) {
+            const escala = chart.scales.r;
+            if (!escala) return;
+
+            const { ctx } = chart;
+            ctx.save();
+
+            // cobre o anel do 100% (desenhado pela grade) com branco
+            ctx.beginPath();
+            categorias.forEach((_, i) => {
+                const p = escala.getPointPosition(i, escala.drawingArea);
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            });
+            ctx.closePath();
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // pontinho no centro
+            ctx.beginPath();
+            ctx.arc(escala.xCenter, escala.yCenter, 3, 0, Math.PI * 2);
+            ctx.fillStyle = corGrade;
+            ctx.fill();
+
+            ctx.restore();
+        },
+    };
+
+    // Raio (px) dos cantos das manchas terracota e verde
+    const RAIO_CANTOS_MANCHA = 2;
+    const estilosManchas = [
+        { borda: corTerracota, fundo: comAlpha(corTerracota, 0.5) },
+        { borda: corVerde, fundo: comAlpha(corVerde, 0.5) },
+    ];
+
+    // Plugin próprio: desenha as duas manchas com cantos arredondados. O radar
+    // nativo do Chart.js só faz vértices retos, então os datasets ficam
+    // transparentes (mantêm pontos, hover e tooltip) e o preenchimento e o
+    // contorno são desenhados aqui. Ordem invertida = mesma ordem do Chart.js
+    // (o primeiro dataset fica por cima).
+    const manchasPlugin = {
+        id: "manchasArredondadas",
+        beforeDatasetsDraw(chart) {
+            const { ctx } = chart;
+
+            for (let i = chart.data.datasets.length - 1; i >= 0; i--) {
+                if (!chart.isDatasetVisible(i)) continue;
+
+                const pontos = chart.getDatasetMeta(i).data;
+                if (pontos.length < 3) continue;
+
+                ctx.save();
+                ctx.beginPath();
+                tracarPoligonoArredondado(ctx, pontos, RAIO_CANTOS_MANCHA);
+                ctx.fillStyle = estilosManchas[i].fundo;
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.lineJoin = "round";
+                ctx.strokeStyle = estilosManchas[i].borda;
+                ctx.stroke();
+                ctx.restore();
+            }
+        },
+    };
+
     // Plugin próprio: desenha "original% / sua praça%" em cores separadas
-    // (terracota / verde) logo além do rótulo de cada categoria — o
-    // Chart.js não suporta cor por trecho dentro de um rótulo, então
+    // (terracota / azul-marinho / verde) logo abaixo do nome de cada categoria —
+    // o Chart.js não suporta cor por trecho dentro de um rótulo, então
     // isto é desenhado manualmente por cima do gráfico já pronto.
-    //
-    // NOTA: 34 é uma distância estimada além do nome da categoria — não
-    // dá pra testar isto sem renderizar de verdade, então é bem provável
-    // que precise ajustar esse número depois de ver ao vivo no site.
-    const DISTANCIA_EXTRA_VALORES = 32;
-
+    // O rótulo nativo tem 2 linhas (nome + linha em branco, ver pointLabels.callback
+    // mais abaixo): a linha em branco reserva o espaço onde estes valores entram.
     const valoresColoridosPlugin = {
-    id: 'valoresColoridos',
-    afterDraw(chart) {
-        const escala = chart.scales.r;
-        if (!escala) return;
+        id: "valoresColoridos",
+        afterDatasetsDraw(chart) {
+            const escala = chart.scales.r;
+            if (!escala) return;
 
-        const { ctx } = chart;
+            const { ctx } = chart;
 
-        ctx.save();
-        ctx.textBaseline = "top";
-        ctx.font = "bold 12px Cabin";
+            ctx.save();
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "left";
+            ctx.font = `500 ${TAMANHO_FONTE}px Cabin`;
 
-        categorias.forEach((_, index) => {
-            const original = Math.round(percentuaisOriginais[categorias[index]] || 0);
-            const imaginada = Math.round(percentuaisImaginados[categorias[index]] || 0);
+            categorias.forEach((_, index) => {
+                const original = Math.round(percentuaisOriginais[categorias[index]] || 0);
+                const imaginada = Math.round(percentuaisImaginados[categorias[index]] || 0);
 
-            const textoOriginal = `${original}%`;
-            const textoBarra = " / ";
-            const textoImaginada = `${imaginada}%`;
+                const textoOriginal = `${original}%`;
+                const textoBarra = " / ";
+                const textoImaginada = `${imaginada}%`;
 
-            const larguraOriginal = ctx.measureText(textoOriginal).width;
-            const larguraBarra = ctx.measureText(textoBarra).width;
-            const larguraImaginada = ctx.measureText(textoImaginada).width;
-            const larguraTotal = larguraOriginal + larguraBarra + larguraImaginada;
+                const larguraOriginal = ctx.measureText(textoOriginal).width;
+                const larguraBarra = ctx.measureText(textoBarra).width;
+                const larguraImaginada = ctx.measureText(textoImaginada).width;
+                const larguraTotal = larguraOriginal + larguraBarra + larguraImaginada;
 
-            // Obtém as coordenadas exatas do rótulo da categoria desenhado pelo Chart.js
-            const labelItem = escala._pointLabelItems?.[index];
+                // Coordenadas do rótulo da categoria desenhado pelo Chart.js (2 linhas)
+                const labelItem = escala._pointLabelItems?.[index];
 
-            let posX, posY;
-            if (labelItem) {
-                // Centraliza horizontalmente com o texto do título e posiciona logo abaixo dele
-                posX = (labelItem.left + labelItem.right) / 2;
-                posY = labelItem.bottom + 4; // Distância (em px) abaixo do título
-            } else {
-                // Fallback caso a propriedade interna não esteja disponível
-                const pos = escala.getPointPosition(index, escala.drawingArea + 36);
-                posX = pos.x;
-                posY = pos.y + 14;
+                let posX, posY;
+                if (labelItem) {
+                    // Centraliza com o nome e usa a 2ª linha do rótulo (a que está em branco)
+                    const alturaLinha = (labelItem.bottom - labelItem.top) / 2;
+                    posX = (labelItem.left + labelItem.right) / 2;
+                    posY = labelItem.bottom - alturaLinha / 2;
+                } else {
+                    // Fallback caso a propriedade interna não esteja disponível
+                    const pos = escala.getPointPosition(index, escala.drawingArea + 36);
+                    posX = pos.x;
+                    posY = pos.y + 14;
+                }
+
+                let cursorX = posX - larguraTotal / 2;
+
+                ctx.fillStyle = corTerracota;
+                ctx.fillText(textoOriginal, cursorX, posY);
+                cursorX += larguraOriginal;
+
+                ctx.fillStyle = corAzulMarinho;
+                ctx.fillText(textoBarra, cursorX, posY);
+                cursorX += larguraBarra;
+
+                ctx.fillStyle = corVerde;
+                ctx.fillText(textoImaginada, cursorX, posY);
+            });
+
+            ctx.restore();
+        },
+    };
+
+    // Plugin próprio: pílula azul-marinho no fundo do cartão com a legenda
+    // (quadradinho colorido + nome). Só é um pouco mais larga que o texto e fica
+    // centralizada. Substitui a legenda nativa do Chart.js, que não permite
+    // desenhar a pílula nem controlar a altura dela.
+    const legendaBarraPlugin = {
+        id: "legendaBarra",
+        afterDatasetsDraw(chart) {
+            const { ctx, width, height } = chart;
+            const topo = height - MARGEM_INFERIOR_LEGENDA - ALTURA_BARRA_LEGENDA;
+            const raio = ALTURA_BARRA_LEGENDA / 2;
+
+            const itens = [
+                { texto: labelOriginal, cor: corTerracota },
+                { texto: labelComparacao, cor: corVerde },
+            ];
+            const lado = 14;
+            const espacoIcone = 8;
+            const espacoItens = 32;
+
+            ctx.save();
+
+            // se os nomes não couberem na largura, diminui a fonte até caberem
+            let fonte = TAMANHO_FONTE_LEGENDA;
+            const medirTudo = () => {
+                ctx.font = `400 ${fonte}px Cabin`;
+                return itens.reduce((soma, item) => soma + lado + espacoIcone + ctx.measureText(item.texto).width, 0)
+                    + espacoItens * (itens.length - 1);
+            };
+            let larguraConteudo = medirTudo();
+            while (larguraConteudo + PADDING_LATERAL_LEGENDA * 2 > width - 16 && fonte > 10) {
+                fonte--;
+                larguraConteudo = medirTudo();
             }
 
-            let cursorX = posX - larguraTotal / 2;
+            const larguraBarra = larguraConteudo + PADDING_LATERAL_LEGENDA * 2;
+            const esquerda = (width - larguraBarra) / 2;
+            const direita = esquerda + larguraBarra;
+
+            // pílula: cantos totalmente arredondados (raio = metade da altura)
+            ctx.beginPath();
+            ctx.moveTo(esquerda + raio, topo);
+            ctx.lineTo(direita - raio, topo);
+            ctx.arc(direita - raio, topo + raio, raio, -Math.PI / 2, Math.PI / 2);
+            ctx.lineTo(esquerda + raio, topo + ALTURA_BARRA_LEGENDA);
+            ctx.arc(esquerda + raio, topo + raio, raio, Math.PI / 2, Math.PI * 1.5);
+            ctx.closePath();
+            ctx.fillStyle = corAzulMarinho;
+            ctx.fill();
+
+            const centroY = topo + ALTURA_BARRA_LEGENDA / 2;
+            let cursorX = esquerda + PADDING_LATERAL_LEGENDA;
 
             ctx.textAlign = "left";
+            ctx.textBaseline = "middle";
 
-            ctx.fillStyle = corTerracota;
-            ctx.fillText(textoOriginal, cursorX, posY);
-            cursorX += larguraOriginal;
+            itens.forEach(item => {
+                ctx.fillStyle = item.cor;
+                ctx.beginPath();
+                if (ctx.roundRect) ctx.roundRect(cursorX, centroY - lado / 2, lado, lado, 3);
+                else ctx.rect(cursorX, centroY - lado / 2, lado, lado);
+                ctx.fill();
+                cursorX += lado + espacoIcone;
 
-            ctx.fillStyle = corBege;
-            ctx.fillText(textoBarra, cursorX, posY);
-            cursorX += larguraBarra;
+                ctx.fillStyle = corBege;
+                ctx.fillText(item.texto, cursorX, centroY);
+                cursorX += ctx.measureText(item.texto).width + espacoItens;
+            });
 
-            ctx.fillStyle = corVerde;
-            ctx.fillText(textoImaginada, cursorX, posY);
-        });
-
-        ctx.restore();
-    },
-};
-
-//Espaço ABAIXO da legenda do radar
-// const espacamentoLegendaPlugin = {
-//     id: 'espacamentoLegenda',
-//     beforeInit(chart) {
-//         const fitOriginal = chart.legend.fit;
-//         chart.legend.fit = function fit() {
-//             fitOriginal.bind(chart.legend)();
-//             this.height += 16; // Ajuste aqui: quanto maior o número, mais o gráfico desce
-//         };
-//     },
-// };
-
-//Espaço ACIMA da legenda - pra quando a legenda estiver no bottom
-const espacamentoLegendaPlugin = {
-    id: 'espacamentoLegenda',
-    beforeInit(chart) {
-        const fitOriginal = chart.legend.fit;
-        chart.legend.fit = function fit() {
-            fitOriginal.bind(chart.legend)();
-            this.height += 32; // 1. Reserva o espaço extra no layout
-        };
-    },
-    afterLayout(chart) {
-        if (chart.legend && chart.legend.options.position === 'bottom') {
-            chart.legend.top += 32; // 2. Desloca a legenda para baixo, deixando o vão no topo
-        }
-    }
-};
+            ctx.restore();
+        },
+    };
 
     graficosRadar[canvasId] = new Chart(canvas, {
-        plugins: [valoresColoridosPlugin, espacamentoLegendaPlugin],
+        plugins: [fundoRadarPlugin, manchasPlugin, valoresColoridosPlugin, legendaBarraPlugin],
         type: "radar",
         data: {
             labels: categorias,
@@ -369,9 +546,9 @@ const espacamentoLegendaPlugin = {
                 {
                     label: labelOriginal,
                     data: categorias.map(c => percentuaisOriginais[c] || 0),
-                    borderColor: corTerracota,
-                    backgroundColor: "rgba(183, 111, 81, 0.14)",
-                    borderWidth: 2.5,
+                    borderColor: "transparent", // desenhado pelo manchasPlugin
+                    backgroundColor: "transparent",
+                    borderWidth: 2,
                     pointRadius: 0,
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: corTerracota,
@@ -380,9 +557,9 @@ const espacamentoLegendaPlugin = {
                 {
                     label: labelComparacao,
                     data: categorias.map(c => percentuaisImaginados[c] || 0),
-                    borderColor: corVerde,
-                    backgroundColor: "rgba(152, 171, 86, 0.18)",
-                    borderWidth: 2.5,
+                    borderColor: "transparent", // desenhado pelo manchasPlugin
+                    backgroundColor: "transparent",
+                    borderWidth: 2,
                     pointRadius: 0,
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: corVerde,
@@ -393,48 +570,35 @@ const espacamentoLegendaPlugin = {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            // padding interna do canvas do grafico
-            layout: { padding: { top: 6, right: 24, bottom: 0, left: 24 } },
+            // padding interna do canvas do grafico — margem ao redor de radar + textos.
+            // O de baixo também reserva o espaço da pílula da legenda.
+            layout: { padding: { top: 16, right: 36, bottom: ALTURA_BARRA_LEGENDA + MARGEM_INFERIOR_LEGENDA + 14, left: 36 } },
             scales: {
                 r: {
                     min: 0,
                     max: 100,
                     beginAtZero: true,
-                    // Só mostra 25/50/75/100% — o 0% fica escondido pra não
-                    // competir visualmente com o centro do gráfico.
+                    // Os números da escala ficam escondidos; a grade mostra 25/50/75%
+                    // (o anel do 100% é o hexágono branco).
                     ticks: {
                         display: false,
                         stepSize: 25,
-                        color: "rgba(249, 239, 231, 0.72)",
-                        font: { ...fonteBase, size: 10, weight: "500" },
                         backdropColor: "transparent",
                         showLabelBackdrop: false,
-                        padding: 2,
-                        callback: valor => (valor === 0 ? "" : valor + "%"),
                     },
-                    grid: { color: "rgba(249, 239, 231, 0.3)", lineWidth: 1 },
-                    angleLines: { color: "rgba(249, 239, 231, 0.11)", lineWidth: 1 },
+                    grid: { color: corGrade, lineWidth: 1.5 },
+                    angleLines: { display: false },
                     pointLabels: {
-                        color: corBege,
-                        padding: 14,
-                        font: { ...fonteBase, size: 14, weight: "400" },
+                        color: corAzulMarinho,
+                        padding: 14, // distância hexágono ↔ rótulo (quanto maior, menor o hexágono)
+                        font: { ...fonteBase, size: TAMANHO_FONTE, weight: "500" },
+                        // 2ª linha em branco: reserva o espaço dos valores "0% / 20%"
+                        callback: nome => [nome, " "],
                     },
                 },
             },
             plugins: {
-                legend: {
-                    display: true,
-                    position: "bottom",
-                    labels: {
-                        color: corBege,
-                        padding: 22,
-                        usePointStyle: true,
-                        pointStyle: "rectRounded",
-                        boxWidth: 18,
-                        boxHeight: 10,
-                        font: { ...fonteBase, size: 14, weight: "400" },
-                    },
-                },
+                legend: { display: false }, // a legenda é desenhada pelo legendaBarraPlugin
                 tooltip: {
                     backgroundColor: "rgba(19, 28, 59, 0.96)",
                     titleColor: corBege,
@@ -458,12 +622,16 @@ const espacamentoLegendaPlugin = {
 // Reaproveitada tanto no popup (comparando 1 criação com o original) quanto
 // no cabeçalho da página de uma praça-base (comparando a MÉDIA com o original).
 function criarListaComparativa(dadosImaginados, dadosOriginais, opcoes = {}) {
-    const { containerId = "modalListaItens", rotuloComparacao = "Na sua praça" } = opcoes;
+    // emColunas: layout da página da praça-base — cabeçalho "Original: / Média:"
+    // uma vez por categoria e só os números em cada linha. O popup continua com
+    // o layout antigo (rótulo pequeno dentro de cada linha).
+    const { containerId = "modalListaItens", rotuloComparacao = "Na sua praça", emColunas = false } = opcoes;
 
     const lista = document.getElementById(containerId);
     if (!lista) return;
 
     lista.innerHTML = "";
+    lista.classList.toggle("lista-colunas", emColunas);
 
     const categorias = [...new Set([
         ...Object.keys(dadosImaginados),
@@ -477,7 +645,21 @@ function criarListaComparativa(dadosImaginados, dadosOriginais, opcoes = {}) {
         const titulo = document.createElement("div");
         titulo.className = "grupo-categoria-titulo";
         titulo.innerText = categoria;
-        grupo.appendChild(titulo);
+
+        if (emColunas) {
+            const cabecalho = document.createElement("div");
+            cabecalho.className = "grupo-categoria-cabecalho";
+            cabecalho.appendChild(titulo);
+
+            const rotulos = document.createElement("div");
+            rotulos.className = "item-comparativo-dados";
+            rotulos.innerHTML = `<span>Original:</span><span>${rotuloComparacao}:</span><span></span>`;
+            cabecalho.appendChild(rotulos);
+
+            grupo.appendChild(cabecalho);
+        } else {
+            grupo.appendChild(titulo);
+        }
 
         const itensContainer = document.createElement("div");
         itensContainer.className = "lista-comparativa";
@@ -507,8 +689,11 @@ function criarListaComparativa(dadosImaginados, dadosOriginais, opcoes = {}) {
                     <span>${nome}</span>
                 </div>
                 <div class="item-comparativo-dados">
-                    <span><small>${rotuloComparacao}</small><strong>${quantidadeAtual}</strong></span>
-                    <span><small>Original</small><strong>${quantidadeOriginal}</strong></span>
+                    ${emColunas
+                        ? `<span class="num-original">${quantidadeOriginal}</span>
+                           <span class="num-comparacao">${quantidadeAtual}</span>`
+                        : `<span><small>${rotuloComparacao}</small><strong>${quantidadeAtual}</strong></span>
+                           <span><small>Original</small><strong>${quantidadeOriginal}</strong></span>`}
                     <span class="badge-diferenca ${classe}">${sinal}${diferenca}</span>
                 </div>
             `;
@@ -603,7 +788,7 @@ async function carregarEstatisticasDaPraca(slugDaPraca, itensOriginais) {
     desenharRadar(itensOriginaisPorCategoria, somaItensPorCategoria, {
         canvasId: "radarComparativoPraca",
         labelOriginal: "Praça original",
-        labelComparacao: "Média das reimaginações",
+        labelComparacao: "rePraça média",
     });
 
     // --- Lista por item: original vs. média (arredondada pra 1 casa) ---
@@ -620,6 +805,7 @@ async function carregarEstatisticasDaPraca(slugDaPraca, itensOriginais) {
     criarListaComparativa(mediaItensPorCategoria, itensOriginaisPorCategoria, {
         containerId: "pracaListaItens",
         rotuloComparacao: "Média",
+        emColunas: true,
     });
 }
 

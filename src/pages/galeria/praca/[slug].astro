@@ -78,18 +78,23 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
                 <canvas id="radarComparativoPraca"></canvas>
             </div>
 
-            <button
-                type="button"
-                class="toggle-lista-itens"
-                aria-expanded="false"
-                aria-controls="pracaListaItensWrapper"
-            >
-                <span class="toggle-texto">Ver mudanças por item</span>
-                <span class="toggle-seta" aria-hidden="true">▾</span>
-            </button>
+            <!-- Desktop: o botão vira só o título "Mudanças por item:" e a lista
+                 fica sempre aberta ao lado do radar, com scroll próprio.
+                 Mobile: vira o dropdown (seta ▾) abaixo do radar. -->
+            <div class="praca-lista-painel">
+                <button
+                    type="button"
+                    class="toggle-lista-itens"
+                    aria-expanded="false"
+                    aria-controls="pracaListaItensWrapper"
+                >
+                    <span class="toggle-texto">Mudanças por item</span>
+                    <span class="toggle-seta" aria-hidden="true">▾</span>
+                </button>
 
-            <div id="pracaListaItensWrapper" class="lista-itens-wrapper">
-                <div id="pracaListaItens" class="lista-categorias"></div>
+                <div id="pracaListaItensWrapper" class="lista-itens-wrapper">
+                    <div id="pracaListaItens" class="lista-categorias"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -164,12 +169,28 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
   const btnToggle = document.querySelector<HTMLButtonElement>('.toggle-lista-itens');
   const wrapper = document.getElementById('pracaListaItensWrapper');
 
+  // No desktop a lista fica sempre aberta (o CSS força isso) e o botão é só um
+  // título; o dropdown só existe no mobile. Mesmo breakpoint do style.css.
+  const desktop = window.matchMedia('(min-width: 769px)');
+
+  function sincronizarComBreakpoint() {
+    if (!btnToggle) return;
+    if (desktop.matches) {
+      btnToggle.setAttribute('aria-expanded', 'true');
+      btnToggle.tabIndex = -1;
+    } else {
+      btnToggle.setAttribute('aria-expanded', String(wrapper?.classList.contains('aberto') ?? false));
+      btnToggle.tabIndex = 0;
+    }
+  }
+
+  sincronizarComBreakpoint();
+  desktop.addEventListener('change', sincronizarComBreakpoint);
+
   btnToggle?.addEventListener('click', () => {
+    if (desktop.matches) return;
     const expandido = btnToggle.getAttribute('aria-expanded') === 'true';
     btnToggle.setAttribute('aria-expanded', String(!expandido));
     wrapper?.classList.toggle('aberto', !expandido);
-    btnToggle.querySelector('.toggle-texto')!.textContent = expandido
-      ? 'Ver mudanças por item'
-      : 'Ocultar mudanças por item';
   });
 </script>
