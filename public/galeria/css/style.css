@@ -1335,6 +1335,10 @@
     font-weight: 500;
 }
 
+.lista-colunas .item-comparativo-nome img {
+    max-width: none; /* o reset (img { max-width: 100% }) esmagava o ícone quando o nome ficava sem espaço */
+}
+
 .lista-colunas .item-comparativo-dados {
     display: grid;
     grid-template-columns: 72px 72px 56px;
@@ -1364,10 +1368,29 @@
        scroll interno para a lista não ficar enorme. */
     .praca-comparativo {
         flex-direction: column;
+
+        margin-left: -14px; /* tira o padding do container que faz o fundo branco, recuperando espaço horizontal */
+        margin-right: -14px;
     }
 
+    /* Mais largura para o radar: sem isso o cartão azul ficava com ~75% da
+       tela (padding do .container + padding do cabeçalho branco). */
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .praca-cabecalho {
+        padding: 24px 14px;
+    }
+
+    /* A altura acompanha a largura (o radar é limitado pela largura, não pela
+       altura) — com o 390px fixo sobrava espaço vazio em cima e embaixo.
+       Ajuste a proporção se o radar ficar apertado ou folgado. */
     .praca-comparativo .radar-container {
         width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1.05;
     }
 
     .praca-lista-painel {
@@ -1404,5 +1427,15 @@
 
     .praca-comparativo .lista-itens-wrapper > .lista-categorias {
         max-height: 360px;
+    }
+
+    /* Lista em colunas: rótulos "Original:/Média:" em 10px e colunas mais
+       estreitas, para sobrar espaço ao nome da categoria e ao nome do item. */
+    .lista-colunas .grupo-categoria-cabecalho .item-comparativo-dados > span {
+        font-size: 10px;
+    }
+
+    .lista-colunas .item-comparativo-dados {
+        grid-template-columns: 46px 46px 52px;
     }
 }

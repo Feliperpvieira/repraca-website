@@ -137,6 +137,16 @@ async function carregarDadosDaPraca(nomeBase) {
 // de mais de uma instância viva ao mesmo tempo.
 const graficosRadar = {};
 
+// Fonte e padding do radar dependem do breakpoint mobile, mas só eram lidos na
+// hora de desenhar: redimensionar a janela (ou girar o celular) mantinha o
+// tamanho antigo. Por isso cada radar registra como se redesenha, e o
+// redesenho roda quando o breakpoint (mesmo do CSS) é cruzado.
+const redesenhosRadar = {};
+const mediaMobileRadar = window.matchMedia("(max-width: 768px)");
+mediaMobileRadar.addEventListener("change", () => {
+    Object.values(redesenhosRadar).forEach(redesenhar => redesenhar());
+});
+
 // Cores lidas do CSS uma única vez (o valor não muda em runtime).
 const coresGrafico = (() => {
     const estilo = getComputedStyle(document.documentElement);
@@ -266,7 +276,7 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
     const {
         canvasId = "radarPraca",
         labelOriginal = "Praça original",
-        labelComparacao = "Sua praça",
+        labelComparacao = "Esta rePraça",
     } = opcoes;
 
     const canvas = document.getElementById(canvasId);
@@ -302,7 +312,12 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
 
     // O cartão (bege + borda azul-marinho) vem do CSS em .radar-container.
     // Aqui só entra o que é desenhado dentro do canvas.
-    const TAMANHO_FONTE = 16;           // nomes das categorias e valores "0% / 20%"
+    //const TAMANHO_FONTE = 16;           // nomes das categorias e valores "0% / 20%"
+    // Mesmo breakpoint do CSS. Menor no mobile para o radar ter mais espaço.
+    const mobile = mediaMobileRadar.matches;
+    const TAMANHO_FONTE = mobile ? 13 : 16;            // nomes das categorias e valores "0% / 20%"
+    const PADDING_LATERAL_GRAFICO = mobile ? 12 : 36;  // folga dos lados do canvas
+
     const TAMANHO_FONTE_LEGENDA = 14;   // texto da legenda (fica menor que o do radar)
     const ALTURA_BARRA_LEGENDA = 36;    // altura da pílula azul-marinho da legenda
     const MARGEM_INFERIOR_LEGENDA = -4;  // distância da pílula até o fundo do cartão
@@ -572,7 +587,7 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
             maintainAspectRatio: false,
             // padding interna do canvas do grafico — margem ao redor de radar + textos.
             // O de baixo também reserva o espaço da pílula da legenda.
-            layout: { padding: { top: 16, right: 36, bottom: ALTURA_BARRA_LEGENDA + MARGEM_INFERIOR_LEGENDA + 14, left: 36 } },
+                        layout: { padding: { top: 16, right: PADDING_LATERAL_GRAFICO, bottom: ALTURA_BARRA_LEGENDA + MARGEM_INFERIOR_LEGENDA + 14, left: PADDING_LATERAL_GRAFICO } },
             scales: {
                 r: {
                     min: 0,
@@ -615,6 +630,8 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
             },
         },
     });
+
+    redesenhosRadar[canvasId] = () => desenharRadar(dadosOriginais, dadosImaginados, opcoes);
 }
 
 // Lista comparativa por item, ex:
