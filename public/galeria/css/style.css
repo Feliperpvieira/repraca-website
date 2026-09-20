@@ -93,6 +93,11 @@
     width: 180px;
 }
 
+/* Some a seta padrão do select: o ícone circular já é o background do <button> */
+#filtroEspecifico::picker-icon {
+    display: none;
+}
+
 /* Isto só roda em navegadores que REALMENTE reconhecem a declaração
    "appearance: base-select" (Chrome/Edge mais recentes). Nesses casos, o
    <button> de dentro passa a ser quem desenha a pílula visível (regra
@@ -163,14 +168,23 @@
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     padding: 6px;
+
+    grid-template-columns: repeat(2, minmax(max-content, 1fr));
+    gap: 1rem;
 }
 
-/* 2. Layout Grid aplicado APENAS quando o select é aberto */
-#filtroEspecifico::picker(select):popover-open {
+/* Layout Grid aplicado quando o select é aberto */
+#filtroEspecifico:open::picker(select) {
     display: grid;
-    /* Usa repeat para as colunas e deixa as linhas automáticas */
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 1rem;
+    /* grid-template-columns: repeat(2, 1fr);
+    gap: 1rem; */
+}
+
+@media (max-width: 640px) {
+    #filtroEspecifico::picker(select) {
+        max-width: 100%;   /* não passa da tela: rola na horizontal */
+        overflow-x: auto;
+    }
 }
 
 #filtroEspecifico option {
