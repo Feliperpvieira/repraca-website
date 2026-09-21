@@ -80,11 +80,13 @@
    Em navegadores sem suporte a appearance: base-select, essa regra é
    simplesmente ignorada e o <select> continua um dropdown nativo comum,
    já coberto pela regra ".filtro-grupo select" acima. */
-#filtroEspecifico, #filtroEspecifico::picker(select) {
+#filtroEspecifico, #filtroOrdem,
+#filtroEspecifico::picker(select), #filtroOrdem::picker(select) {
     appearance: base-select;
 }
 
-#filtroEspecifico {
+#filtroEspecifico,
+#filtroOrdem {
     /* width (não max-width): trava o tamanho de verdade, não só um teto —
        max-width sozinho não impede o conteúdo de empurrar o texto pra uma
        segunda linha quando ultrapassa o espaço disponível.
@@ -94,7 +96,8 @@
 }
 
 /* Some a seta padrão do select: o ícone circular já é o background do <button> */
-#filtroEspecifico::picker-icon {
+#filtroEspecifico::picker-icon,
+#filtroOrdem::picker-icon {
     display: none;
 }
 
@@ -110,7 +113,8 @@
    e escolher "sem borda" quebrava justamente quem mais precisa dela (o
    fallback nativo). */
 @supports (appearance: base-select) {
-    #filtroEspecifico {
+    #filtroEspecifico,
+    #filtroOrdem {
         border: none;
         background: none;
         padding: 0;
@@ -120,7 +124,8 @@
 /* Quando o base-select está ativo, quem aparece de fato "fechado" é o
    <button> que já está dentro do <select> no HTML — por isso ele recebe
    a MESMA pílula visual da regra acima, e não o <select> em si. */
-#filtroEspecifico > button {
+#filtroEspecifico > button,
+#filtroOrdem > button {
     appearance: none;
     -webkit-appearance: none;
     display: flex;
@@ -150,7 +155,8 @@
    viram um fluxo inline normal, e SÓ NESSE modelo o text-overflow:ellipsis
    funciona de verdade — dentro de um flex container o "…" não aparece,
    só o corte seco (testado, é uma pegadinha real do CSS). */
-#filtroEspecifico > button selectedcontent {
+#filtroEspecifico > button selectedcontent,
+#filtroOrdem > button selectedcontent {
     display: block;
     min-width: 0;
     overflow: hidden;
@@ -163,12 +169,17 @@
     margin-right: 6px;
 }
 
-#filtroEspecifico::picker(select) {
+#filtroEspecifico::picker(select),
+#filtroOrdem::picker(select) {
     border: 1px solid #eee;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     padding: 6px;
+}
 
+/* Só o filtro de itens abre em grid de 2 colunas; o "Ordenar por" fica na
+   lista vertical padrão (1 coluna), por isso não tem display:grid aqui. */
+#filtroEspecifico::picker(select) {
     grid-template-columns: repeat(2, minmax(max-content, 1fr));
     gap: 1rem;
 }
@@ -187,7 +198,8 @@
     }
 }
 
-#filtroEspecifico option {
+#filtroEspecifico option,
+#filtroOrdem option {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -196,11 +208,14 @@
 }
 
 #filtroEspecifico option:hover,
-#filtroEspecifico option:focus {
+#filtroEspecifico option:focus,
+#filtroOrdem option:hover,
+#filtroOrdem option:focus {
     background: #f9efe7;
 }
 
-#filtroEspecifico option:checked {
+#filtroEspecifico option:checked,
+#filtroOrdem option:checked {
     background: #0A6EB6;
     color: white;
 }
@@ -413,7 +428,8 @@
     }
 
     .filtro-grupo select,
-    #filtroEspecifico > button {
+    #filtroEspecifico > button,
+    #filtroOrdem > button {
         min-width: 170px;
     }
 
