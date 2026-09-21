@@ -257,6 +257,10 @@
     background-size: contain;
     transform: rotate(90deg);
     cursor: pointer;
+
+    background-color: transparent;   /* tira o fundo branco do iOS */
+    box-shadow: none;                /* tira a sombra padrão, que gira junto com o rotate(90deg) */
+    border-radius: 50%;              /* garante que nada apareça fora do círculo */
 }
 
 .filtro-grupo--slider input[type="range"]::-moz-range-thumb {
