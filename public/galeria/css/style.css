@@ -1,24 +1,5 @@
 * { margin:0; padding:0; box-sizing: border-box;  }
 
-/* Color variables */
-:root {
-    --azul-marinho: #131C3B;
-    --azul: #0A6EB6;
-    --bege: #F9EFE7;
-    --verde: #98AB56;
-    --terracota: #B76F51;
-
-    /* Ícones em SVG inline, usados nos selects, no thumb do slider e no
-       checkbox dos filtros (ver seção FILTROS abaixo). Ficam aqui como
-       variável pra não repetir a mesma string enorme em cada regra —
-       trocar a cor ou o desenho é só mudar aqui uma vez. */
-    --icone-select-seta: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none'%3E%3Ccircle cx='11' cy='11' r='11' fill='%230A6EB6'/%3E%3Cpath d='M6 8.5L11 4.5L16 8.5' stroke='%23F9EFE7' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 13.5L11 17.5L16 13.5' stroke='%23F9EFE7' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-    /* Mesmo ícone acima, mas o slider usa via `transform: rotate(90deg)`
-       no próprio thumb (ver .filtro-grupo--slider ::-webkit-slider-thumb),
-       não precisa de uma segunda variável só pra isso. */
-    --icone-checkbox-marcado: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='28' viewBox='0 0 34 28' fill='none'%3E%3Cpath d='M30.8674 6.98963C31.3245 7.53446 31.2535 8.34672 30.7086 8.80388L15.8835 21.2433C15.882 21.2446 15.8818 21.2468 15.8831 21.2483C15.8843 21.2498 15.8842 21.2521 15.8826 21.2534L12.5626 24.039C12.0178 24.4961 11.2056 24.425 10.7484 23.8802L3.22292 14.9117C2.76577 14.3669 2.83682 13.5547 3.3816 13.0975L5.71766 11.1372C6.26247 10.68 7.07476 10.751 7.53193 11.2958L11.4371 15.9499C11.8943 16.4947 12.7066 16.5658 13.2514 16.1086L27.0928 4.4946C27.6376 4.03746 28.4498 4.10852 28.907 4.65334L30.8674 6.98963Z' fill='%23B76F51'/%3E%3Cpath d='M25.9809 2.91157C27.2955 1.91742 29.155 2.08009 30.277 3.28743L30.3867 3.41159L32.3473 5.7481C33.49 7.11012 33.3124 9.14066 31.9505 10.2835L17.2414 22.6253C17.204 22.6623 17.1654 22.6987 17.1244 22.7331L13.8042 25.5188C12.4422 26.6615 10.4117 26.4839 9.2688 25.122L1.7432 16.1533C0.600385 14.7913 0.778068 12.7608 2.13999 11.6179L4.47617 9.65758L4.60578 9.55405C5.96422 8.52678 7.90443 8.73472 9.01162 10.0541L12.5029 14.2148L25.8513 3.01479L25.9809 2.91157ZM28.9071 4.6534C28.45 4.10859 27.6376 4.03752 27.0928 4.49467L13.2515 16.1086L13.1996 16.1498C12.6562 16.5608 11.88 16.4777 11.4372 15.9498L7.53203 11.2959C7.07486 10.7511 6.26249 10.68 5.71767 11.1371L3.38181 13.0975C2.83702 13.5546 2.76593 14.367 3.22307 14.9118L10.7484 23.8801C11.1912 24.4079 11.9674 24.4913 12.5108 24.0804L12.5628 24.0389L15.8826 21.2532L15.8835 21.2432L30.7087 8.80393C31.2535 8.34678 31.3246 7.5344 30.8674 6.98958L28.9071 4.6534Z' fill='%23F9EFE7'/%3E%3C/svg%3E");
-}
-
 .container { /*  container branco que ocupa a horizontal toda da tela */
     max-width: 1200px; 
     padding: 40px 20px; 
@@ -250,8 +231,8 @@
         to right,
         var(--azul) 0%,
         var(--azul) var(--posicao-slider, 10%),
-        var(--terracota) var(--posicao-slider, 10%),
-        var(--terracota) 100%
+        var(--marrom) var(--posicao-slider, 10%),
+        var(--marrom) 100%
     );
     cursor: pointer;
 
@@ -481,7 +462,7 @@
     align-items: center;
     gap: 4px; /* espaçamento entre o ícone e o número */
     font-weight: bold; 
-    color: var(--terracota); 
+    color: var(--marrom); 
 }
 
 .loading-spinner { 
@@ -542,7 +523,7 @@
     position: absolute; 
     top: 15px; 
     right: 15px; 
-    background: var(--terracota); 
+    background: var(--marrom); 
     font-size: 1.2rem;
     color: var(--bege);
     border: none; 
@@ -702,9 +683,9 @@
 .btn-like { 
     padding: 12px 18px 12px 12px; 
     border-radius: 30px; 
-    border: 2px solid var(--terracota); 
+    border: 2px solid var(--marrom); 
     background: white; 
-    color: var(--terracota); 
+    color: var(--marrom); 
     font-weight: bold; 
     cursor: pointer; 
     transition: 0.2s; 
@@ -725,12 +706,12 @@
 }
 
 .btn-like svg path { 
-    fill: var(--terracota); 
+    fill: var(--marrom); 
     transition: fill 0.2s;
 }
 
 .btn-like:hover, .btn-like.curtido { 
-    background: var(--terracota); 
+    background: var(--marrom); 
     color: white; 
 }
 
@@ -897,7 +878,7 @@
 }
 
 .tab-historico { 
-    background: var(--terracota); 
+    background: var(--marrom); 
 }
 
 .tabs-conteudo { 
@@ -918,7 +899,7 @@
 }
 
 .tabs-conteudo--historico { 
-    background: var(--terracota); 
+    background: var(--marrom); 
 }
 
 .tab-painel { 
@@ -1114,7 +1095,7 @@
 }
 
 .badge-diferenca.aumentou { background: var(--verde); }
-.badge-diferenca.diminuiu { background: var(--terracota); }
+.badge-diferenca.diminuiu { background: var(--marrom); }
 .badge-diferenca.igual { background: #999; }
 
 /* Abas "remixes" e "histórico" */
@@ -1238,7 +1219,7 @@
     width: 60px;
     height: 60px;
     border-radius: 16px;
-    background: var(--terracota);
+    background: var(--marrom);
     transition: filter 0.15s ease;
     transition: border-radius 0.25s ease;
 }
@@ -1270,10 +1251,17 @@
 /* O visual do botão em si (gradiente, lápis absoluto) já existe em
    .btn-remix, lá na seção do popup (ver linha ~757). Aqui só cancelamos o
    flex:1 dele — que só faz sentido ao lado do botão de curtir, dentro de
-   .popup-acoes — pra ele não esticar até preencher o .praca-topo inteiro. */
+   .popup-acoes. Sem isso, quando o .praca-topo quebra numa tela de tablet
+   (o título não cabe mais do lado do botão), o botão fica sozinho na sua
+   própria linha e o flex:1 o estica pra preencher ela inteira, virando uma
+   pílula enorme — foi esse o "quebra em tablets".
+   O padding-right maior substitui a folga que o flex:1 dava "de graça"
+   (a caixa ficando bem mais larga que o texto) — sem ela, o lápis
+   (posicionado a 10% da direita) cobre a última palavra do texto. */
 .praca-topo .btn-remix {
-    /* flex: none; */
-    max-width: 400px;
+    flex: none;
+    padding-right: 120px;
+    padding-left: 50px;
 }
 
 /* --- Bio + fotos (mapa/satélite e foto no local) --- */
@@ -1481,7 +1469,7 @@
     font-weight: bold;
 }
 
-.lista-colunas .num-original { color: var(--terracota); }
+.lista-colunas .num-original { color: var(--marrom); }
 .lista-colunas .num-comparacao { color: var(--verde); }
 
 /* Telas médias (tablet/monitor estreito): a bio já não cabe do lado das
@@ -1610,15 +1598,22 @@
         /* scroll-snap-align: start; */
     }
 
-    /* Botão fixo no fundo da tela — a posição dele no HTML deixa de importar
-       (position:fixed tira do fluxo normal), ele fica sempre colado embaixo
-       da viewport, por cima do resto do conteúdo, independente do scroll.
+    /* Botão fixo no fundo da tela. IMPORTANTE: uma vez position:fixed, o
+       elemento sai do layout flex do .praca-topo por completo — o flex:none
+       lá de cima deixa de valer, e quem passa a mandar no tamanho é só
+       left/right/width/max-width daqui. Por isso não dá pra só reaproveitar
+       left:14/right:14 (isso sempre estica de ponta a ponta, sem nenhum
+       limite): centralizamos com left:50%+transform e limitamos a
+       largura com max-width, pra não formar aquela pílula
+       enorme e desalinhada à esquerda que aparecia perto de 768px.
        Escopado a ".praca-topo .btn-remix": o popup de cada criação também
        usa .btn-remix (dentro de .popup-acoes) e esse NÃO pode virar fixo. */
     .praca-topo .btn-remix {
         position: fixed;
-        left: 14px;
-        right: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 28px);
+        max-width: 400px;
         bottom: 14px;
         z-index: 500; /* abaixo do #popup (1000), acima do resto da página */
     }

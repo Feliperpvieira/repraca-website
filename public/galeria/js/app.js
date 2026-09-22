@@ -152,7 +152,7 @@ const coresGrafico = (() => {
     const estilo = getComputedStyle(document.documentElement);
     return {
         verde: estilo.getPropertyValue("--verde").trim(),
-        terracota: estilo.getPropertyValue("--terracota").trim(),
+        terracota: estilo.getPropertyValue("--marrom").trim(),
         bege: estilo.getPropertyValue("--bege").trim(),
         azulMarinho: estilo.getPropertyValue("--azul-marinho").trim(),
     };

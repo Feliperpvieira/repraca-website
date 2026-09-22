@@ -6,13 +6,28 @@ html, body {
     max-width: 100%;
 }
 
-:root{
+/* Color variables */
+:root {
     --azul: #0A6EB6;
     --azul-marinho: #131C3B;
     --bege: #F9EFE7;
     --marrom: #B76F51;
     --verde: #98AB56;
+
+    /* Ícones em SVG inline, usados nos selects, no thumb do slider e no
+       checkbox dos filtros (ver seção FILTROS abaixo). Ficam aqui como
+       variável pra não repetir a mesma string enorme em cada regra —
+       trocar a cor ou o desenho é só mudar aqui uma vez. */
+    --icone-select-seta: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none'%3E%3Ccircle cx='11' cy='11' r='11' fill='%230A6EB6'/%3E%3Cpath d='M6 8.5L11 4.5L16 8.5' stroke='%23F9EFE7' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 13.5L11 17.5L16 13.5' stroke='%23F9EFE7' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    /* Mesmo ícone acima, mas o slider usa via `transform: rotate(90deg)`
+       no próprio thumb (ver .filtro-grupo--slider ::-webkit-slider-thumb),
+       não precisa de uma segunda variável só pra isso. */
+    --icone-checkbox-marcado: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='28' viewBox='0 0 34 28' fill='none'%3E%3Cpath d='M30.8674 6.98963C31.3245 7.53446 31.2535 8.34672 30.7086 8.80388L15.8835 21.2433C15.882 21.2446 15.8818 21.2468 15.8831 21.2483C15.8843 21.2498 15.8842 21.2521 15.8826 21.2534L12.5626 24.039C12.0178 24.4961 11.2056 24.425 10.7484 23.8802L3.22292 14.9117C2.76577 14.3669 2.83682 13.5547 3.3816 13.0975L5.71766 11.1372C6.26247 10.68 7.07476 10.751 7.53193 11.2958L11.4371 15.9499C11.8943 16.4947 12.7066 16.5658 13.2514 16.1086L27.0928 4.4946C27.6376 4.03746 28.4498 4.10852 28.907 4.65334L30.8674 6.98963Z' fill='%23B76F51'/%3E%3Cpath d='M25.9809 2.91157C27.2955 1.91742 29.155 2.08009 30.277 3.28743L30.3867 3.41159L32.3473 5.7481C33.49 7.11012 33.3124 9.14066 31.9505 10.2835L17.2414 22.6253C17.204 22.6623 17.1654 22.6987 17.1244 22.7331L13.8042 25.5188C12.4422 26.6615 10.4117 26.4839 9.2688 25.122L1.7432 16.1533C0.600385 14.7913 0.778068 12.7608 2.13999 11.6179L4.47617 9.65758L4.60578 9.55405C5.96422 8.52678 7.90443 8.73472 9.01162 10.0541L12.5029 14.2148L25.8513 3.01479L25.9809 2.91157ZM28.9071 4.6534C28.45 4.10859 27.6376 4.03752 27.0928 4.49467L13.2515 16.1086L13.1996 16.1498C12.6562 16.5608 11.88 16.4777 11.4372 15.9498L7.53203 11.2959C7.07486 10.7511 6.26249 10.68 5.71767 11.1371L3.38181 13.0975C2.83702 13.5546 2.76593 14.367 3.22307 14.9118L10.7484 23.8801C11.1912 24.4079 11.9674 24.4913 12.5108 24.0804L12.5628 24.0389L15.8826 21.2532L15.8835 21.2432L30.7087 8.80393C31.2535 8.34678 31.3246 7.5344 30.8674 6.98958L28.9071 4.6534Z' fill='%23F9EFE7'/%3E%3C/svg%3E");
+
+    /* Ícone de galeria (grid), usado no link "Galeria" da navegação. */
+    --icone-nav-galeria: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='24' viewBox='0 0 30 24' fill='none'%3E%3Cpath d='M8.595 18.6C8.595 17.805 7.89 17.1 7.095 17.1H1.5C0.705 17.1 0 17.805 0 18.6V22.5C0 23.295 0.705 24 1.5 24H7.095C7.89 24 8.595 23.295 8.595 22.5V18.6ZM30 18.6C30 17.805 29.295 17.1 28.5 17.1H22.905C22.11 17.1 21.405 17.805 21.405 18.6V22.5C21.405 23.295 22.11 24 22.905 24H28.5C29.295 24 30 23.295 30 22.5V18.6ZM19.2975 18.474C19.2975 17.679 18.5925 16.974 17.7975 16.974H12.2025C11.4075 16.974 10.7025 17.679 10.7025 18.474V22.374C10.7025 23.1705 11.4075 23.874 12.2025 23.874H17.7975C18.5925 23.874 19.2975 23.1705 19.2975 22.374V18.474ZM30 1.5C30 0.705 29.295 0 28.5 0H1.5C0.705 0 0 0.705 0 1.5V13.5C0 14.295 0.705 15 1.5 15H28.5C29.295 15 30 14.295 30 13.5V1.5Z' fill='%23F9EFE7'/%3E%3C/svg%3E");
 }
+
 
 /* body font */
 body{
@@ -111,12 +126,12 @@ a:hover {
 
     display: flex;
     width: 100%;
-    height: 54px;
+    height: 36px;
 }
 
 .nav-frpv img{
     justify-content: center;
-    height: 54%;
+    height: 60%;
     margin: auto;
 }
 
@@ -126,11 +141,103 @@ header{
     border-radius: 0 0 42px 42px;
 }
 
+.menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 40px;
+    gap: 16px;
+}
+
+.links-site, .links-download{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.links-site{
+    flex-shrink: 0;
+}
+
+.links-download{
+    flex-shrink: 2;
+}
+
 .img-logo{
-    width: 400px;
-    margin: auto;
-    padding: 40px 0;
-    display: block;
+    /* width: 280px; */
+   height: 64px;
+   width: auto;
+}
+
+.nav-galeria, .nav-logo{
+    border-radius: 40px;
+    padding: 12px 36px;
+    border: 3px solid var(--Bege, #F9EFE7);
+    background: rgba(19, 28, 59, 0.50);
+
+    color: var(--bege);
+    font-size: 1.6rem;
+    text-decoration: none;
+    font-weight: 700;
+    line-height: 100%;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-galeria:hover, .nav-logo:hover{
+    background: var(--bege);
+    color: var(--azul);
+}
+
+.nav-galeria:hover svg path{
+    fill: var(--azul);
+}
+
+.nav-galeria svg path{
+    fill: var(--bege);
+
+    transition: 0.2s ease-in-out;
+}
+
+.nav-galeria svg{
+    margin-right: 8px;
+    height: 20px;
+}
+
+/* O botão vira a "âncora" pro ícone se posicionar por cima dele.
+   position: relative não muda nada visualmente, só cria a referência
+   pro absolute do ícone lá embaixo. */
+.nav-logo {
+    position: relative;
+    /* Abre espaço na esquerda do texto "rePraça" pro ícone não ficar
+       por cima da palavra. Ajusta esse valor conforme o tamanho do ícone. */
+    padding-left: 70px;
+}
+
+/* O ícone sai do fluxo normal (não empurra mais o texto do lado) e
+   fica "grudado" na borda esquerda do botão, podendo estourar pra
+   cima/baixo da pílula (por isso ele é maior que a altura dela). */
+.nav-logo img {
+    position: absolute;
+    left: -4px; /* quanto mais negativo, mais ele "vaza" pra fora da borda esquerda */
+    top: 50%;
+    transform: translateY(-50%); /* centraliza verticalmente independente da altura do ícone */
+    width: 58px; /* maior que a altura da pílula de propósito, pra estourar em cima/embaixo */
+    height: auto;
+}
+
+
+.links-download a{
+        /* We specify 'box-shadow' and 'transform' for a slightly more performant transition */
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.links-download a:hover{ /* botao disponivel no google play move no hover */
+    transform: translateY(-3px); /* Moves the element up by 3 pixels */
+    
+    /* The values are: x-offset | y-offset | blur | color */
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
 
@@ -138,7 +245,7 @@ header{
 .header-cover{
     display: block; 
     width: 100%;
-    height: 52vh;
+    height: 36vh;
     overflow: hidden;
     position: relative; /* used to center img */
     border: none;
@@ -706,14 +813,17 @@ footer > div{
 
 
     .nav-frpv{
-        height: 46px;
+        height: 40px;
+    }
+
+    .menu{
+        flex-direction: column;
+    }
+
+    .menu *{
+        flex-direction: column;
     }
     
-    .img-logo{
-        width: auto;
-        max-width: 75%;
-        max-height: 160px;
-    }
 
     /* capa google play */
     .header-cover{
