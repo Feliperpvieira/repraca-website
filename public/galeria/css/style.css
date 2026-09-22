@@ -1206,15 +1206,85 @@
 }
 
 .praca-cabecalho h1 {
-    margin: 0 0 12px;
+    margin: 0;
     font-weight: normal;
     color: var(--azul-marinho);
 }
 
+/* --- Topo: badge de localização + nome, e botão "Reimaginar na app" --- */
+
+.praca-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.praca-local {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0; /* permite o h1 truncar/quebrar em vez de espremer o badge */
+}
+
+.praca-local-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: var(--terracota);
+    transition: filter 0.15s ease;
+}
+
+.praca-local-badge:hover {
+    filter: brightness(1.08);
+}
+
+.praca-local-badge img {
+    width: 30px;
+    height: 30px;
+}
+
+.praca-local-texto h1{
+    min-width: 0;
+    text-align: left;
+}
+
+.praca-local-nome {
+    display: block;
+    margin-bottom: -6px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* O visual do botão em si (gradiente, lápis absoluto) já existe em
+   .btn-remix, lá na seção do popup (ver linha ~757). Aqui só cancelamos o
+   flex:1 dele — que só faz sentido ao lado do botão de curtir, dentro de
+   .popup-acoes — pra ele não esticar até preencher o .praca-topo inteiro. */
+.praca-topo .btn-remix {
+    /* flex: none; */
+    max-width: 400px;
+}
+
+/* --- Bio + fotos (mapa/satélite e foto no local) --- */
+
+.praca-media {
+    display: flex;
+    align-items: stretch;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
 .praca-intro {
+    flex: 1;
+    min-width: 260px;
     color: #444;
     line-height: 1.5;
-    margin-bottom: 24px;
 }
 
 .praca-intro p {
@@ -1225,32 +1295,51 @@
     margin-bottom: 0;
 }
 
-.estatisticas-praca {
+.praca-fotos {
     display: flex;
-    gap: 15px;
-    margin-bottom: 24px;
+    flex: 2;
+    gap: 16px;
+    min-width: 0;
 }
 
-.estatisticas-praca .stat-box {
-    background: var(--bege);
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
+/* aspect-ratio (não altura fixa) evita que as fotos fiquem "espremidas"
+   em telas muito estreitas ou "esticadas" em telas muito largas — a altura
+   sempre acompanha a largura que a foto ocupar em cada breakpoint. */
+.praca-foto {
+    position: relative;
     flex: 1;
+    min-width: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bege);
 }
 
-.estatisticas-praca .stat-numero {
+.praca-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: var(--azul-marinho);
 }
 
-.estatisticas-praca .stat-label {
+.praca-foto figcaption {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(19, 28, 59, 0.72);
+    color: var(--bege);
     font-size: 0.75rem;
+}
+
+/* Texto do rodapé do comparativo — é o mesmo #statTotal que o app.js já
+   preenche (antes ficava dentro do stat-box "Reimaginações"). */
+.praca-amostra {
+    margin-top: 14px;
     color: #757575;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+    font-size: 0.85rem;
+    text-align: center;
 }
 
 /* O radar (desenharRadar) e a lista comparativa (criarListaComparativa)
@@ -1389,15 +1478,22 @@
 .lista-colunas .num-original { color: var(--terracota); }
 .lista-colunas .num-comparacao { color: var(--verde); }
 
+/* Telas médias (tablet/monitor estreito): a bio já não cabe do lado das
+   fotos sem ficar espremida, então empilha texto em cima e fotos embaixo —
+   mas ainda lado a lado uma da outra, cabendo sem precisar de scroll. Só
+   abaixo de 768px (bloco seguinte) é que elas viram a faixa rolável. */
+@media (max-width: 1024px) {
+    .praca-media {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .praca-intro {
+        min-width: 0;
+    }
+}
+
 @media (max-width: 768px) {
-    .estatisticas-praca {
-        flex-wrap: wrap;
-    }
-
-    .estatisticas-praca .stat-box {
-        flex: 1 1 calc(50% - 8px);
-    }
-
     /* Radar em cima; embaixo, "Mudanças por item ▾" vira dropdown com
        scroll interno para a lista não ficar enorme. */
     .praca-comparativo {
@@ -1416,6 +1512,10 @@
 
     .praca-cabecalho {
         padding: 24px 14px;
+    }
+
+    .praca-local-nome {
+        margin-bottom: 2px;
     }
 
     /* A altura acompanha a largura (o radar é limitado pela largura, não pela
@@ -1471,5 +1571,49 @@
 
     .lista-colunas .item-comparativo-dados {
         grid-template-columns: 46px 46px 52px;
+    }
+
+    /* Fotos: faixa com scroll horizontal, cada foto ocupando ~80% da tela
+       — sobra uma tira da foto seguinte pra dar a dica visual de que dá
+       pra arrastar. scroll-snap faz o arrasto "encaixar" foto a foto. */
+    .praca-fotos {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        margin: 0 -14px; /* estica até a borda do cartão, como o radar */
+        padding: 0 14px;
+        
+    }
+
+    .praca-fotos::-webkit-scrollbar {
+        display: none;
+    }
+
+    .praca-foto {
+        flex: 0 0 80%;
+        /* scroll-snap-align: start; */
+    }
+
+    /* Botão fixo no fundo da tela — a posição dele no HTML deixa de importar
+       (position:fixed tira do fluxo normal), ele fica sempre colado embaixo
+       da viewport, por cima do resto do conteúdo, independente do scroll.
+       Escopado a ".praca-topo .btn-remix": o popup de cada criação também
+       usa .btn-remix (dentro de .popup-acoes) e esse NÃO pode virar fixo. */
+    .praca-topo .btn-remix {
+        position: fixed;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        z-index: 500; /* abaixo do #popup (1000), acima do resto da página */
+    }
+
+    /* Reserva o espaço que o botão fixo ocupa, pro fim da página (rodapé
+       de filtros, spinner de "carregar mais") não ficar escondido atrás
+       dele. :has() já é seguro aqui — o projeto já depende de recursos
+       de CSS recentes (o customizable <select>, ver #filtroEspecifico).
+       Escopado igual à regra acima, pelo mesmo motivo. */
+    body:has(.praca-topo .btn-remix) {
+        padding-bottom: 76px;
     }
 }

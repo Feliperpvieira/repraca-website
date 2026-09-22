@@ -32,7 +32,6 @@ export async function getStaticPaths() {
 
 const { slug, dados } = Astro.props;
 const itensOriginais = dados.itens || {};
-const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => soma + qtd, 0);
 ---
 <GaleriaLayout
     title={`${dados.nome} — rePraça`}
@@ -55,22 +54,66 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
          dois stat-boxes de baixo (média/reimaginações) e o radar
          dependem do Supabase, preenchidos pelo app.js depois. -->
     <section class="praca-cabecalho">
-        <h1>{dados.nome}</h1>
-        {dados.descricao && <div class="praca-intro" set:html={dados.descricao} />}
+        <!-- Localização (badge que abre o Google Maps) + nome, e o botão
+             "Reimaginar na app". No mobile o botão fica fixo no fundo da
+             tela (ver style.css) — a posição dele aqui no HTML não importa
+             mais nesse caso, mas mantemos ele aqui pra ordem de leitura/
+             tab fazer sentido em quem usa teclado ou leitor de tela.
 
-        <div class="estatisticas-praca">
-            <div class="stat-box">
-                <span class="stat-numero">{totalItensOriginais}</span>
-                <span class="stat-label">Itens na praça original</span>
+             ATENÇÃO: o link usa "?mapa=" (mapaId), não "?id=" (que é o
+             formato usado hoje só pra remixar UMA criação existente). O
+             DeepLinkManager.cs do app Unity ainda não trata "?mapa=" —
+             isso precisa ser adicionado lá pro botão funcionar de facto. -->
+        <div class="praca-topo">
+            <div class="praca-local">
+                {dados.mapsUrl && (
+                    <a
+                        class="praca-local-badge"
+                        href={dados.mapsUrl}
+                        target="_blank"
+                        rel="noopener"
+                        aria-label={`Ver ${dados.nome} no Google Maps`}
+                    >
+                        <img src="/img/icone-mapa.svg" alt="" width="32" height="32" />
+                    </a>
+                )}
+
+                <div class="praca-local-texto">
+                    {(dados.bairro || dados.cidade) && (
+                        <span class="praca-local-nome">
+                            {[dados.bairro, dados.cidade].filter(Boolean).join(", ")}
+                        </span>
+                    )}
+                    <h1>{dados.nome}</h1>
+                </div>
             </div>
-            <div class="stat-box">
-                <span id="statMedia" class="stat-numero">-</span>
-                <span class="stat-label">Média por reimaginação</span>
-            </div>
-            <div class="stat-box">
-                <span id="statTotal" class="stat-numero">-</span>
-                <span class="stat-label">Reimaginações</span>
-            </div>
+
+            <!-- .btn-remix é o MESMO botão já usado dentro do popup de cada
+                 criação (ver .popup-acoes no style.css) — reaproveitado aqui
+                 tal e qual, só com href/texto diferentes. O flex:1 dele (que
+                 só faz sentido ao lado do botão de curtir, lá no popup) é
+                 anulado logo abaixo, em ".praca-topo .btn-remix". -->
+            <a href={`https://feliperpv.com/repraca/galeria/abrir-app/?mapa=${slug}`} class="btn-remix">
+                Reimaginar na app<img src="/img/icone-lapis.png" width="54" height="54" alt="" />
+            </a>
+        </div>
+
+        <!-- Bio + fotos (mapa/satélite e foto no local) lado a lado no
+             desktop; no mobile as fotos viram uma faixa com scroll
+             horizontal, cada uma ocupando ~80% da largura (ver style.css). -->
+        <div class="praca-media">
+            {dados.descricao && <div class="praca-intro" set:html={dados.descricao} />}
+
+            {dados.imagens?.length > 0 && (
+                <div class="praca-fotos">
+                    {dados.imagens.map(imagem => (
+                        <figure class="praca-foto">
+                            <img src={imagem.src} alt={imagem.alt || ""} loading="lazy" />
+                            {imagem.legenda && <figcaption>{imagem.legenda}</figcaption>}
+                        </figure>
+                    ))}
+                </div>
+            )}
         </div>
 
         <div class="praca-comparativo">
@@ -97,6 +140,10 @@ const totalItensOriginais = Object.values(itensOriginais).reduce((soma, qtd) => 
                 </div>
             </div>
         </div>
+
+        <!-- Mesmo #statTotal que já existia no stat-box removido — o app.js
+             não precisou mudar, só o innerText dele agora aparece aqui. -->
+        <p class="praca-amostra">Média com base em <span id="statTotal">-</span> rePraças</p>
     </section>
 
     <!-- BARRA DE FILTROS — filtra só dentro das reimaginações desta

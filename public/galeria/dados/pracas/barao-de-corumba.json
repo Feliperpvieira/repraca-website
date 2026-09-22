@@ -1,7 +1,15 @@
 {
     "nome": "Barão de Corumbá",
+    "bairro": "Tijuca",
+    "cidade": "Rio de Janeiro",
+    "mapsUrl": "https://maps.app.goo.gl/t526VTfGoXZejZcf8",
 
-    "descricao": "<p>Escreva aqui a apresentação da praça original — onde fica, quando foi feita, o que ela tem hoje. HTML normal funciona: parágrafos, <b>negrito</b>, etc.</p>",
+    "descricao": "<p>Esta praça foi objeto de obras recentes, inaugurada em 2025, junto do novo centro de saúde de Alcântara, que fica logo ao lado.</p>     <p>A maior parte do terreno é utilizada como parque de estacionamento, contendo alguns poucos bancos e arbustos, sem nenhum aproveitamento pedonal, apesar de estar em uma zona de grande fluxo de peões, com uma paragem de autocarro no espaço.</p>",
+
+    "imagens": [
+        { "src": "/img/pracas/alcantara-mapa.jpg", "alt": "Vista aérea da praça", "legenda": "Vista aérea" },
+        { "src": "/img/pracas/alcantara-foto.jpg", "alt": "Foto da praça no local", "legenda": "No local" }
+    ],
 
     "itens": {
         "Banco de concreto": 2,
