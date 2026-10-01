@@ -120,6 +120,10 @@ a:hover {
     text-underline-offset: 0.4em;
 }
 
+
+
+/* -------- HEADER WEBSITE --------- */
+
 /* Barra frpv */
 .nav-frpv{
     background: linear-gradient(280.12deg, #F5F5F5 41.12%, #FFFFFF 100.31%);
@@ -135,7 +139,7 @@ a:hover {
     margin: auto;
 }
 
-/* logo repraça */
+/* menu de fundo azul */
 header{
     background-color: var(--azul);
     border-radius: 0 0 42px 42px;
@@ -148,6 +152,10 @@ header{
 
     padding: 40px;
     gap: 16px;
+}
+
+.links-download-mobile{
+    display: none;
 }
 
 .links-site, .links-download{
@@ -205,6 +213,7 @@ header{
     height: 20px;
 }
 
+/* o que o claude fez pra fazer o icone por cima do botao */
 /* O botão vira a "âncora" pro ícone se posicionar por cima dele.
    position: relative não muda nada visualmente, só cria a referência
    pro absolute do ícone lá embaixo. */
@@ -233,15 +242,218 @@ header{
     transition: filter 0.3s ease, transform 0.3s ease;
 }
 
-.links-download a:hover{ /* botao disponivel no google play move no hover */
-    transform: translateY(-3px); /* Moves the element up by 3 pixels */
+.links-download a:hover{ /* botao disponivel no google play/apple move no hover */
+    transform: translateY(-3px);
     
     /* The values are: x-offset | y-offset | blur | color */
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
+/* ----- MENU - MOBILE */
+@media screen and (max-width: 780px) {
+    .nav-frpv{
+        height: 40px;
+    }
 
-/* Imagem fundo botao google play */
+    .menu{
+        flex-direction: row;
+
+        padding: 30px 20px;
+    }
+
+    /* rePraça e Galeria dividem o espaço igualmente e sempre cabem lado a
+   lado — a fonte, o padding e o ícone encolhem com clamp() conforme a
+   tela aperta, em vez de quebrar linha ou vazar da tela. */
+    .menu .nav-galeria,
+    .menu .nav-logo{
+        flex: 1;
+
+        justify-content: center;
+        text-align: center;
+        padding: clamp(10px, 6vw, 10px) clamp(10px, 7vw, 16px);
+        font-size: clamp(0.8rem, 6vw, 1.05rem);
+        white-space: nowrap;
+    }
+
+    .menu .nav-galeria svg{
+        width: 21px;
+        height: 17px;
+    }
+
+    .menu .nav-galeria, .menu .nav-logo {
+        padding: 12px 16px;
+        
+        font-size: 1.1rem;
+    }
+
+    .menu .nav-logo {
+        /* Abre espaço na esquerda do texto "rePraça" pro ícone não ficar
+        por cima da palavra. Ajusta esse valor conforme o tamanho do ícone. */
+        padding-left: 52px;
+    }
+
+    .menu .nav-logo img{
+        left: -6px; /* quanto mais negativo, mais ele "vaza" pra fora da borda esquerda */
+        width: 50px; /* maior que a altura da pílula de propósito, pra estourar em cima/embaixo */
+    }
+
+    .menu .links-download{
+        display: none;
+    }
+
+    /* summary{
+        list-style: none;
+    } */
+
+    .links-download-mobile{
+        display: flex;
+
+        background-color: var(--marrom);
+        padding: 11px;
+        border-radius: 50%;
+        border: 3px solid var(--Bege, #F9EFE7);
+    }
+
+    .links-download-mobile svg{
+        height: 26px;
+        width: 26px;
+    }
+
+
+
+
+
+
+
+
+
+
+/* O header é a referência do painel e fica acima do conteúdo */
+header{
+    position: relative;
+    z-index: 20;
+}
+ 
+.links-download-mobile{
+    flex-shrink: 0;
+}
+ 
+/* ---------- Botão: morph nuvem <-> X ---------- */
+button.links-download-mobile{
+    position: relative;
+    cursor: pointer;
+    font: inherit;
+}
+ 
+.links-download-mobile svg{
+    pointer-events: none; /* o alvo do clique é sempre o botão */
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.2s ease;
+}
+ 
+/* o X fica por cima da nuvem, centrado, e começa "dobrado" */
+.links-download-mobile .icone-fechar{
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.4);
+}
+ 
+button.links-download-mobile[aria-expanded="true"] .icone-nuvem{
+    opacity: 0;
+    transform: rotate(90deg) scale(0.4);
+}
+ 
+button.links-download-mobile[aria-expanded="true"] .icone-fechar{
+    opacity: 1;
+    transform: none;
+}
+ 
+/* ---------- Painel: gaveta que desce ----------
+   Só com JS (classe .menu--js). Fica sempre renderizado e é revelado com
+   clip-path, que mantém os cantos de baixo arredondados enquanto cresce.
+   Fechado = só os 42px que ficam escondidos atrás do header (invisível).
+   Aberto = painel inteiro. */
+.menu.menu--js .links-download{
+    display: flex;
+    flex-wrap: wrap;            /* só os badges quebram, se faltar largura */
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+ 
+    position: absolute;
+    z-index: -1;                /* atrás dos botões, por cima do fundo do header */
+    left: 0;
+    right: 0;
+    top: calc(100% - 42px);     /* 42px = raio do header, tapa os cantos */
+    padding: 42px 20px 28px;
+ 
+    background-color: var(--azul);
+    border-radius: 0 0 42px 42px;
+ 
+    clip-path: inset(0 0 calc(100% - 42px) 0 round 0 0 42px 42px);
+    visibility: hidden;
+    transition: clip-path 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s linear 0.4s;
+}
+ 
+.menu.menu--js.menu--aberto .links-download{
+    clip-path: inset(0 0 0 0 round 0 0 42px 42px);
+    visibility: visible;
+    transition: clip-path 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s;
+}
+ 
+/* badges: mesma altura (alinhados) e entram em cascata depois da gaveta */
+.menu.menu--js .links-download a{
+    display: flex;
+    min-width: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+ 
+.menu.menu--js .links-download img{
+    height: 52px;
+    width: auto;
+}
+ 
+.menu.menu--js.menu--aberto .links-download a{
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s;
+}
+ 
+.menu.menu--js.menu--aberto .links-download a:nth-child(2){
+    transition-delay: 0.16s;
+}
+ 
+@media (prefers-reduced-motion: reduce){
+    .links-download-mobile svg,
+    .menu.menu--js .links-download,
+    .menu.menu--js .links-download a{
+        transition: none !important;
+    }
+}
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+}
+
+/* Imagem fundo entre o menu e o inicio da home */
 .header-cover{
     display: block; 
     width: 100%;
@@ -272,15 +484,16 @@ header{
     -webkit-filter: blur(3px);
 }
 
+/* coisas do botao antigo de download que ficava sobre a imagem de fundo */
 /* google play */
-.play-badge{
+/* .play-badge{
     display: flex;
     height: 100%;
     align-items: center;
     justify-content: center;
-}
+} */
 
-.play-badge a{
+/* .play-badge a{
     width: 530px;
     height: 86px;
     text-decoration: none;
@@ -288,19 +501,19 @@ header{
     justify-content: center;
     align-items: center;
 
-    /* Degradê bege */
+    /* Degradê bege
     background: linear-gradient(136.27deg, rgba(255, 255, 255, 0.95) 17.49%, rgba(254, 242, 224, 0.95) 103.91%), #B76F51;
     border-radius: 55px;
 
-    /* drop shadow */
+    /* drop shadow
     -webkit-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.3);
     -moz-box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.3);
     box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.3);
 
     transition: 0.2s ease-out;
-}
+} */
 
-.play-badge a:hover{
+/* .play-badge a:hover{
     width: 580px;
 }
 
@@ -316,7 +529,7 @@ header{
     margin-right: 28px;
     font-size: 32px;
     font-weight: 700;
-}
+} */
 
 /* Foto da praça real */
 .primeira-frase{
@@ -809,19 +1022,6 @@ footer > div{
 
     h6{
         font-size: 20px;
-    }
-
-
-    .nav-frpv{
-        height: 40px;
-    }
-
-    .menu{
-        flex-direction: column;
-    }
-
-    .menu *{
-        flex-direction: column;
     }
     
 
