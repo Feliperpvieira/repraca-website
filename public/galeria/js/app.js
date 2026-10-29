@@ -294,10 +294,19 @@ function desenharRadar(dadosOriginais, dadosImaginados, opcoes = {}) {
         delete graficosRadar[canvasId];
     }
 
+    // Eixos fixos: todas as categorias do catálogo (itens.json), não só as
+    // presentes nesta praça. Garante >= 3 eixos e deixa os radares comparáveis.
+    // O spread no final mantém qualquer categoria inesperada (ex.: "Sem categoria")
+    // que apareça nos dados mas não esteja no catálogo.
+    const categoriasDoCatalogo = Object.values(catalogoItens)
+        .map(item => item.categoria)
+        .filter(Boolean);
+
     const categorias = [...new Set([
+        ...categoriasDoCatalogo,
         ...Object.keys(dadosOriginais),
         ...Object.keys(dadosImaginados),
-    ])];
+    ])].sort();
 
     const percentuaisOriginais = percentualPorCategoria(dadosOriginais);
     const percentuaisImaginados = percentualPorCategoria(dadosImaginados);
@@ -844,10 +853,10 @@ const popup = document.getElementById("popup");
 const loader = document.getElementById("fim-da-pagina");
 
 async function carregarPracas() {
-    if (carregando || chegouAoFim) return;
+    if (carregando || chegouAoFim) return false;
 
     const elOrdem = document.getElementById("filtroOrdem");
-    if (!elOrdem) return; // página sem grade de galeria (ex.: hub /galeria/)
+    if (!elOrdem) return false; // página sem grade de galeria (ex.: hub /galeria/)
 
     carregando = true;
 
@@ -867,7 +876,7 @@ async function carregarPracas() {
     // ativo — é o único filtro que depende dele, e o campo é relativamente
     // pesado (guarda a posição de cada objeto da praça inteira), então
     // evitamos baixá-lo à toa nas consultas normais.
-    let colunas = 'praca_id, image_topo_url, created_at, likes, total_objects, praca_pai_id';
+    let colunas = 'praca_id, image_topo_url, created_at, likes, total_objects, praca_pai_id, comentario';
     if (categoriaSelecionada !== "todas") colunas += ', layout_data';
 
     // Quando filtra por item específico, chamamos uma função SQL (RPC) em
@@ -901,7 +910,7 @@ async function carregarPracas() {
         console.error("Erro ao buscar:", error);
         loader.innerText = "Não foi possível carregar a galeria. Tente novamente mais tarde.";
         carregando = false;
-        return;
+        return false;
     }
 
     // Só marca "chegou ao fim" pelo tamanho BRUTO devolvido pelo banco —
@@ -939,6 +948,8 @@ async function carregarPracas() {
         if (totalCardsRenderados === 0) mostrarAvisoSemResultados();
         else mostrarAvisoFimDaGaleria();
     }
+
+    return true;
 }
 
 function desenharCards(pracas) {
@@ -948,20 +959,26 @@ function desenharCards(pracas) {
         // Selo de "remix" só aparece quando a praça nasceu de outra —
         // mesma coluna usada pelo filtro "Só remixes" acima.
         const ehRemix = praca.praca_pai_id && praca.praca_pai_id.trim() !== "";
-        const seloRemix = ehRemix ? '<span class="card-remix-badge">↻ remix</span>' : '';
+        const seloRemix = ehRemix ? '<span class="card-remix-badge" data-tooltip="Esta praça é um remix" aria-label="Esta praça é um remix">↻ remix</span>' : '';
+        const temDescricao = praca.comentario && praca.comentario.trim() !== "";
+        const seloDescricao = temDescricao ? `
+            <span class="card-descricao-badge" data-tooltip="Esta praça tem descrição" aria-label="Esta praça tem descrição">
+                <span class="card-descricao-icone" aria-hidden="true"><i></i><i></i><i></i></span>
+            </span>
+        ` : '';
 
         const card = document.createElement("div");
         card.className = "card-praca";
+        card.dataset.pracaId = praca.praca_id;
         card.innerHTML = `
-            ${seloRemix}
+            ${(seloRemix || seloDescricao) ? `<div class="card-badges">${seloRemix}${seloDescricao}</div>` : ''}
             <img src="${praca.image_topo_url}" class="card-img" loading="lazy" alt="Praça">
             <div class="card-info">
-                <span class="card-data">${dataFormatada}</span>
-                
                 <span class="card-likes">
-                    ${praca.likes || 0}
                     <img src="/img/icone-coracao.svg" height="20"> 
+                    ${praca.likes || 0}
                 </span>
+                <span class="card-data">${dataFormatada}</span>
             </div>
         `;
 
@@ -1132,12 +1149,20 @@ async function lidarComNavegacao() {
     if (!id) {
         popup.classList.add("escondido");
         document.body.style.overflow = "auto";
+        if (elementoComFocoAntesDoModal) {
+            elementoComFocoAntesDoModal.focus();
+            elementoComFocoAntesDoModal = null;
+        }
         return;
     }
 
+    if (popup.classList.contains("escondido")) {
+        elementoComFocoAntesDoModal = document.activeElement;
+    }
     document.getElementById("modalTitulo").innerText = "A carregar dados...";
     popup.classList.remove("escondido");
     document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => document.getElementById("btnFecharModal").focus());
 
     // NOTA: .eq('praca_id', id).single() quebrava assim que o mesmo
     // praca_id passasse a ter mais de uma linha (cada edição salva de
@@ -1170,11 +1195,149 @@ popup.addEventListener("click", e => {
     if (e.target === popup) fecharPraca();
 });
 
+let elementoComFocoAntesDoModal = null;
+
+document.addEventListener("keydown", evento => {
+    if (popup.classList.contains("escondido")) return;
+
+    if (evento.key === "Escape") {
+        evento.preventDefault();
+        fecharPraca();
+        return;
+    }
+
+    if (evento.key !== "Tab") return;
+
+    const focaveis = [...popup.querySelectorAll(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )].filter(elemento => elemento.offsetParent !== null);
+    if (!focaveis.length) return;
+
+    const primeiro = focaveis[0];
+    const ultimo = focaveis[focaveis.length - 1];
+    if (evento.shiftKey && document.activeElement === primeiro) {
+        evento.preventDefault();
+        ultimo.focus();
+    } else if (!evento.shiftKey && document.activeElement === ultimo) {
+        evento.preventDefault();
+        primeiro.focus();
+    }
+});
+
+async function compartilharPraca() {
+    if (!pracaAbertaId) return;
+
+    const botao = document.getElementById("btnCompartilhar");
+    const texto = document.getElementById("textoCompartilhar");
+    const url = new URL(window.location.href);
+    url.searchParams.set("id", pracaAbertaId);
+    const dados = {
+        title: document.getElementById("modalTitulo").innerText,
+        text: document.getElementById("modalNumero").innerText,
+        url: url.toString(),
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(dados);
+            texto.innerText = "Partilhado";
+        } else {
+            await navigator.clipboard.writeText(dados.url);
+            texto.innerText = "Link copiado";
+        }
+    } catch (erro) {
+        if (erro.name === "AbortError") return;
+        texto.innerText = "Não foi possível partilhar";
+    }
+
+    window.setTimeout(() => { texto.innerText = "Compartilhar"; }, 2000);
+    botao.focus();
+}
+
+document.getElementById("btnCompartilhar").addEventListener("click", compartilharPraca);
+
+// Percorre os cards na mesma ordem em que aparecem na grelha, portanto
+// respeita os filtros e a ordenação selecionados. Se a pessoa chegar ao
+// último card já carregado, busca mais uma página antes de decidir que não
+// há para onde avançar.
+async function navegarPelaGrelha(direcao) {
+    if (!gallery || !pracaAbertaId) return;
+
+    let cards = [...gallery.querySelectorAll(".card-praca")];
+    let indiceAtual = cards.findIndex(card => card.dataset.pracaId === pracaAbertaId);
+    if (indiceAtual === -1) return;
+
+    let indiceDestino = indiceAtual + direcao;
+
+    while (indiceDestino >= cards.length && !chegouAoFim) {
+        const carregou = await carregarPracas();
+        cards = [...gallery.querySelectorAll(".card-praca")];
+
+        // Pode haver uma página inteira que não sobreviva a um filtro
+        // aplicado no cliente. Nesse caso tenta a página seguinte; só para
+        // se já não houver uma consulta nova em curso.
+        if (!carregou) break;
+    }
+
+    const destino = cards[indiceDestino];
+    if (destino) abrirPraca(destino.dataset.pracaId);
+}
+
+let navegandoComTeclado = false;
+
+document.addEventListener("keydown", async evento => {
+    if (popup.classList.contains("escondido") || evento.altKey || evento.ctrlKey || evento.metaKey) return;
+    if (evento.target.closest("input, textarea, select, [contenteditable='true']")) return;
+    if (evento.key !== "ArrowLeft" && evento.key !== "ArrowRight") return;
+
+    evento.preventDefault();
+    if (navegandoComTeclado) return;
+
+    navegandoComTeclado = true;
+    try {
+        await navegarPelaGrelha(evento.key === "ArrowRight" ? 1 : -1);
+    } finally {
+        navegandoComTeclado = false;
+    }
+});
+
 // ==========================================
 // 5. PREENCHER O MODAL
 // ==========================================
 
 let pracaAbertaId = null;
+
+function carregarVista(url, vista) {
+    const imgEl = document.getElementById("selectedImage");
+    const container = imgEl.closest(".popup-imagem-container");
+    const loading = document.getElementById("imagemLoading");
+    const btnTopo = document.getElementById("btnVistaTopo");
+    const btnAngulo = document.getElementById("btnVistaAngulo");
+
+    // Cada troca recebe uma identidade própria: se o utilizador clicar
+    // rapidamente nas duas vistas, o evento atrasado da imagem anterior
+    // não pode remover o estado de loading da imagem atual.
+    const pedido = Symbol("vista");
+    imgEl._pedidoDeVista = pedido;
+    container.classList.add("a-carregar");
+    loading.firstElementChild.textContent = "A carregar";
+    loading.setAttribute("aria-label", `A carregar vista de ${vista}`);
+
+    imgEl.onload = () => {
+        if (imgEl._pedidoDeVista !== pedido) return;
+        container.classList.remove("a-carregar");
+    };
+
+    imgEl.onerror = () => {
+        if (imgEl._pedidoDeVista !== pedido) return;
+        loading.firstElementChild.textContent = "Não foi possível carregar a imagem";
+        loading.setAttribute("aria-label", "Não foi possível carregar esta imagem");
+        btnTopo.disabled = false;
+        btnAngulo.disabled = false;
+    };
+
+    imgEl.src = url;
+}
 
 async function preencherModal(praca) {
     pracaAbertaId = praca.praca_id;
@@ -1184,17 +1347,17 @@ async function preencherModal(praca) {
     const btnTopo = document.getElementById("btnVistaTopo");
     const btnAngulo = document.getElementById("btnVistaAngulo");
 
-    imgEl.src = praca.image_topo_url;
+    carregarVista(praca.image_topo_url, "topo");
     btnTopo.classList.add("ativo");
     btnAngulo.classList.remove("ativo");
 
     btnTopo.onclick = () => {
-        imgEl.src = praca.image_topo_url;
+        carregarVista(praca.image_topo_url, "topo");
         btnTopo.classList.add("ativo");
         btnAngulo.classList.remove("ativo");
     };
     btnAngulo.onclick = () => {
-        imgEl.src = praca.image_url;
+        carregarVista(praca.image_url, "ângulo");
         btnAngulo.classList.add("ativo");
         btnTopo.classList.remove("ativo");
     };

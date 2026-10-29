@@ -367,15 +367,90 @@
 }
 
 .card-remix-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
     background: rgba(19, 28, 59, 0.82);
     color: #F9EFE7;
     font-size: 0.75rem;
     padding: 3px 8px;
     border-radius: 999px;
+    pointer-events: auto;
+}
+
+.card-remix-badge,
+.card-descricao-badge {
+    position: relative;
+}
+
+.card-badges {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    pointer-events: auto;
+}
+
+.card-remix-badge::after,
+.card-descricao-badge::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: var(--azul-marinho);
+    color: var(--bege);
+    font-size: 0.7rem;
+    font-weight: normal;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-3px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
     pointer-events: none;
+    z-index: 2;
+}
+
+.card-remix-badge:hover::after,
+.card-remix-badge:focus-visible::after,
+.card-descricao-badge:hover::after,
+.card-descricao-badge:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-descricao-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+    box-sizing: border-box;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(19, 28, 59, 0.82);
+    color: #F9EFE7;
+}
+
+.card-descricao-icone {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card-descricao-icone i {
+    display: block;
+    width: 15px;
+    height: 1.5px;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.card-descricao-icone i:nth-child(2) {
+    width: 8px;
+}
+
+.card-descricao-icone i:nth-child(3) {
+    width: 12px;
 }
 
 /* MOBILE: em vez de empilhar os filtros em várias linhas (ocupa muita
@@ -453,16 +528,18 @@
 }
 
 .card-data { 
-    font-size: 0.9rem; 
-    color: #666; 
+    font-size: 1rem;
+    color: #7F7F7F;
 }
 
 .card-likes { 
     display: inline-flex;
     align-items: center;
-    gap: 4px; /* espaçamento entre o ícone e o número */
-    font-weight: bold; 
+    gap: 8px; /* espaçamento entre o ícone e o número */
+    font-weight: bold;
     color: var(--marrom); 
+
+    font-size: 1.2rem;
 }
 
 .loading-spinner { 
@@ -556,6 +633,61 @@
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.popup-imagem-container.a-carregar #selectedImage {
+    opacity: 0;
+}
+
+.imagem-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--bege);
+    font-size: 1rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.popup-imagem-container.a-carregar .imagem-loading {
+    opacity: 1;
+}
+
+.imagem-loading-pontos {
+    display: flex;
+    gap: 4px;
+}
+
+.imagem-loading-pontos i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: ponto-a-carregar 0.8s ease-in-out infinite alternate;
+}
+
+.imagem-loading-pontos i:nth-child(2) {
+    animation-delay: 0.16s;
+}
+
+.imagem-loading-pontos i:nth-child(3) {
+    animation-delay: 0.32s;
+}
+
+@keyframes ponto-a-carregar {
+    to { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .imagem-loading-pontos i {
+        animation: none;
+    }
 }
 
 .toggle-vista { 
@@ -667,6 +799,42 @@
     font-size: 0.9rem;
 }
 
+.popup-identificacao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-compartilhar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--marrom);
+    font: inherit;
+    cursor: pointer;
+    
+    /* Make the underline visible by default */
+    text-decoration: underline;
+    /* Set an initial small gap between the text and the line */
+    text-underline-offset: 0.2em;
+    /* Animate the change in the offset property */
+    transition: text-underline-offset 300ms ease;
+}
+
+.btn-compartilhar:hover,
+.btn-compartilhar:focus-visible {
+    /* Increase the gap on hover to create the "bump" effect */
+    text-underline-offset: 0.4em;
+}
+
+.btn-compartilhar img {
+    width: 13px;
+    height: 11px;
+}
+
 .praca-base { 
     font-size: 0.9rem; 
     color: #757575; 
@@ -775,28 +943,6 @@
 
 .btn-remix:hover img {
     transform: rotate(-6deg) scale(1.3);
-}
-
-.btn-compartilhar {
-    padding: 12px 18px;
-    border-radius: 30px;
-    border: 2px solid var(--azul);
-    background: white;
-    color: var(--azul);
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-compartilhar:hover {
-    background: var(--azul);
-    color: white;
-}
-
-.btn-compartilhar.copiado {
-    border-color: var(--verde);
-    background: var(--verde);
-    color: white;
 }
 
 /* ABAS ESTILO PASTA DE ARQUIVO */

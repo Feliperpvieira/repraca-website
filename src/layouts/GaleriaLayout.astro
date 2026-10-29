@@ -75,11 +75,17 @@ const cssFiles = [
 
     <!-- O MODAL (POPUP) QUE ABRE VIA ?id= NA URL -->
     <div id="popup" class="escondido">
-        <div class="popup-content">
-            <button id="btnFecharModal" class="btn-fechar">X</button>
+        <div class="popup-content" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" tabindex="-1">
+            <button id="btnFecharModal" class="btn-fechar" aria-label="Fechar detalhes da praça">X</button>
 
             <div class="popup-imagem-container">
                 <img src="" alt="Vista da praça" id="selectedImage" />
+                <div id="imagemLoading" class="imagem-loading" role="status" aria-live="polite">
+                    <span>A carregar</span>
+                    <span class="imagem-loading-pontos" aria-hidden="true">
+                        <i></i><i></i><i></i>
+                    </span>
+                </div>
                 <div class="toggle-vista">
                     <button id="btnVistaTopo" class="btn-vista ativo" title="Vista de topo">
                         <svg xmlns="http://www.w3.org/2000/svg" width="27" height="40" viewBox="0 0 27 40" fill="none">
@@ -96,7 +102,14 @@ const cssFiles = [
 
             <div class="popup-sidebar">
                 <div class="sidebar-topo">
-                    <p class="praca-numero" id="modalNumero">rePraça</p>
+                    <div class="popup-identificacao">
+                        <p class="praca-numero" id="modalNumero">rePraça</p>
+                        <span aria-hidden="true">•</span>
+                        <button id="btnCompartilhar" class="btn-compartilhar" type="button">
+                            <span id="textoCompartilhar">Compartilhar</span>
+                            <img src="/img/icone-share.svg" alt="" width="13" height="11" />
+                        </button>
+                    </div>
                     <h2 id="modalTitulo">Carregando...</h2>
                     <p class="praca-base" id="modalBaseadoEm"></p>
                     <p id="modalData" class="texto-dica"></p>
