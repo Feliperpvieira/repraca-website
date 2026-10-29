@@ -1128,9 +1128,9 @@ function pegarIdDaUrl() {
 // Usado sempre que algo no site abre uma praça (clique num card, num
 // remix, etc.) — troca a URL sem recarregar e chama o handler na mão,
 // porque pushState (diferente do hash) não dispara evento sozinho.
-function abrirPraca(id) {
+function abrirPraca(id, direcao = null) {
     history.pushState({}, "", "?id=" + id);
-    lidarComNavegacao();
+    return lidarComNavegacao(direcao);
 }
 
 // Usado sempre que o popup fecha (botão X, clique fora, erro ao carregar).
@@ -1141,13 +1141,70 @@ function fecharPraca() {
 
 // popstate cobre o botão voltar/avançar do navegador (pushState não
 // dispara isso sozinho, só a navegação por histórico dispara).
-window.addEventListener("popstate", lidarComNavegacao);
+window.addEventListener("popstate", () => lidarComNavegacao());
 
-async function lidarComNavegacao() {
+async function buscarPraca(id) {
+    // .single() é seguro porque a consulta ordena e limita à edição mais
+    // recente da praça antes de pedir uma única linha.
+    return db
+        .from('city_creations')
+        .select('*')
+        .eq('praca_id', id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+}
+
+const conteudoPopup = document.querySelector(".popup-content");
+let transicaoDePracaEmCurso = false;
+
+function classeDeSaida(direcao) {
+    return direcao > 0 ? "popup-saindo-esquerda" : "popup-saindo-direita";
+}
+
+function classeDeEntrada(direcao) {
+    return direcao > 0 ? "popup-entrando-direita" : "popup-entrando-esquerda";
+}
+
+function aguardarAnimacao(elemento) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+        const aoTerminar = evento => {
+            // animationend também sobe dos elementos internos (como os
+            // pontinhos do loading); só a animação do próprio popup conta.
+            if (evento.target !== elemento) return;
+            elemento.removeEventListener("animationend", aoTerminar);
+            resolve();
+        };
+        elemento.addEventListener("animationend", aoTerminar);
+    });
+}
+
+async function animarSaidaDaPraca(direcao) {
+    const classe = classeDeSaida(direcao);
+    conteudoPopup.classList.add(classe);
+    await aguardarAnimacao(conteudoPopup);
+    conteudoPopup.classList.remove(classe);
+    conteudoPopup.classList.add("popup-conteudo-escondido");
+}
+
+async function animarEntradaDaPraca(direcao) {
+    const classe = classeDeEntrada(direcao);
+    conteudoPopup.classList.remove("popup-conteudo-escondido");
+    conteudoPopup.classList.add(classe);
+    await aguardarAnimacao(conteudoPopup);
+    conteudoPopup.classList.remove(classe);
+}
+
+async function lidarComNavegacao(direcao = null) {
     const id = pegarIdDaUrl();
 
     if (!id) {
         popup.classList.add("escondido");
+        conteudoPopup.classList.remove("popup-conteudo-escondido", "popup-saindo-esquerda", "popup-saindo-direita");
         document.body.style.overflow = "auto";
         if (elementoComFocoAntesDoModal) {
             elementoComFocoAntesDoModal.focus();
@@ -1159,35 +1216,45 @@ async function lidarComNavegacao() {
     if (popup.classList.contains("escondido")) {
         elementoComFocoAntesDoModal = document.activeElement;
     }
-    document.getElementById("modalTitulo").innerText = "A carregar dados...";
     popup.classList.remove("escondido");
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => document.getElementById("btnFecharModal").focus());
 
-    // NOTA: .eq('praca_id', id).single() quebrava assim que o mesmo
-    // praca_id passasse a ter mais de uma linha (cada edição salva de
-    // novo). Buscamos sempre a versão mais recente.
-    const { data, error } = await db
-        .from('city_creations')
-        .select('*')
-        .eq('praca_id', id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+    const deveAnimar = Boolean(direcao && pracaAbertaId && !transicaoDePracaEmCurso);
+    if (deveAnimar) transicaoDePracaEmCurso = true;
+    else document.getElementById("modalTitulo").innerText = "A carregar dados...";
+
+    // A consulta e a saída correm ao mesmo tempo. Assim, numa ligação
+    // normal, a nova praça já está pronta quando a antiga termina de sair.
+    const [{ data, error }] = await Promise.all([
+        buscarPraca(id),
+        deveAnimar ? animarSaidaDaPraca(direcao) : Promise.resolve(),
+    ]);
+
+    // A praça pode ter sido fechada durante a espera.
+    if (pegarIdDaUrl() !== id) {
+        transicaoDePracaEmCurso = false;
+        return;
+    }
 
     if (error) {
         console.error("Erro ao carregar praça:", error);
+        if (deveAnimar) await animarEntradaDaPraca(-direcao);
+        else fecharPraca();
         alert("Erro ao carregar a praça.");
-        fecharPraca();
+        transicaoDePracaEmCurso = false;
         return;
     }
 
     if (data) {
         await preencherModal(data);
+        if (deveAnimar) await animarEntradaDaPraca(direcao);
     } else {
         alert("Praça não encontrada!");
         fecharPraca();
     }
+
+    transicaoDePracaEmCurso = false;
 }
 
 document.getElementById("btnFecharModal").addEventListener("click", fecharPraca);
@@ -1280,7 +1347,7 @@ async function navegarPelaGrelha(direcao) {
     }
 
     const destino = cards[indiceDestino];
-    if (destino) abrirPraca(destino.dataset.pracaId);
+    if (destino) return abrirPraca(destino.dataset.pracaId, direcao);
 }
 
 let navegandoComTeclado = false;

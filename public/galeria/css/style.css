@@ -596,6 +596,55 @@
     position: relative; 
 }
 
+/* Troca entre praças: deslocamento curto + fade, preparado para ser usado
+   tanto pelo teclado quanto pelos futuros botões anterior/próxima. */
+.popup-content.popup-conteudo-escondido {
+    opacity: 0;
+}
+
+.popup-content.popup-saindo-esquerda {
+    animation: popup-sair-esquerda 0.15s ease-in forwards;
+}
+
+.popup-content.popup-saindo-direita {
+    animation: popup-sair-direita 0.15s ease-in forwards;
+}
+
+.popup-content.popup-entrando-direita {
+    animation: popup-entrar-direita 0.15s ease-out both;
+}
+
+.popup-content.popup-entrando-esquerda {
+    animation: popup-entrar-esquerda 0.15s ease-out both;
+}
+
+@keyframes popup-sair-esquerda {
+    to { opacity: 0; transform: translateX(-44px); }
+}
+
+@keyframes popup-sair-direita {
+    to { opacity: 0; transform: translateX(44px); }
+}
+
+@keyframes popup-entrar-direita {
+    from { opacity: 0; transform: translateX(44px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes popup-entrar-esquerda {
+    from { opacity: 0; transform: translateX(-44px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .popup-content.popup-saindo-esquerda,
+    .popup-content.popup-saindo-direita,
+    .popup-content.popup-entrando-direita,
+    .popup-content.popup-entrando-esquerda {
+        animation: none;
+    }
+}
+
 .btn-fechar { 
     position: absolute; 
     top: 15px; 
