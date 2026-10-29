@@ -603,19 +603,19 @@
 }
 
 .popup-content.popup-saindo-esquerda {
-    animation: popup-sair-esquerda 0.15s ease-in forwards;
+    animation: popup-sair-esquerda 0.2s ease-in forwards;
 }
 
 .popup-content.popup-saindo-direita {
-    animation: popup-sair-direita 0.15s ease-in forwards;
+    animation: popup-sair-direita 0.2s ease-in forwards;
 }
 
 .popup-content.popup-entrando-direita {
-    animation: popup-entrar-direita 0.15s ease-out both;
+    animation: popup-entrar-direita 0.2s ease-out both;
 }
 
 .popup-content.popup-entrando-esquerda {
-    animation: popup-entrar-esquerda 0.15s ease-out both;
+    animation: popup-entrar-esquerda 0.2s ease-out both;
 }
 
 @keyframes popup-sair-esquerda {
