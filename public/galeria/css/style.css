@@ -619,20 +619,20 @@
 }
 
 @keyframes popup-sair-esquerda {
-    to { opacity: 0; transform: translateX(-44px); }
+    to { opacity: 0; transform: translateX(-84px); }
 }
 
 @keyframes popup-sair-direita {
-    to { opacity: 0; transform: translateX(44px); }
+    to { opacity: 0; transform: translateX(84px); }
 }
 
 @keyframes popup-entrar-direita {
-    from { opacity: 0; transform: translateX(44px); }
+    from { opacity: 0; transform: translateX(84px); }
     to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes popup-entrar-esquerda {
-    from { opacity: 0; transform: translateX(-44px); }
+    from { opacity: 0; transform: translateX(-84px); }
     to { opacity: 1; transform: translateX(0); }
 }
 
