@@ -61,6 +61,8 @@ const cssFiles = [
          de URL diferentes (/galeria/ vs /galeria/praca/<slug>/), então um
          caminho relativo (ex: "css/style.css") quebraria numa das duas. -->
     <link rel="stylesheet" href="/galeria/css/style.css" />
+    <!-- Popup em forma de pasta (Capa, Comparação, Remixes, Histórico) -->
+    <link rel="stylesheet" href="/galeria/css/galeria-popup.css" />
 </head>
 <body data-praca-slug={pracaSlug} data-praca-nome={pracaNome}>
     <Header />
@@ -73,107 +75,225 @@ const cssFiles = [
 
     <Footer />
 
-    <!-- O MODAL (POPUP) QUE ABRE VIA ?id= NA URL -->
+    <!-- O MODAL (POPUP) QUE ABRE VIA ?id= NA URL
+         Desenhado como uma "pasta de planeamento" com quatro separadores
+         (Capa, Comparação, Remixes, Histórico). O conteúdo é todo
+         preenchido pelo app.js (secção 5). -->
     <div id="popup" class="escondido">
-        <div class="popup-content" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" tabindex="-1">
-            <button id="btnFecharModal" class="btn-fechar" aria-label="Fechar detalhes da praça">X</button>
+        <div class="pasta" data-aba="capa" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" tabindex="-1">
 
-            <div class="popup-imagem-container">
-                <img src="" alt="Vista da praça" id="selectedImage" />
-                <div id="imagemLoading" class="imagem-loading" role="status" aria-live="polite">
-                    <span>A carregar</span>
-                    <span class="imagem-loading-pontos" aria-hidden="true">
-                        <i></i><i></i><i></i>
-                    </span>
-                </div>
-                <div class="toggle-vista">
-                    <button id="btnVistaTopo" class="btn-vista ativo" title="Vista de topo">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="40" viewBox="0 0 27 40" fill="none">
-                            <path d="M3.375 26.6667C1.512 26.6667 4.44159e-07 25.1733 5.24588e-07 23.3333L1.39882e-06 3.33333C1.47932e-06 1.49167 1.512 -1.11412e-06 3.375 -1.03268e-06L23.625 -1.47526e-07C25.488 -6.60916e-08 27 1.49167 27 3.33333L27 23.3333C27 25.1733 25.488 26.6667 23.625 26.6667L3.375 26.6667ZM21.9995 40C23.805 40 24.6863 37.7967 23.3788 36.5516L17.078 30.5516C16.7061 30.1975 16.2123 30 15.6988 30L11.3012 30C10.7877 30 10.2939 30.1975 9.92202 30.5516L3.62123 36.5516C2.31374 37.7967 3.19497 40 5.00045 40L21.9995 40Z" fill="#F9EFE7"/>
-                        </svg>
+            <div class="pasta-topo">
+                <div class="pasta-abas" role="group" aria-label="Separadores da pasta">
+                    <button type="button" class="pasta-aba" data-tab="capa" aria-pressed="true" aria-controls="painelCapa">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Capa
                     </button>
-                    <button id="btnVistaAngulo" class="btn-vista" title="Vista de ângulo">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="39" viewBox="0 0 45 39" fill="none">
-                        <path d="M23.551 32.5689C22.6195 34.1823 20.5703 34.745 18.9768 33.825L1.65628 23.825C0.0613534 22.9042 -0.474468 20.849 0.457032 19.2355L10.582 1.69853C11.5135 0.0851261 13.5614 -0.478471 15.1563 0.442362L32.4768 10.4424C34.0703 11.3624 34.6075 13.4185 33.676 15.0319L23.551 32.5689ZM44.4103 23.1062C45.3131 21.5426 43.8456 19.6778 42.1136 20.1876L33.767 22.6442C33.2744 22.7892 32.8564 23.1181 32.5997 23.5629L30.4009 27.3712C30.1442 27.8159 30.0683 28.3424 30.189 28.8415L32.2348 37.2981C32.6593 39.053 35.008 39.3915 35.9108 37.8279L44.4103 23.1062Z" fill="#0A6EB6"/>
-                        </svg>
+                    <button type="button" class="pasta-aba" data-tab="comparacao" aria-pressed="false" aria-controls="painelComparacao">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18"/><rect x="5.5" y="11" width="5" height="9" rx="1"/><rect x="13.5" y="4" width="5" height="16" rx="1"/></svg>Comparação
+                    </button>
+                    <button type="button" class="pasta-aba" data-tab="remixes" aria-pressed="false" aria-controls="painelRemixes">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="5" r="2.2"/><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M6 7.2v9.6"/><path d="M18 8.2c0 5.5-12 3.5-12 8.6"/></svg>Remixes
+                    </button>
+                    <button type="button" class="pasta-aba" data-tab="historico" aria-pressed="false" aria-controls="painelHistorico">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/><path d="M12 8v4.2l3 1.8"/></svg>Histórico
+                    </button>
+                </div>
+
+                <div class="pasta-acoes-topo">
+                    <!-- Setas: fora da pasta, nos lados, no desktop; no topo à esquerda no mobile -->
+                    <button type="button" id="btnPracaAnterior" class="pasta-seta pasta-seta--anterior" aria-label="Praça anterior" hidden>
+                        <img src="/img/icone-seta.png" alt="" width="46" height="64" />
+                    </button>
+                    <button type="button" id="btnPracaSeguinte" class="pasta-seta pasta-seta--seguinte" aria-label="Próxima praça" hidden>
+                        <img src="/img/icone-seta.png" alt="" width="46" height="64" />
+                    </button>
+
+                    <button type="button" class="pasta-denunciar pasta-denunciar--topo" data-denunciar aria-haspopup="dialog" aria-expanded="false" aria-controls="painelDenuncia">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 24h-2v-24h2v24zm6.161-23c-1.8 0-3.436 1.017-4.161 1.638v11.362c2.447-3.692 5.281-2.538 7.526-1.909 4.435 1.244 6.686-1.535 8.474-4.78-6.427 2.666-5.895-6.311-11.839-6.311z"/></svg>Denunciar
+                    </button>
+                    <button type="button" id="btnCompartilhar" class="pasta-partilhar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/></svg>
+                        <span id="textoCompartilhar">Partilhar</span>
+                    </button>
+                    <button type="button" id="btnFecharModal" class="pasta-fechar" aria-label="Fechar a pasta">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
                     </button>
                 </div>
             </div>
 
-            <div class="popup-sidebar">
-                <div class="sidebar-topo">
-                    <div class="popup-identificacao">
-                        <p class="praca-numero" id="modalNumero">rePraça</p>
-                        <span aria-hidden="true">•</span>
-                        <button id="btnCompartilhar" class="btn-compartilhar" type="button">
-                            <span id="textoCompartilhar">Partilhar</span>
-                            <img src="/img/icone-share.svg" alt="" width="13" height="11" />
-                        </button>
-                    </div>
-                    <h2 id="modalTitulo">A carregar...</h2>
-                    <p class="praca-base" id="modalBaseadoEm"></p>
-                    <p id="modalData" class="texto-dica"></p>
+            <div class="pasta-corpo">
+                <div class="pasta-folha">
+                    <div class="pasta-scroll" tabindex="0" role="region" aria-label="Conteúdo da pasta">
 
-                    <div class="popup-acoes">
-                        <button id="btnLikeModal" class="btn-like">
-                            <span id="modalLikesCount">0</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="33" viewBox="0 0 36 33" fill="none">
-                                <path d="M9.4212 0C4.6476 0 0 3.35317 0 9.49117C0 16.3203 7.821 23.6573 16.7454 32.4812C17.0946 32.8277 17.5482 33 18 33C18.4518 33 18.9054 32.8277 19.2546 32.4812C28.2132 23.6243 36 16.3222 36 9.49117C36 3.344 31.356 0.0165001 26.5878 0.0165001C23.283 0.0165001 20.025 1.60417 18 4.69883C15.966 1.5895 12.717 0 9.4212 0Z" fill="#B76F51" />
-                            </svg>
-                        </button>
-                        <a href="#" id="btnRemix" class="btn-remix">
-                            reMixar praça
-                            <img src="/img/icone-lapis.png" width="54" height="54" />
-                        </a>
-                    </div>
-                </div>
+                        <div id="bannerVersao" class="pasta-banner" role="status" hidden>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                            <span id="bannerVersaoTexto"></span>
+                            <button type="button" class="pasta-banner-btn" data-voltar-atual>Voltar à atual</button>
+                        </div>
 
-                <div class="tabs-container">
-                    <div class="tabs-header">
-                        <button class="tab-btn tab-itens ativo" data-tab="itens">info</button>
-                        <button class="tab-btn tab-remixes" data-tab="remixes">remixes</button>
-                        <button class="tab-btn tab-historico" data-tab="historico" id="btnTabHistorico">histórico</button>
-                    </div>
-
-                    <div class="tabs-conteudo tabs-conteudo--itens">
-                        <div class="tab-painel ativo" id="painelItens">
-                            <div class="estatisticas">
-                                <div class="stat-box">
-                                    <span id="modalTotalItens" class="stat-numero">-</span>
-                                    <span class="stat-label">Itens</span>
-                                </div>
-                                <div class="stat-box">
-                                    <span id="modalCategoria" class="stat-numero">-</span>
-                                    <span class="stat-label">Foco</span>
+                        <!-- CAPA -->
+                        <section class="pasta-painel capa ativo" id="painelCapa" aria-label="Capa">
+                            <div class="capa-foto-col">
+                                <div class="capa-foto">
+                                    <img id="selectedImage" class="capa-img" alt="Planta da praça reimaginada, vista de topo" />
+                                    <img id="imagemHoje" class="capa-img capa-img--hoje" alt="" />
+                                    <div id="imagemLoading" class="pasta-pontos" role="status" aria-label="A carregar">
+                                        <i></i><i></i><i></i>
+                                        <span class="pasta-pontos-erro">Não foi possível carregar a imagem</span>
+                                    </div>
+                                    <div id="grupoHojeProposta" class="capa-segmento" role="group" aria-label="Comparar com a praça de hoje">
+                                        <button type="button" id="btnVerHoje" aria-pressed="false">Hoje</button>
+                                        <button type="button" id="btnVerProposta" aria-pressed="true">Proposta</button>
+                                    </div>
+                                    <div id="grupoVistas" class="capa-vistas">
+                                        <button type="button" id="btnVistaTopo" class="capa-vista ativo" aria-label="Vista de topo" aria-pressed="true">
+                                            <svg width="17" height="25" viewBox="0 0 27 40" aria-hidden="true"><path d="M3.375 26.6667C1.512 26.6667 4.44159e-07 25.1733 5.24588e-07 23.3333L1.39882e-06 3.33333C1.47932e-06 1.49167 1.512 -1.11412e-06 3.375 -1.03268e-06L23.625 -1.47526e-07C25.488 -6.60916e-08 27 1.49167 27 3.33333L27 23.3333C27 25.1733 25.488 26.6667 23.625 26.6667L3.375 26.6667ZM21.9995 40C23.805 40 24.6863 37.7967 23.3788 36.5516L17.078 30.5516C16.7061 30.1975 16.2123 30 15.6988 30L11.3012 30C10.7877 30 10.2939 30.1975 9.92202 30.5516L3.62123 36.5516C2.31374 37.7967 3.19497 40 5.00045 40L21.9995 40Z"/></svg>
+                                        </button>
+                                        <button type="button" id="btnVistaAngulo" class="capa-vista" aria-label="Vista de ângulo" aria-pressed="false">
+                                            <svg width="29" height="25" viewBox="0 0 45 39" aria-hidden="true"><path d="M23.551 32.5689C22.6195 34.1823 20.5703 34.745 18.9768 33.825L1.65628 23.825C0.0613534 22.9042 -0.474468 20.849 0.457032 19.2355L10.582 1.69853C11.5135 0.0851261 13.5614 -0.478471 15.1563 0.442362L32.4768 10.4424C34.0703 11.3624 34.6075 13.4185 33.676 15.0319L23.551 32.5689ZM44.4103 23.1062C45.3131 21.5426 43.8456 19.6778 42.1136 20.1876L33.767 22.6442C33.2744 22.7892 32.8564 23.1181 32.5997 23.5629L30.4009 27.3712C30.1442 27.8159 30.0683 28.3424 30.189 28.8415L32.2348 37.2981C32.6593 39.053 35.008 39.3915 35.9108 37.8279L44.4103 23.1062Z"/></svg>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <p id="modalComentario" class="comentario-praca"></p>
 
-                            <div class="radar-container">
-                                <canvas id="radarPraca"></canvas>
+                            <div class="capa-info">
+                                <div class="capa-cabecalho">
+                                    <span class="pasta-sobretitulo">Proposta de reimaginação</span>
+                                    <h2 id="modalTitulo" class="capa-titulo">A carregar…</h2>
+                                    <figure id="modalNotaAutor" class="capa-nota" hidden>
+                                        <figcaption>Nota do autor</figcaption>
+                                        <blockquote id="modalComentario"></blockquote>
+                                    </figure>
+                                </div>
+
+                                <div class="capa-gostos">
+                                    <button type="button" id="btnLikeModal" class="pasta-like" aria-label="Gostar desta proposta" aria-pressed="false">
+                                        <span id="modalLikesCount">0</span>
+                                        <svg width="20" height="18" viewBox="0 0 36 33" aria-hidden="true"><path d="M9.4 0C4.6 0 0 3.4 0 9.5c0 6.8 7.8 14.2 16.7 23a1.8 1.8 0 0 0 2.6 0C28.2 23.6 36 16.3 36 9.5 36 3.3 31.4 0 26.6 0 23.3 0 20 1.6 18 4.7 16 1.6 12.7 0 9.4 0z" fill="currentColor"/></svg>
+                                    </button>
+                                    <span class="capa-gostos-texto">pessoas gostaram<span class="so-desktop"> desta proposta</span></span>
+                                </div>
+
+                                <div class="capa-indice">
+                                    <span class="pasta-sobretitulo pasta-sobretitulo--neutro">Índice da pasta</span>
+                                    <button type="button" class="indice-linha" data-ir="comparacao">
+                                        <span class="indice-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18"/><rect x="5.5" y="11" width="5" height="9" rx="1"/><rect x="13.5" y="4" width="5" height="16" rx="1"/></svg></span>
+                                        <span class="indice-texto"><span class="indice-nome">Comparação</span><span class="indice-desc">O que esta proposta muda na praça de hoje</span></span>
+                                        <span class="indice-resumo" id="resumoComparacao"></span>
+                                        <svg class="indice-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                    <button type="button" class="indice-linha" data-ir="remixes">
+                                        <span class="indice-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="5" r="2.2"/><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M6 7.2v9.6"/><path d="M18 8.2c0 5.5-12 3.5-12 8.6"/></svg></span>
+                                        <span class="indice-texto"><span class="indice-nome">Remixes</span><span class="indice-desc">Quem pegou nesta ideia e a levou noutra direção</span></span>
+                                        <span class="indice-resumo" id="resumoRemixes"></span>
+                                        <svg class="indice-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                    <button type="button" class="indice-linha" data-ir="historico">
+                                        <span class="indice-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/><path d="M12 8v4.2l3 1.8"/></svg></span>
+                                        <span class="indice-texto"><span class="indice-nome">Histórico</span><span class="indice-desc">Como o autor foi mudando a proposta</span></span>
+                                        <span class="indice-resumo" id="resumoHistorico"></span>
+                                        <svg class="indice-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                                    </button>
+                                </div>
                             </div>
+                        </section>
 
-                            <div id="modalListaItens" class="lista-categorias">
-                                <!-- O JS injeta aqui os grupos por categoria -->
+                        <!-- COMPARAÇÃO -->
+                        <section class="pasta-painel comp" id="painelComparacao" aria-label="Comparação">
+                            <div class="comp-resumo">
+                                <h2 class="pasta-h">Face à praça real</h2>
+                                <div class="comp-caixa">
+                                    <div class="comp-legenda">
+                                        <span><i class="comp-cor comp-cor--real"></i>Praça real</span>
+                                        <span><i class="comp-cor comp-cor--prop"></i>Esta proposta</span>
+                                    </div>
+                                    <div id="compBarras" class="comp-barras"></div>
+                                </div>
+                                <div class="comp-caixa comp-total">
+                                    <span id="compTotal"></span>
+                                    <span id="compTotalDif" class="comp-total-dif"></span>
+                                </div>
                             </div>
-                        </div>
+                            <div class="comp-lista-col">
+                                <button type="button" id="btnVerItens" class="comp-toggle" aria-expanded="false" aria-controls="compListaWrap">
+                                    Ver os itens um a um
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                                </button>
+                                <div id="compListaWrap" class="comp-lista-wrap">
+                                    <div class="comp-lista-dentro">
+                                        <div id="modalListaItens" class="comp-inventario"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
 
-                        <div class="tab-painel" id="painelRemixes">
-                            <div id="listaRemixes" class="lista-remixes"></div>
-                        </div>
+                        <!-- REMIXES -->
+                        <section class="pasta-painel" id="painelRemixes" aria-label="Remixes">
+                            <div class="pasta-painel-cabecalho">
+                                <h2 class="pasta-h">Árvore de remixes</h2>
+                                <span class="pasta-sub">Cada ramo é uma resposta. As etiquetas mostram o que mudou face à praça de onde saiu.</span>
+                            </div>
+                            <div id="arvoreRemixes" class="arvore"></div>
+                        </section>
 
-                        <div class="tab-painel" id="painelHistorico">
-                            <div id="listaHistorico" class="lista-historico"></div>
+                        <!-- HISTÓRICO -->
+                        <section class="pasta-painel" id="painelHistorico" aria-label="Histórico">
+                            <div class="pasta-painel-cabecalho">
+                                <h2 class="pasta-h">Versões desta proposta</h2>
+                                <span class="pasta-sub">Cada exportação do autor fica guardada. As mudanças são face à versão anterior. Clica numa versão para a abrir.</span>
+                            </div>
+                            <ol id="listaHistorico" class="hist"></ol>
+                        </section>
+                    </div>
+
+                    <!-- Ficha do projeto: rodapé da folha no desktop, topo da folha no mobile -->
+                    <div class="pasta-ficha" role="group" aria-label="Ficha do projeto">
+                        <div class="ficha-celula"><span class="ficha-rotulo">Projeto</span><span class="ficha-valor ficha-valor--forte" id="modalNumero"></span></div>
+                        <div class="ficha-celula"><span class="ficha-rotulo" id="fichaDataRotulo">Última edição</span><span class="ficha-valor" id="modalData"></span></div>
+                        <div class="ficha-celula"><span class="ficha-rotulo">Praça-base</span><span class="ficha-valor ficha-valor--forte" id="fichaBase"></span></div>
+                        <div class="ficha-celula" id="fichaLocalCelula"><span class="ficha-rotulo">Local</span><span class="ficha-valor" id="fichaLocal"></span></div>
+                        <div class="ficha-celula ficha-celula--denunciar">
+                            <button type="button" class="pasta-denunciar pasta-denunciar--ficha" data-denunciar aria-haspopup="dialog" aria-expanded="false" aria-controls="painelDenuncia">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 24h-2v-24h2v24zm6.161-23c-1.8 0-3.436 1.017-4.161 1.638v11.362c2.447-3.692 5.281-2.538 7.526-1.909 4.435 1.244 6.686-1.535 8.474-4.78-6.427 2.666-5.895-6.311-11.839-6.311z"/></svg>Denunciar
+                            </button>
                         </div>
+                        <div class="ficha-espaco" aria-hidden="true"></div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Denunciar: nem todos os browsers têm uma app de email ligada ao
+                 mailto, por isso há também o Gmail e copiar a mensagem. -->
+            <div id="denunciaFundo" class="denuncia-fundo" hidden></div>
+            <div id="painelDenuncia" class="pasta-denuncia" role="dialog" aria-modal="true" aria-labelledby="denunciaTitulo" hidden>
+                <div class="denuncia-cabecalho">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 24h-2v-24h2v24zm6.161-23c-1.8 0-3.436 1.017-4.161 1.638v11.362c2.447-3.692 5.281-2.538 7.526-1.909 4.435 1.244 6.686-1.535 8.474-4.78-6.427 2.666-5.895-6.311-11.839-6.311z"/></svg>
+                    <strong id="denunciaTitulo">Denunciar esta proposta</strong>
+                    <button type="button" id="denunciaFechar" class="denuncia-fechar" aria-label="Fechar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                    </button>
+                </div>
+                <p class="denuncia-texto">Se achas que esta praça não respeita os nossos <a href="/termos/" target="_blank" rel="noopener">termos de utilização</a>, envia-nos uma denúncia para <b>repraca@feliperpv.com</b>. A mensagem vem pré-preenchida com o número e o link desta praça. Podes acrescentar mais detalhes, se quiseres.</p>
+                <div class="denuncia-acoes">
+                    <a id="denunciaEmail" class="denuncia-btn denuncia-btn--principal" href="mailto:repraca@feliperpv.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Abrir na app de email</a>
+                    <a id="denunciaGmail" class="denuncia-btn" href="https://mail.google.com/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Abrir o Gmail na web</a>
+                    <button type="button" id="denunciaCopiar" class="denuncia-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg><span id="denunciaCopiarTexto">Copiar para a área de transferência</span></button>
+                </div>
+                <span id="denunciaAviso" class="denuncia-aviso" role="status"></span>
+            </div>
+
+            <!-- reMixar: sempre à vista, no canto inferior direito da pasta -->
+            <div class="pasta-remix">
+                <span id="balaoRemix" class="pasta-balao">Tens outra ideia para esta praça?</span>
+                <a id="btnRemix" class="pasta-btn-remix" href="https://feliperpv.com/repraca/galeria/abrir-app/">
+                    reMixar<img src="/img/icone-lapis.png" alt="" width="76" height="76" />
+                </a>
+                <button type="button" id="btnRemixVoltar" class="pasta-btn-voltar" data-voltar-atual hidden>Volta à atual para remixar</button>
             </div>
         </div>
     </div>
-
     <!-- Import do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" is:inline></script>
-    <!-- Chart.Js pras tabelas no popup de cada praça -->
+    <!-- Chart.js para o radar da página de cada praça-base -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4" is:inline></script>
     <!-- Caminho absoluto pelo mesmo motivo do CSS acima -->
     <script src="/galeria/js/app.js" is:inline></script>

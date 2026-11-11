@@ -131,7 +131,7 @@ async function carregarDadosDaPraca(nomeBase) {
 // (0% a 100%). Praça original em terracota, praça imaginada em verde.
 // As categorias vêm do itens.json.
 
-// Um Chart.js por canvas — hoje só existe #radarPraca (dentro do popup),
+// Um Chart.js por canvas — o popup já não usa radar (passou a barras),
 // mas a página de uma praça-base tem um segundo radar (#radarComparativoPraca)
 // comparando original vs. média de todas as reimaginações, então precisa
 // de mais de uma instância viva ao mesmo tempo.
@@ -847,6 +847,10 @@ let chegouAoFim = false;
 // filtro (ver aplicarFiltros()). É o que diferencia "zero resultados com
 // esses filtros" de "chegou ao fim de verdade, depois de mostrar algo".
 let totalCardsRenderados = 0;
+// Cada reexportação cria uma linha nova com o mesmo praca_id (Histórico).
+// A grelha mostra um só card por praça: o primeiro que chega (na ordem
+// "recentes", a versão mais recente).
+const pracasNaGrelha = new Set();
 
 const gallery = document.getElementById("gallery");
 const popup = document.getElementById("popup");
@@ -934,8 +938,7 @@ async function carregarPracas() {
             return categoriaPredominante(jsonConvertido.layoutDaPraca || []) === categoriaSelecionada;
         });
 
-    desenharCards(pracasParaMostrar);
-    totalCardsRenderados += pracasParaMostrar.length;
+    totalCardsRenderados += desenharCards(pracasParaMostrar);
     paginaAtual++;
     carregando = false;
 
@@ -953,7 +956,13 @@ async function carregarPracas() {
 }
 
 function desenharCards(pracas) {
-    pracas.forEach(praca => {
+    const novas = pracas.filter(praca => {
+        if (pracasNaGrelha.has(praca.praca_id)) return false;
+        pracasNaGrelha.add(praca.praca_id);
+        return true;
+    });
+
+    novas.forEach(praca => {
         const dataFormatada = new Date(praca.created_at).toLocaleDateString('pt-PT');
 
         // Selo de "remix" só aparece quando a praça nasceu de outra —
@@ -985,6 +994,10 @@ function desenharCards(pracas) {
         card.addEventListener("click", () => abrirPraca(praca.praca_id));
         gallery.appendChild(card);
     });
+
+    // Um link direto pode abrir a pasta antes de a grelha carregar.
+    if (pracaAbertaId) atualizarSetas();
+    return novas.length;
 }
 
 // Aviso de "filtros não bateram com nada" — só acontece quando a busca
@@ -1036,6 +1049,7 @@ function aplicarFiltros() {
     gallery.innerHTML = "";
     paginaAtual = 0;
     chegouAoFim = false;
+    pracasNaGrelha.clear();
     totalCardsRenderados = 0; // recomeça a contagem pro novo conjunto de filtros
     loader.innerHTML = "A carregar mais praças...";
     carregarPracas();
@@ -1143,38 +1157,46 @@ function fecharPraca() {
 // dispara isso sozinho, só a navegação por histórico dispara).
 window.addEventListener("popstate", () => lidarComNavegacao());
 
+// Busca TODAS as versões da praça (mesmo praca_id), da mais recente para a
+// mais antiga. A primeira é a atual; as restantes alimentam o separador
+// Histórico sem precisar de uma segunda consulta.
 async function buscarPraca(id) {
-    // .single() é seguro porque a consulta ordena e limita à edição mais
-    // recente da praça antes de pedir uma única linha.
-    return db
+    const { data, error } = await db
         .from('city_creations')
         .select('*')
         .eq('praca_id', id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+        .order('created_at', { ascending: false });
+
+    if (error) return { data: null, versoes: [], error };
+    return { data: data && data.length ? data[0] : null, versoes: data || [], error: null };
 }
 
-const conteudoPopup = document.querySelector(".popup-content");
+// O popup é uma "pasta": separadores em cima (desktop) ou em baixo (mobile)
+// e uma folha com o conteúdo. Ao trocar de praça só os separadores e a
+// folha saem e entram; as setas, o Partilhar e o reMixar ficam no lugar.
+const pasta = document.querySelector(".pasta");
+const partesAnimadasDaPasta = [pasta.querySelector(".pasta-abas"), pasta.querySelector(".pasta-corpo")];
 let transicaoDePracaEmCurso = false;
 
 function classeDeSaida(direcao) {
-    return direcao > 0 ? "popup-saindo-esquerda" : "popup-saindo-direita";
+    return direcao > 0 ? "pasta-sair-esq" : "pasta-sair-dir";
 }
 
 function classeDeEntrada(direcao) {
-    return direcao > 0 ? "popup-entrando-direita" : "popup-entrando-esquerda";
+    return direcao > 0 ? "pasta-entrar-dir" : "pasta-entrar-esq";
+}
+
+function semAnimacoes() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 function aguardarAnimacao(elemento) {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return Promise.resolve();
-    }
+    if (semAnimacoes()) return Promise.resolve();
 
     return new Promise(resolve => {
         const aoTerminar = evento => {
             // animationend também sobe dos elementos internos (como os
-            // pontinhos do loading); só a animação do próprio popup conta.
+            // pontinhos do loading); só a animação do próprio elemento conta.
             if (evento.target !== elemento) return;
             elemento.removeEventListener("animationend", aoTerminar);
             resolve();
@@ -1185,27 +1207,34 @@ function aguardarAnimacao(elemento) {
 
 async function animarSaidaDaPraca(direcao) {
     const classe = classeDeSaida(direcao);
-    conteudoPopup.classList.add(classe);
-    await aguardarAnimacao(conteudoPopup);
-    conteudoPopup.classList.remove(classe);
-    conteudoPopup.classList.add("popup-conteudo-escondido");
+    partesAnimadasDaPasta.forEach(parte => parte.classList.add(classe));
+    await aguardarAnimacao(partesAnimadasDaPasta[1]);
+    partesAnimadasDaPasta.forEach(parte => {
+        parte.classList.remove(classe);
+        parte.classList.add("pasta-escondida");
+    });
 }
 
 async function animarEntradaDaPraca(direcao) {
     const classe = classeDeEntrada(direcao);
-    conteudoPopup.classList.remove("popup-conteudo-escondido");
-    conteudoPopup.classList.add(classe);
-    await aguardarAnimacao(conteudoPopup);
-    conteudoPopup.classList.remove(classe);
+    partesAnimadasDaPasta.forEach(parte => {
+        parte.classList.remove("pasta-escondida");
+        parte.classList.add(classe);
+    });
+    await aguardarAnimacao(partesAnimadasDaPasta[1]);
+    partesAnimadasDaPasta.forEach(parte => parte.classList.remove(classe));
 }
 
 async function lidarComNavegacao(direcao = null) {
     const id = pegarIdDaUrl();
 
     if (!id) {
+        fecharDenuncia({ devolverFoco: false, animar: false });
         popup.classList.add("escondido");
-        conteudoPopup.classList.remove("popup-conteudo-escondido", "popup-saindo-esquerda", "popup-saindo-direita");
-        document.body.style.overflow = "auto";
+        partesAnimadasDaPasta.forEach(parte => parte.classList.remove(
+            "pasta-escondida", "pasta-sair-esq", "pasta-sair-dir", "pasta-entrar-esq", "pasta-entrar-dir"
+        ));
+        document.documentElement.classList.remove("popup-aberto");
         if (elementoComFocoAntesDoModal) {
             elementoComFocoAntesDoModal.focus();
             elementoComFocoAntesDoModal = null;
@@ -1217,16 +1246,18 @@ async function lidarComNavegacao(direcao = null) {
         elementoComFocoAntesDoModal = document.activeElement;
     }
     popup.classList.remove("escondido");
-    document.body.style.overflow = "hidden";
+    // Trava o scroll da página por trás (o scroll do site é o do <html>,
+    // por causa do overflow-x no index.css, por isso não basta o <body>).
+    document.documentElement.classList.add("popup-aberto");
     requestAnimationFrame(() => document.getElementById("btnFecharModal").focus());
 
     const deveAnimar = Boolean(direcao && pracaAbertaId && !transicaoDePracaEmCurso);
     if (deveAnimar) transicaoDePracaEmCurso = true;
-    else document.getElementById("modalTitulo").innerText = "A carregar dados...";
+    else document.getElementById("modalTitulo").textContent = "A carregar…";
 
     // A consulta e a saída correm ao mesmo tempo. Assim, numa ligação
     // normal, a nova praça já está pronta quando a antiga termina de sair.
-    const [{ data, error }] = await Promise.all([
+    const [{ data, versoes, error }] = await Promise.all([
         buscarPraca(id),
         deveAnimar ? animarSaidaDaPraca(direcao) : Promise.resolve(),
     ]);
@@ -1247,7 +1278,7 @@ async function lidarComNavegacao(direcao = null) {
     }
 
     if (data) {
-        await preencherModal(data);
+        await preencherModal(data, versoes);
         if (deveAnimar) await animarEntradaDaPraca(direcao);
     } else {
         alert("Praça não encontrada!");
@@ -1269,15 +1300,18 @@ document.addEventListener("keydown", evento => {
 
     if (evento.key === "Escape") {
         evento.preventDefault();
-        fecharPraca();
+        if (denunciaAberta()) fecharDenuncia();
+        else fecharPraca();
         return;
     }
 
     if (evento.key !== "Tab") return;
 
-    const focaveis = [...popup.querySelectorAll(
+    // Com o painel Denunciar aberto, o Tab fica dentro dele.
+    const contentor = denunciaAberta() ? document.getElementById("painelDenuncia") : popup;
+    const focaveis = [...contentor.querySelectorAll(
         'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )].filter(elemento => elemento.offsetParent !== null);
+    )].filter(elemento => elemento.getClientRects().length > 0);
     if (!focaveis.length) return;
 
     const primeiro = focaveis[0];
@@ -1327,10 +1361,22 @@ document.getElementById("btnCompartilhar").addEventListener("click", compartilha
 // respeita os filtros e a ordenação selecionados. Se a pessoa chegar ao
 // último card já carregado, busca mais uma página antes de decidir que não
 // há para onde avançar.
+// Cada reexportação pode aparecer como um card à parte; para as setas conta
+// só o primeiro card de cada praca_id, senão "seguinte" abria a mesma praça.
+function cardsDaGrelha() {
+    if (!gallery) return [];
+    const vistos = new Set();
+    return [...gallery.querySelectorAll(".card-praca")].filter(card => {
+        if (vistos.has(card.dataset.pracaId)) return false;
+        vistos.add(card.dataset.pracaId);
+        return true;
+    });
+}
+
 async function navegarPelaGrelha(direcao) {
     if (!gallery || !pracaAbertaId) return;
 
-    let cards = [...gallery.querySelectorAll(".card-praca")];
+    let cards = cardsDaGrelha();
     let indiceAtual = cards.findIndex(card => card.dataset.pracaId === pracaAbertaId);
     if (indiceAtual === -1) return;
 
@@ -1338,7 +1384,7 @@ async function navegarPelaGrelha(direcao) {
 
     while (indiceDestino >= cards.length && !chegouAoFim) {
         const carregou = await carregarPracas();
-        cards = [...gallery.querySelectorAll(".card-praca")];
+        cards = cardsDaGrelha();
 
         // Pode haver uma página inteira que não sobreviva a um filtro
         // aplicado no cliente. Nesse caso tenta a página seguinte; só para
@@ -1348,246 +1394,889 @@ async function navegarPelaGrelha(direcao) {
 
     const destino = cards[indiceDestino];
     if (destino) return abrirPraca(destino.dataset.pracaId, direcao);
+    atualizarSetas();
 }
 
-let navegandoComTeclado = false;
+// Teclado (← →) e as setas da pasta partilham a mesma trava, para dois
+// pedidos seguidos não trocarem de praça duas vezes ao mesmo tempo.
+let navegandoEntrePracas = false;
 
-document.addEventListener("keydown", async evento => {
+async function irParaPracaVizinha(direcao) {
+    if (navegandoEntrePracas) return;
+    navegandoEntrePracas = true;
+    try {
+        await navegarPelaGrelha(direcao);
+    } finally {
+        navegandoEntrePracas = false;
+    }
+}
+
+document.addEventListener("keydown", evento => {
     if (popup.classList.contains("escondido") || evento.altKey || evento.ctrlKey || evento.metaKey) return;
     if (evento.target.closest("input, textarea, select, [contenteditable='true']")) return;
     if (evento.key !== "ArrowLeft" && evento.key !== "ArrowRight") return;
 
     evento.preventDefault();
-    if (navegandoComTeclado) return;
-
-    navegandoComTeclado = true;
-    try {
-        await navegarPelaGrelha(evento.key === "ArrowRight" ? 1 : -1);
-    } finally {
-        navegandoComTeclado = false;
-    }
+    irParaPracaVizinha(evento.key === "ArrowRight" ? 1 : -1);
 });
 
+const btnPracaAnterior = document.getElementById("btnPracaAnterior");
+const btnPracaSeguinte = document.getElementById("btnPracaSeguinte");
+btnPracaAnterior.addEventListener("click", () => irParaPracaVizinha(-1));
+btnPracaSeguinte.addEventListener("click", () => irParaPracaVizinha(1));
+
+// As setas só aparecem quando a praça aberta está na grelha desta página
+// (a hub /galeria/ não tem grelha, e um link direto pode abrir uma praça
+// que ainda não carregou).
+function atualizarSetas() {
+    const cards = cardsDaGrelha();
+    const indice = cards.findIndex(card => card.dataset.pracaId === pracaAbertaId);
+    const temGrelha = indice !== -1;
+
+    btnPracaAnterior.hidden = !temGrelha;
+    btnPracaSeguinte.hidden = !temGrelha;
+    if (!temGrelha) return;
+
+    btnPracaAnterior.disabled = indice === 0;
+    btnPracaSeguinte.disabled = indice === cards.length - 1 && chegouAoFim;
+}
+
 // ==========================================
-// 5. PREENCHER O MODAL
+// 5. PREENCHER A PASTA
 // ==========================================
 
 let pracaAbertaId = null;
 
-function carregarVista(url, vista) {
-    const imgEl = document.getElementById("selectedImage");
-    const container = imgEl.closest(".popup-imagem-container");
-    const loading = document.getElementById("imagemLoading");
-    const btnTopo = document.getElementById("btnVistaTopo");
-    const btnAngulo = document.getElementById("btnVistaAngulo");
+const LINK_REMIX = "https://feliperpv.com/repraca/galeria/abrir-app/?id=";
+const EMAIL_DENUNCIA = "repraca@feliperpv.com";
 
-    // Cada troca recebe uma identidade própria: se o utilizador clicar
+// Pergunta no balão por cima do reMixar, conforme o separador aberto.
+const PERGUNTAS_REMIX = {
+    capa: "Tens outra ideia para esta praça?",
+    comparacao: "O que acrescentavas ou tiravas?",
+    remixes: "Leva esta ideia noutra direção.",
+    historico: "Pega na última versão e faz a tua.",
+};
+
+// Tudo o que a pasta precisa de lembrar sobre a praça aberta.
+const estadoPasta = {
+    aba: "capa",
+    vista: "proposta",          // "hoje" (foto da praça real) ou "proposta"
+    vistaProposta: "topo",      // "topo" ou "angulo"
+    atual: null,                // linha mais recente da praça
+    aVer: null,                 // linha mostrada (a atual ou uma versão antiga)
+    versoes: [],                // todas as linhas, da mais recente para a mais antiga
+    base: { itens: {} },        // JSON da praça-base
+    itensOriginais: {},         // itens da praça-base por categoria
+};
+
+function escaparHtml(texto) {
+    return String(texto ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+}
+
+function formatarData(dataIso) {
+    return dataIso ? dataIso.substring(0, 10).split("-").reverse().join("/") : "";
+}
+
+function textoItens(n) {
+    return n === 1 ? "1 item" : n + " itens";
+}
+
+// layout_data pode chegar como texto JSON ou já como objeto.
+function lerLayout(linha) {
+    if (!linha || !linha.layout_data) return {};
+    if (typeof linha.layout_data === "object") return linha.layout_data;
+    try {
+        return JSON.parse(linha.layout_data);
+    } catch (erro) {
+        console.warn("layout_data inválido na linha", linha.id, erro);
+        return {};
+    }
+}
+
+function itensDaLinha(linha) {
+    return lerLayout(linha).layoutDaPraca || [];
+}
+
+// { "Banco de madeira": 2, "Palmeira": 3 } a partir dos itens posicionados.
+function contagemPorNome(itens) {
+    const contagem = {};
+    itens.forEach(item => {
+        const nome = item.nome || "Item sem nome";
+        contagem[nome] = (contagem[nome] || 0) + 1;
+    });
+    return contagem;
+}
+
+function somaDeContagem(contagem) {
+    return Object.values(contagem).reduce((soma, qtd) => soma + qtd, 0);
+}
+
+// Diferenças de item a item entre duas contagens, das maiores para as menores.
+function diferencasEntre(contagemNova, contagemAntiga) {
+    const nomes = new Set([...Object.keys(contagemNova), ...Object.keys(contagemAntiga)]);
+    return [...nomes]
+        .map(nome => ({ nome, dif: (contagemNova[nome] || 0) - (contagemAntiga[nome] || 0) }))
+        .filter(d => d.dif !== 0)
+        .sort((a, b) => Math.abs(b.dif) - Math.abs(a.dif) || a.nome.localeCompare(b.nome, "pt"));
+}
+
+function sinalDe(n) {
+    return n > 0 ? "+" + n : n < 0 ? "−" + Math.abs(n) : "0";
+}
+
+// Etiquetas "+8 Cereja-do-mato" / "−1 Mesa de xadrez".
+function etiquetasDeMudanca(diferencas, { comIcone = false, maximo = 4 } = {}) {
+    if (!diferencas.length) {
+        return `<span class="chip chip--neutro">Sem mudanças nos itens</span>`;
+    }
+    const mostradas = diferencas.slice(0, maximo);
+    const resto = diferencas.length - mostradas.length;
+    return mostradas.map(d => `
+        <span class="chip ${d.dif > 0 ? "chip--mais" : "chip--menos"}">${comIcone ? `<img src="${escaparHtml(iconeParaItem(d.nome))}" alt="">` : ""}${sinalDe(d.dif)} ${escaparHtml(d.nome)}</span>
+    `).join("") + (resto > 0 ? `<span class="chip chip--neutro">+${resto} ${resto === 1 ? "mudança" : "mudanças"}</span>` : "");
+}
+
+function reanimar(elemento, classe) {
+    elemento.classList.remove(classe);
+    void elemento.offsetWidth; // força o reflow para a animação recomeçar
+    elemento.classList.add(classe);
+}
+
+function eVersaoAntiga() {
+    return Boolean(estadoPasta.aVer && estadoPasta.atual && estadoPasta.aVer.id !== estadoPasta.atual.id);
+}
+
+function numeroDaVersao(linha) {
+    return estadoPasta.versoes.length - estadoPasta.versoes.indexOf(linha);
+}
+
+// --- Imagens da capa ---
+
+function carregarVista(url, descricao) {
+    const imgEl = document.getElementById("selectedImage");
+    const caixa = imgEl.closest(".capa-foto");
+    const loading = document.getElementById("imagemLoading");
+
+    if (!url) {
+        caixa.classList.add("a-carregar", "com-erro");
+        loading.setAttribute("aria-label", "Não foi possível carregar esta imagem");
+        return;
+    }
+
+    // Mesma imagem já carregada: nada a fazer (o onload não voltaria a correr).
+    if (imgEl.getAttribute("src") === url && imgEl.complete && imgEl.naturalWidth) {
+        caixa.classList.remove("a-carregar", "com-erro");
+        return;
+    }
+
+    // Cada troca recebe uma identidade própria: se a pessoa clicar
     // rapidamente nas duas vistas, o evento atrasado da imagem anterior
     // não pode remover o estado de loading da imagem atual.
     const pedido = Symbol("vista");
     imgEl._pedidoDeVista = pedido;
-    container.classList.add("a-carregar");
-    loading.firstElementChild.textContent = "A carregar";
-    loading.setAttribute("aria-label", `A carregar vista de ${vista}`);
+    caixa.classList.add("a-carregar");
+    caixa.classList.remove("com-erro");
+    loading.setAttribute("aria-label", `A carregar a ${descricao}`);
 
     imgEl.onload = () => {
         if (imgEl._pedidoDeVista !== pedido) return;
-        container.classList.remove("a-carregar");
+        caixa.classList.remove("a-carregar");
     };
 
     imgEl.onerror = () => {
         if (imgEl._pedidoDeVista !== pedido) return;
-        loading.firstElementChild.textContent = "Não foi possível carregar a imagem";
+        caixa.classList.add("com-erro");
         loading.setAttribute("aria-label", "Não foi possível carregar esta imagem");
-        btnTopo.disabled = false;
-        btnAngulo.disabled = false;
     };
 
+    imgEl.alt = "Planta da praça reimaginada, " + descricao;
     imgEl.src = url;
 }
 
-async function preencherModal(praca) {
-    pracaAbertaId = praca.praca_id;
+// Aplica "Hoje / Proposta" e "topo / ângulo" à foto da capa.
+function aplicarVista() {
+    const linha = estadoPasta.aVer;
+    const caixa = document.querySelector(".capa-foto");
+    const imagemHoje = document.getElementById("imagemHoje");
+    const hoje = estadoPasta.vista === "hoje";
+    const angulo = estadoPasta.vistaProposta === "angulo";
 
-    // --- Imagens: abre sempre na vista de topo ---
-    const imgEl = document.getElementById("selectedImage");
+    caixa.classList.toggle("vista-hoje", hoje);
+    imagemHoje.setAttribute("aria-hidden", hoje ? "false" : "true");
+    document.getElementById("btnVerHoje").setAttribute("aria-pressed", hoje);
+    document.getElementById("btnVerProposta").setAttribute("aria-pressed", !hoje);
+
     const btnTopo = document.getElementById("btnVistaTopo");
     const btnAngulo = document.getElementById("btnVistaAngulo");
+    btnTopo.classList.toggle("ativo", !angulo);
+    btnAngulo.classList.toggle("ativo", angulo);
+    btnTopo.setAttribute("aria-pressed", !angulo);
+    btnAngulo.setAttribute("aria-pressed", angulo);
 
-    carregarVista(praca.image_topo_url, "topo");
-    btnTopo.classList.add("ativo");
-    btnAngulo.classList.remove("ativo");
+    if (linha) {
+        carregarVista(angulo ? linha.image_url : linha.image_topo_url, angulo ? "vista de ângulo" : "vista de topo");
+    }
 
-    btnTopo.onclick = () => {
-        carregarVista(praca.image_topo_url, "topo");
-        btnTopo.classList.add("ativo");
-        btnAngulo.classList.remove("ativo");
-    };
-    btnAngulo.onclick = () => {
-        carregarVista(praca.image_url, "ângulo");
-        btnAngulo.classList.add("ativo");
-        btnTopo.classList.remove("ativo");
-    };
+}
 
-    document.getElementById("btnRemix").href =
-        "https://feliperpv.com/repraca/galeria/abrir-app/?id=" + praca.praca_id;
+document.getElementById("btnVerHoje").addEventListener("click", () => {
+    estadoPasta.vista = "hoje";
+    aplicarVista();
+});
+document.getElementById("btnVerProposta").addEventListener("click", () => {
+    estadoPasta.vista = "proposta";
+    aplicarVista();
+});
+document.getElementById("btnVistaTopo").addEventListener("click", () => {
+    estadoPasta.vistaProposta = "topo";
+    aplicarVista();
+});
+document.getElementById("btnVistaAngulo").addEventListener("click", () => {
+    estadoPasta.vistaProposta = "angulo";
+    aplicarVista();
+});
 
-    // --- Dados da praça imaginada ---
-    const jsonConvertido = JSON.parse(praca.layout_data);
-    const itens = jsonConvertido.layoutDaPraca || [];
+// --- Abertura de uma praça ---
+
+async function preencherModal(praca, versoes) {
+    pracaAbertaId = praca.praca_id;
+    fecharDenuncia({ devolverFoco: false, animar: false });
+
+    estadoPasta.atual = praca;
+    estadoPasta.versoes = versoes && versoes.length ? versoes : [praca];
+    estadoPasta.vista = "proposta";
+    estadoPasta.vistaProposta = "topo";
+    ramosDaArvore = { mae: null, filhos: [], netos: [] };
+    document.getElementById("arvoreRemixes").innerHTML = "";
 
     // "mapaId" (ex: "barao-de-corumba") é o identificador estável que liga
     // essa criação à praça-base certa — bate com o nome do arquivo em
-    // dados/pracas/*.json. "nomeDaCena" é só o nome de exibição; não dá
-    // mais pra usar a coluna nome_da_cena da linha pra isso (agora é
-    // sempre "Jogo", já que todas as praças carregam a mesma cena de UI).
-    const slugBase = jsonConvertido.mapaId || "";
-    const nomeBase = jsonConvertido.nomeDaCena || "";
+    // dados/pracas/*.json. "nomeDaCena" é só o nome de exibição.
+    const layout = lerLayout(praca);
+    estadoPasta.base = await carregarDadosDaPraca(layout.mapaId || "");
+    estadoPasta.itensOriginais = organizarItensOriginais(estadoPasta.base.itens || {});
 
-    const itensPorCategoria = contarItensImaginados(itens);
-    const dadosPracaOriginal = await carregarDadosDaPraca(slugBase);
-    const itensOriginais = organizarItensOriginais(dadosPracaOriginal.itens || {});
+    // Foto da praça como está hoje: a primeira imagem do JSON da praça-base.
+    const fotoReal = (estadoPasta.base.imagens || [])[0];
+    const imagemHoje = document.getElementById("imagemHoje");
+    document.getElementById("grupoHojeProposta").hidden = !fotoReal;
+    if (fotoReal) {
+        imagemHoje.src = fotoReal.src;
+        imagemHoje.alt = fotoReal.alt || "A praça como está hoje";
+    } else {
+        imagemHoje.removeAttribute("src");
+    }
 
-    desenharRadar(itensOriginais, itensPorCategoria);
-    criarListaComparativa(itensPorCategoria, itensOriginais);
+    document.getElementById("btnRemix").href = LINK_REMIX + praca.praca_id;
 
-    // "rePraça {numero}" = id da LINHA na tabela (não o praca_id, que é o UUID)
-    document.getElementById("modalNumero").innerText = "rePraça " + praca.id;
+    mostrarVersao(praca);
+    verificarStatusDoLike(praca.praca_id, praca.likes || 0);
+    trocarAba("capa"); // abre sempre na capa
+    desenharHistorico();
+    atualizarSetas();
+    carregarRemixes(praca);
+}
+
+// Mostra uma versão (a atual ou uma antiga) na capa, na comparação e na ficha.
+function mostrarVersao(linha) {
+    estadoPasta.aVer = linha;
+    const antiga = eVersaoAntiga();
+    const layout = lerLayout(linha);
+    const itens = layout.layoutDaPraca || [];
+    const nomeBase = layout.nomeDaCena || estadoPasta.base.nome || "";
+    const numero = numeroDaVersao(linha);
+    const data = formatarData(linha.created_at);
+
+    pasta.classList.toggle("versao-antiga", antiga);
+
+    // Capa
+    estadoPasta.vista = "proposta";
+    aplicarVista();
 
     // Título = o nome que o criador deu à própria criação; se não tiver
     // (linhas antigas sem esse campo), cai pro nome da praça-base.
-    const titulo = (praca.titulo && praca.titulo.trim()) ? praca.titulo : (nomeBase || "Praça Personalizada");
-    document.getElementById("modalTitulo").innerText = titulo;
+    const titulo = (linha.titulo && linha.titulo.trim()) ? linha.titulo.trim() : (nomeBase || "Praça personalizada");
+    document.getElementById("modalTitulo").textContent = titulo;
 
-    const baseadoEmEl = document.getElementById("modalBaseadoEm");
-    if (nomeBase && nomeBase !== titulo) {
-        baseadoEmEl.innerText = "baseado em: " + nomeBase;
-        baseadoEmEl.style.display = "";
-    } else {
-        baseadoEmEl.style.display = "none";
+    const nota = document.getElementById("modalNotaAutor");
+    const comentario = (linha.comentario || "").trim();
+    nota.hidden = !comentario;
+    document.getElementById("modalComentario").textContent = comentario;
+
+    // Ficha do projeto. "rePraça {numero}" = id da linha mais recente
+    // (não o praca_id, que é o UUID), igual para todas as versões.
+    document.getElementById("modalNumero").textContent = "rePraça " + estadoPasta.atual.id;
+    document.getElementById("fichaBase").textContent = nomeBase || "—";
+    const local = [estadoPasta.base.bairro, estadoPasta.base.cidade].filter(Boolean).join(", ");
+    document.getElementById("fichaLocal").textContent = local;
+    document.getElementById("fichaLocalCelula").hidden = !local;
+    document.getElementById("fichaDataRotulo").textContent = antiga ? "Data desta versão" : "Última edição";
+    document.getElementById("modalData").textContent = antiga ? `${data} · versão ${numero}` : data;
+
+    // Aviso de versão antiga
+    const banner = document.getElementById("bannerVersao");
+    banner.hidden = !antiga;
+    if (antiga) {
+        document.getElementById("bannerVersaoTexto").innerHTML =
+            `<b>Estás a ver a versão ${numero}</b>, de ${escaparHtml(data)}. Há uma versão mais recente desta proposta.`;
     }
 
-    document.getElementById("modalData").innerText =
-        "Última edição: " + praca.created_at.substring(0, 10).split('-').reverse().join('/');
-    document.getElementById("modalTotalItens").innerText = praca.total_objects;
+    // Comparação e resumo no índice
+    const itensPorCategoria = contarItensImaginados(itens);
+    desenharComparacao(itensPorCategoria, estadoPasta.itensOriginais);
+    document.getElementById("resumoComparacao").textContent =
+        resumoDaComparacao(itensPorCategoria, estadoPasta.itensOriginais);
 
-    // Foco = categoria com mais itens na praça imaginada (mesma conta do filtro "Foco principal" da galeria)
-    document.getElementById("modalCategoria").innerText = categoriaPredominante(itens);
-
-    const comentarioEl = document.getElementById("modalComentario");
-    if (praca.comentario && praca.comentario.trim()) {
-        comentarioEl.innerText = praca.comentario;
-        comentarioEl.style.display = "";
-    } else {
-        comentarioEl.style.display = "none";
-    }
-
-    verificarStatusDoLike(praca.praca_id, praca.likes || 0);
-
-    trocarAba("itens"); // sempre volta pra aba "itens" ao abrir uma praça
-    carregarRemixes(praca.praca_id);
-    carregarHistorico(praca.praca_id, praca.id);
+    atualizarDenuncia(linha, titulo, nomeBase, local);
+    atualizarRemix();
+    marcarVersaoAVer();
 }
 
-// ==========================================
-// 5b. ABAS (itens / remixes / histórico)
-// ==========================================
+document.querySelectorAll("[data-voltar-atual]").forEach(botao => {
+    botao.addEventListener("click", () => {
+        if (estadoPasta.atual) mostrarVersao(estadoPasta.atual);
+    });
+});
 
-document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => trocarAba(btn.dataset.tab));
+// --- Separadores ---
+
+document.querySelectorAll(".pasta-aba").forEach(botao => {
+    botao.addEventListener("click", () => trocarAba(botao.dataset.tab));
+});
+
+document.querySelectorAll(".indice-linha").forEach(botao => {
+    botao.addEventListener("click", () => trocarAba(botao.dataset.ir));
 });
 
 function trocarAba(nomeAba) {
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("ativo", btn.dataset.tab === nomeAba);
+    estadoPasta.aba = nomeAba;
+    pasta.dataset.aba = nomeAba;
+
+    document.querySelectorAll(".pasta-aba").forEach(botao => {
+        botao.setAttribute("aria-pressed", botao.dataset.tab === nomeAba);
     });
-    document.querySelectorAll(".tab-painel").forEach(painel => painel.classList.remove("ativo"));
 
-    const painel = document.getElementById("painel" + nomeAba.charAt(0).toUpperCase() + nomeAba.slice(1));
-    if (painel) painel.classList.add("ativo");
+    const idPainel = "painel" + nomeAba.charAt(0).toUpperCase() + nomeAba.slice(1);
+    document.querySelectorAll(".pasta-painel").forEach(painel => {
+        painel.classList.toggle("ativo", painel.id === idPainel);
+    });
 
-    document.querySelector(".tabs-conteudo").className = "tabs-conteudo tabs-conteudo--" + nomeAba;
+    pasta.querySelector(".pasta-scroll").scrollTop = 0;
+
+    // No mobile os separadores têm scroll horizontal: mantém o ativo à vista.
+    pasta.querySelector(`.pasta-aba[data-tab="${nomeAba}"]`)
+        ?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: semAnimacoes() ? "auto" : "smooth" });
+
+    atualizarRemix();
 }
 
-// ==========================================
-// 5c. ABA "REMIXES" — criações filhas desta praça
-// ==========================================
+// --- reMixar e Denunciar ---
 
-async function carregarRemixes(pracaId) {
-    const container = document.getElementById("listaRemixes");
-    container.innerHTML = "<p class='texto-dica'>A carregar...</p>";
+function atualizarRemix() {
+    const antiga = eVersaoAntiga();
+    document.getElementById("btnRemix").hidden = antiga;
+    document.getElementById("btnRemixVoltar").hidden = !antiga;
 
-    const { data, error } = await db
-        .from('city_creations')
-        .select('praca_id, image_topo_url, created_at')
-        .eq('praca_pai_id', pracaId)
-        .order('created_at', { ascending: false });
+    const balao = document.getElementById("balaoRemix");
+    const texto = antiga ? "Só a versão atual pode ser remixada." : PERGUNTAS_REMIX[estadoPasta.aba];
+    if (balao.textContent !== texto) {
+        balao.textContent = texto;
+        reanimar(balao, "anim-balao");
+    }
+}
 
-    if (error) {
-        container.innerHTML = "<p class='texto-dica'>Não foi possível carregar os remixes.</p>";
+// Prepara a mensagem de denúncia com os dados da proposta. O painel oferece
+// três caminhos, porque o mailto não faz nada em browsers sem app de email:
+// app de email, Gmail na web, ou copiar o texto.
+let mensagemDeDenuncia = { assunto: "", corpo: "" };
+
+function atualizarDenuncia(linha, titulo, nomeBase, local) {
+    const total = estadoPasta.versoes.length;
+    const link = window.location.origin + window.location.pathname + "?id=" + linha.praca_id;
+    const assunto = `Denúncia: rePraça ${estadoPasta.atual.id} (${titulo})`;
+    const corpo = [
+        "Quero denunciar esta proposta da galeria rePraça.",
+        "",
+        `Proposta: rePraça ${estadoPasta.atual.id}${titulo !== nomeBase ? " — " + titulo : ""}`,
+        `Praça-base: ${nomeBase || "—"}${local ? ", " + local : ""}`,
+        `Versão: ${numeroDaVersao(linha)} de ${total} (linha ${linha.id}, ${formatarData(linha.created_at)})`,
+        `ID: ${linha.praca_id}`,
+        `Link: ${link}`,
+        "",
+        "Detalhes (opcional):",
+        "",
+        "",
+    ].join("\r\n");
+    mensagemDeDenuncia = { assunto, corpo };
+    document.getElementById("denunciaEmail").href =
+        `mailto:${EMAIL_DENUNCIA}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+    document.getElementById("denunciaGmail").href =
+        `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(EMAIL_DENUNCIA)}&su=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+}
+
+// ---------- Painel Denunciar ----------
+// No desktop é um balão por baixo do botão; no mobile, uma folha que sobe
+// de baixo (CSS). O fundo apanha os cliques fora para fechar só o painel.
+let temporizadorDenuncia = null;
+
+function denunciaAberta() {
+    const painel = document.getElementById("painelDenuncia");
+    return !painel.hidden && !painel.classList.contains("saindo");
+}
+
+function abrirDenuncia(botao) {
+    const painel = document.getElementById("painelDenuncia");
+    const pasta = painel.closest(".pasta");
+    // Alinha a margem direita do balão com a do botão que o abriu.
+    const caixaPasta = pasta.getBoundingClientRect();
+    const caixaBotao = botao.getBoundingClientRect();
+    const direita = Math.max(0, caixaPasta.right - caixaBotao.right);
+    painel.style.setProperty("--denuncia-direita", direita + "px");
+    painel.style.setProperty("--denuncia-topo", (caixaBotao.bottom - caixaPasta.top + 6) + "px");
+
+    limparAvisoDenuncia();
+    window.clearTimeout(temporizadorDenuncia);
+    const fundo = document.getElementById("denunciaFundo");
+    fundo.classList.remove("saindo");
+    painel.classList.remove("saindo");
+    fundo.hidden = false;
+    painel.hidden = false;
+    document.querySelectorAll("[data-denunciar]").forEach(b => b.setAttribute("aria-expanded", "true"));
+    painel.dataset.origem = botao.classList.contains("pasta-denunciar--ficha") ? "ficha" : "topo";
+    document.getElementById("denunciaEmail").focus();
+}
+
+// Fecha com a animação do abrir ao contrário. Ao mudar de praça ou fechar a
+// pasta (animar: false) fecha logo.
+function fecharDenuncia({ devolverFoco = true, animar = true } = {}) {
+    const painel = document.getElementById("painelDenuncia");
+    if (!painel || painel.hidden) return;
+    const fundo = document.getElementById("denunciaFundo");
+    const esconder = () => {
+        window.clearTimeout(temporizadorDenuncia);
+        painel.hidden = true;
+        fundo.hidden = true;
+        painel.classList.remove("saindo");
+        fundo.classList.remove("saindo");
+    };
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (animar && !semMovimento) {
+        if (painel.classList.contains("saindo")) return;
+        painel.classList.add("saindo");
+        fundo.classList.add("saindo");
+        temporizadorDenuncia = window.setTimeout(esconder, 230);
+    } else {
+        esconder();
+    }
+    document.querySelectorAll("[data-denunciar]").forEach(b => b.setAttribute("aria-expanded", "false"));
+    if (devolverFoco) {
+        const origem = document.querySelector(`.pasta-denunciar--${painel.dataset.origem || "topo"}`);
+        const visivel = origem && origem.getClientRects().length ? origem
+            : [...document.querySelectorAll("[data-denunciar]")].find(b => b.getClientRects().length);
+        if (visivel) visivel.focus();
+    }
+}
+
+function limparAvisoDenuncia() {
+    const aviso = document.getElementById("denunciaAviso");
+    aviso.textContent = "";
+    aviso.classList.remove("erro");
+    document.getElementById("denunciaCopiarTexto").textContent = "Copiar para a área de transferência";
+}
+
+// navigator.clipboard só existe em páginas seguras (https ou localhost);
+// fora disso, usa-se o método antigo com uma textarea escondida.
+async function copiarTexto(texto) {
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(texto);
         return;
     }
+    const area = document.createElement("textarea");
+    area.value = texto;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand("copy");
+    area.remove();
+    if (!ok) throw new Error("copiar falhou");
+}
 
-    if (!data || data.length === 0) {
-        container.innerHTML = `
-            <div class="remix-vazio">
-                Ainda ninguém reimaginou esta praça.<br/>
-                <a href="https://feliperpv.com/repraca/galeria/abrir-app/?id=${pracaId}">Sê o primeiro a remixar →</a>
+document.querySelectorAll("[data-denunciar]").forEach(botao => {
+    botao.addEventListener("click", evento => {
+        evento.stopPropagation();
+        if (denunciaAberta()) fecharDenuncia();
+        else abrirDenuncia(botao);
+    });
+});
+
+document.getElementById("denunciaFechar").addEventListener("click", () => fecharDenuncia());
+document.getElementById("denunciaFundo").addEventListener("click", () => fecharDenuncia());
+
+document.getElementById("denunciaCopiar").addEventListener("click", async () => {
+    const { assunto, corpo } = mensagemDeDenuncia;
+    const texto = `Para: ${EMAIL_DENUNCIA}\r\nAssunto: ${assunto}\r\n\r\n${corpo}`;
+    const aviso = document.getElementById("denunciaAviso");
+    try {
+        await copiarTexto(texto);
+        document.getElementById("denunciaCopiarTexto").textContent = "Mensagem copiada ✓";
+        aviso.classList.remove("erro");
+        aviso.textContent = `Agora cola-a no teu email e envia para ${EMAIL_DENUNCIA}.`;
+    } catch (erro) {
+        aviso.classList.add("erro");
+        aviso.textContent = `Não foi possível copiar. Escreve-nos para ${EMAIL_DENUNCIA}.`;
+    }
+});
+
+// ==========================================
+// 5b. SEPARADOR "COMPARAÇÃO" — proposta face à praça real
+// ==========================================
+
+function categoriasDoCatalogo() {
+    return [...new Set(Object.values(catalogoItens).map(item => item.categoria).filter(Boolean))];
+}
+
+function desenharComparacao(imaginados, originais) {
+    const pctReal = percentualPorCategoria(originais);
+    const pctProposta = percentualPorCategoria(imaginados);
+
+    // Todas as categorias do catálogo aparecem nas barras, mesmo a 0%:
+    // o que falta também é informação. Ordem: o que a proposta mais tem.
+    const categorias = [...new Set([
+        ...categoriasDoCatalogo(),
+        ...Object.keys(originais),
+        ...Object.keys(imaginados),
+    ])].sort((a, b) =>
+        (pctProposta[b] || 0) - (pctProposta[a] || 0) || (pctReal[b] || 0) - (pctReal[a] || 0)
+    );
+
+    document.getElementById("compBarras").innerHTML = categorias.map(categoria => {
+        const real = Math.round(pctReal[categoria] || 0);
+        const proposta = Math.round(pctProposta[categoria] || 0);
+        return `
+            <div class="comp-barra-linha">
+                <span class="comp-barra-nome">${escaparHtml(categoria)}</span>
+                <span class="comp-barra-par" aria-hidden="true">
+                    <span class="comp-barra comp-barra--real" style="width:${Math.max(real, 1)}%"></span>
+                    <span class="comp-barra comp-barra--prop" style="width:${Math.max(proposta, 1)}%"></span>
+                </span>
+                <span class="comp-barra-txt"><span class="sr-pasta">Praça real </span>${real}% → <span class="sr-pasta">esta proposta </span>${proposta}%</span>
             </div>
         `;
-        return;
-    }
+    }).join("");
 
-    container.innerHTML = "";
-    data.forEach(filho => {
-        const linha = document.createElement("div");
-        linha.className = "remix-card";
-        linha.innerHTML = `
-            <span>${new Date(filho.created_at).toLocaleDateString('pt-PT')}</span>
-            <img src="${filho.image_topo_url}" alt="" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">
+    const totalReal = totalDeItens(originais);
+    const totalProposta = totalDeItens(imaginados);
+    const dif = totalProposta - totalReal;
+    document.getElementById("compTotal").textContent = `${totalReal} → ${textoItens(totalProposta)}`;
+    const difEl = document.getElementById("compTotalDif");
+    difEl.textContent = sinalDe(dif);
+    difEl.className = "comp-total-dif " + (dif > 0 ? "mais" : dif < 0 ? "menos" : "");
+
+    // Inventário item a item, só com as categorias que têm alguma coisa.
+    const comItens = categorias.filter(c => imaginados[c] || originais[c]);
+    document.getElementById("modalListaItens").innerHTML = comItens.map(categoria => {
+        const daProposta = imaginados[categoria] || {};
+        const doReal = originais[categoria] || {};
+        const nomes = [...new Set([...Object.keys(daProposta), ...Object.keys(doReal)])]
+            .sort((a, b) => (daProposta[b] || 0) - (daProposta[a] || 0) || a.localeCompare(b, "pt"));
+
+        const linhas = nomes.map(nome => {
+            const atual = daProposta[nome] || 0;
+            const original = doReal[nome] || 0;
+            const d = atual - original;
+            return `
+                <div class="comp-linha">
+                    <span class="comp-item"><img src="${escaparHtml(iconeParaItem(nome))}" alt="" width="30" height="30"><span>${escaparHtml(nome)}</span></span>
+                    <span class="comp-num"><span class="sr-pasta">Real: </span>${original}</span>
+                    <span class="comp-num comp-num--forte"><span class="sr-pasta">Proposta: </span>${atual}</span>
+                    <span class="comp-num comp-dif ${d > 0 ? "mais" : d < 0 ? "menos" : ""}"><span class="sr-pasta">Diferença: </span>${sinalDe(d)}</span>
+                </div>
+            `;
+        }).join("");
+
+        return `
+            <div class="comp-grupo">
+                <div class="comp-grupo-titulo">
+                    <span class="comp-grupo-texto">
+                        <span class="comp-grupo-nome">${escaparHtml(categoria)}</span>
+                        <span class="comp-grupo-pct">real ${Math.round(pctReal[categoria] || 0)}% · proposta ${Math.round(pctProposta[categoria] || 0)}%</span>
+                    </span>
+                    <span class="comp-colunas" aria-hidden="true"><span>Real</span><span><span class="so-desktop">Proposta</span><span class="so-mobile">Prop.</span></span><span><span class="so-desktop">Diferença</span><span class="so-mobile">Dif.</span></span></span>
+                </div>
+                ${linhas}
+            </div>
         `;
-        linha.addEventListener("click", () => abrirPraca(filho.praca_id));
-        container.appendChild(linha);
+    }).join("") || `<p class="pasta-sub">Nem a praça real nem esta proposta têm itens registados.</p>`;
+}
+
+// Resumo no índice da capa: a diferença em si, ex. "+9 itens · mais Paisagem"
+// (quantos itens a mais ou a menos e a categoria cujo peso mais cresceu).
+function resumoDaComparacao(imaginados, originais) {
+    const totalProposta = totalDeItens(imaginados);
+    const totalReal = totalDeItens(originais);
+    if (!totalProposta && !totalReal) return "Sem itens";
+
+    const dif = totalProposta - totalReal;
+    const parteItens = dif === 0
+        ? "Mesmo n.º de itens"
+        : `${sinalDe(dif)} ${Math.abs(dif) === 1 ? "item" : "itens"}`;
+
+    const pctReal = percentualPorCategoria(originais);
+    const pctProposta = percentualPorCategoria(imaginados);
+    let maisCresceu = null;
+    let maiorSubida = 0;
+    Object.keys(pctProposta).forEach(categoria => {
+        if (categoria === "Sem categoria") return;
+        const subida = pctProposta[categoria] - (pctReal[categoria] || 0);
+        if (subida > maiorSubida) {
+            maiorSubida = subida;
+            maisCresceu = categoria;
+        }
+    });
+
+    return maisCresceu ? `${parteItens} · mais ${maisCresceu}` : parteItens;
+}
+
+// No mobile a lista item a item fica fechada, para a página não ficar longa.
+document.getElementById("btnVerItens").addEventListener("click", evento => {
+    const botao = evento.currentTarget;
+    const aberta = botao.getAttribute("aria-expanded") !== "true";
+    botao.setAttribute("aria-expanded", aberta);
+    document.getElementById("compListaWrap").classList.toggle("aberta", aberta);
+});
+
+// ==========================================
+// 5c. SEPARADOR "REMIXES" — árvore: praça-mãe → esta → remixes → remixes dos remixes
+// ==========================================
+// Três consultas no máximo (mãe, filhos, netos), feitas uma vez por praça
+// aberta. As diferenças entre praças são calculadas aqui no navegador a
+// partir do layout_data, sem pedidos extra ao Supabase.
+
+const CAMPOS_DO_RAMO = "id, praca_id, praca_pai_id, titulo, image_topo_url, created_at, layout_data";
+let pedidoDeRemixes = 0;
+let ramosDaArvore = { mae: null, filhos: [], netos: [] };
+
+// Cada reexportação cria uma linha nova com o mesmo praca_id: fica só a mais recente.
+function soAsMaisRecentes(linhas) {
+    const vistas = new Set();
+    return linhas.filter(linha => {
+        if (vistas.has(linha.praca_id)) return false;
+        vistas.add(linha.praca_id);
+        return true;
     });
 }
 
-// ==========================================
-// 5d. ABA "HISTÓRICO" — versões anteriores do mesmo praca_id
-// ==========================================
-// NOTA: listo as versões antigas só como informação (data + número da
-// linha) — não abrem, porque a navegação por hash hoje é pelo praca_id
-// (igual em todas as versões). Pra tornar isso navegável precisaria mudar
-// como a URL identifica a praça.
+async function carregarRemixes(praca) {
+    const pedido = ++pedidoDeRemixes;
+    const arvore = document.getElementById("arvoreRemixes");
+    const resumo = document.getElementById("resumoRemixes");
+    arvore.innerHTML = "<p class='pasta-sub'>A carregar…</p>";
+    resumo.textContent = "…";
 
-async function carregarHistorico(pracaId, idAtual) {
-    const abaBtn = document.getElementById("btnTabHistorico");
-    const container = document.getElementById("listaHistorico");
+    const consultaMae = praca.praca_pai_id && praca.praca_pai_id.trim()
+        ? db.from('city_creations').select(CAMPOS_DO_RAMO)
+            .eq('praca_id', praca.praca_pai_id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+        : Promise.resolve({ data: [] });
 
-    const { data, error } = await db
-        .from('city_creations')
-        .select('id, created_at')
-        .eq('praca_id', pracaId)
+    const consultaFilhos = db.from('city_creations').select(CAMPOS_DO_RAMO)
+        .eq('praca_pai_id', praca.praca_id)
         .order('created_at', { ascending: false });
 
-    if (error || !data || data.length <= 1) {
-        // Sem edições anteriores — some com a aba (mas "remixes" continua ali)
-        abaBtn.style.display = "none";
-        if (abaBtn.classList.contains("ativo")) trocarAba("itens");
+    const [mae, filhos] = await Promise.all([consultaMae, consultaFilhos]);
+    if (pedido !== pedidoDeRemixes) return;
+
+    if (filhos.error) {
+        console.error("Erro ao carregar remixes:", filhos.error);
+        arvore.innerHTML = "<p class='pasta-sub'>Não foi possível carregar os remixes.</p>";
+        resumo.textContent = "";
         return;
     }
 
-    abaBtn.style.display = "";
-    container.innerHTML = "";
-    data.forEach(versao => {
-        const linha = document.createElement("div");
-        linha.className = "historico-linha";
-        linha.innerHTML = `
-            <span>${new Date(versao.created_at).toLocaleDateString('pt-PT')}</span>
-            <span>${versao.id === idAtual ? "atual" : "rePraça " + versao.id}</span>
-        `;
-        container.appendChild(linha);
-    });
+    const listaFilhos = soAsMaisRecentes((filhos.data || []).filter(f => f.praca_id !== praca.praca_id));
+
+    let netos = [];
+    if (listaFilhos.length) {
+        const resposta = await db.from('city_creations').select(CAMPOS_DO_RAMO)
+            .in('praca_pai_id', listaFilhos.map(f => f.praca_id))
+            .order('created_at', { ascending: false });
+        if (pedido !== pedidoDeRemixes) return;
+        netos = soAsMaisRecentes(resposta.data || []);
+    }
+
+    ramosDaArvore = { mae: (mae.data || [])[0] || null, filhos: listaFilhos, netos };
+
+    // Resumo no índice da capa: de onde veio (se for remix) e quantos ramos
+    // saíram dela. A praça-mãe não conta como "1 remix" para não confundir.
+    const n = listaFilhos.length;
+    const doMae = ramosDaArvore.mae ? "rePraça " + ramosDaArvore.mae.id : "";
+    if (doMae && n === 0) resumo.textContent = "Remix da " + doMae;
+    else if (doMae) resumo.textContent = `Remix da ${ramosDaArvore.mae.id} · ${n === 1 ? "1 remix" : n + " remixes"}`;
+    else resumo.textContent = n === 0 ? "Ainda ninguém remixou" : n === 1 ? "1 remix" : n + " remixes";
+    desenharArvore();
 }
+
+function noDaArvore(linha, { rotulo, tipo, meta = "", comparacao = "", etiquetas = "", abrir = true }) {
+    const itens = itensDaLinha(linha);
+    const titulo = linha.titulo && linha.titulo.trim() ? " · " + linha.titulo.trim() : "";
+    return `
+        <div class="arvore-no arvore-no--${tipo}">
+            <img src="${escaparHtml(linha.image_topo_url || "")}" alt="" loading="lazy">
+            <span class="arvore-textos">
+                <span class="arvore-rotulo">${rotulo}</span>
+                <span class="arvore-nome">rePraça ${escaparHtml(linha.id)}${escaparHtml(titulo)}</span>
+                <span class="arvore-meta">${meta || `${formatarData(linha.created_at)} · ${textoItens(itens.length)}`}</span>
+                ${comparacao ? `<span class="arvore-meta">${comparacao}</span>` : ""}
+                ${etiquetas ? `<span class="arvore-chips">${etiquetas}</span>` : ""}
+            </span>
+            ${abrir ? `<a class="arvore-abrir" href="?id=${encodeURIComponent(linha.praca_id)}" data-abrir="${escaparHtml(linha.praca_id)}">Abrir →</a>` : ""}
+        </div>
+    `;
+}
+
+function desenharArvore() {
+    const arvore = document.getElementById("arvoreRemixes");
+    const atual = estadoPasta.aVer || estadoPasta.atual;
+    if (!atual) return;
+
+    const { mae, filhos, netos } = ramosDaArvore;
+    const contagemAtual = contagemPorNome(itensDaLinha(atual));
+    const antiga = eVersaoAntiga();
+
+    // Esta praça: comparada com a praça-mãe ou, se não for remix, com a praça real.
+    const referencia = mae ? contagemPorNome(itensDaLinha(mae)) : (estadoPasta.base.itens || {});
+    const itensAtual = itensDaLinha(atual);
+    const noAtual = noDaArvore(atual, {
+        tipo: "atual",
+        rotulo: antiga ? `Estás aqui · versão ${numeroDaVersao(atual)}` : "Estás aqui · versão mais recente",
+        meta: `${formatarData(atual.created_at)} · ${textoItens(itensAtual.length)}${itensAtual.length ? " · foco " + escaparHtml(categoriaPredominante(itensAtual)) : ""}`,
+        comparacao: mae ? "Face à praça-mãe:" : "Face à praça real:",
+        etiquetas: etiquetasDeMudanca(diferencasEntre(contagemAtual, referencia)),
+        abrir: false,
+    });
+
+    const contagemMaisRecente = contagemPorNome(itensDaLinha(estadoPasta.atual));
+    const ramosDosFilhos = filhos.map(filho => {
+        const contagemFilho = contagemPorNome(itensDaLinha(filho));
+        const seusNetos = netos.filter(neto => neto.praca_pai_id === filho.praca_id);
+        const ramosDosNetos = seusNetos.length ? `
+            <ul class="arvore-filhos">
+                ${seusNetos.map(neto => `
+                    <li class="arvore-item">${noDaArvore(neto, {
+                        tipo: "remix",
+                        rotulo: "Remix de um remix",
+                        etiquetas: etiquetasDeMudanca(diferencasEntre(contagemPorNome(itensDaLinha(neto)), contagemFilho), { maximo: 3 }),
+                    })}</li>
+                `).join("")}
+            </ul>` : "";
+        return `
+            <li class="arvore-item">${noDaArvore(filho, {
+                tipo: "remix",
+                rotulo: "Remix",
+                etiquetas: etiquetasDeMudanca(diferencasEntre(contagemFilho, contagemMaisRecente), { maximo: 3 }),
+            })}${ramosDosNetos}</li>
+        `;
+    }).join("");
+
+    // Convite a abrir um ramo novo (só na versão atual, a única remixável).
+    const ramoNovo = antiga ? "" : `
+        <li class="arvore-item">
+            <a class="arvore-no arvore-novo" href="${LINK_REMIX + encodeURIComponent(estadoPasta.atual.praca_id)}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                <span class="arvore-textos">
+                    <span class="arvore-nome">Faz o teu remix</span>
+                    <span class="arvore-meta">${filhos.length ? "Cria um novo ramo a partir desta praça" : "Ainda ninguém reimaginou esta praça. Sê a primeira pessoa!"}</span>
+                </span>
+            </a>
+        </li>`;
+
+    const ramosDaAtual = (ramosDosFilhos || ramoNovo) ? `<ul class="arvore-filhos">${ramosDosFilhos}${ramoNovo}</ul>` : "";
+    const itemAtual = `<li class="arvore-item">${noAtual}${ramosDaAtual}</li>`;
+
+    arvore.innerHTML = mae
+        ? `<ul class="arvore-raiz"><li class="arvore-item">${noDaArvore(mae, { tipo: "mae", rotulo: "Praça-mãe" })}<ul class="arvore-filhos">${itemAtual}</ul></li></ul>`
+        : `<ul class="arvore-raiz">${itemAtual}</ul>`;
+}
+
+document.getElementById("arvoreRemixes").addEventListener("click", evento => {
+    const link = evento.target.closest("[data-abrir]");
+    if (!link) return;
+    evento.preventDefault();
+    abrirPraca(link.dataset.abrir);
+});
+
+// ==========================================
+// 5d. SEPARADOR "HISTÓRICO" — versões do mesmo praca_id
+// ==========================================
+// Cada versão abre na própria pasta (com um aviso azul em cima). O reMixar
+// fica desligado nas versões antigas porque a app só sabe abrir o praca_id,
+// que leva sempre à versão mais recente.
+
+function desenharHistorico() {
+    const versoes = estadoPasta.versoes;
+    const total = versoes.length;
+    document.getElementById("resumoHistorico").textContent = total === 1 ? "Versão única" : total + " versões";
+
+    document.getElementById("listaHistorico").innerHTML = versoes.map((linha, indice) => {
+        const anterior = versoes[indice + 1];
+        const itens = itensDaLinha(linha);
+        const data = formatarData(linha.created_at);
+        let variacao = "(início)";
+        let mudancas = `<span class="hist-primeira">Primeira exportação desta proposta.</span>`;
+        if (anterior) {
+            const dif = itens.length - itensDaLinha(anterior).length;
+            variacao = dif === 0 ? "(igual)" : `(${sinalDe(dif)})`;
+            mudancas = etiquetasDeMudanca(
+                diferencasEntre(contagemPorNome(itens), contagemPorNome(itensDaLinha(anterior))),
+                { comIcone: true, maximo: 5 }
+            );
+        }
+        return `
+            <li class="hist-item${indice === 0 ? " hist-item--atual" : ""}">
+                <button type="button" class="hist-cartao" data-versao="${indice}" aria-pressed="false">
+                    <img src="${escaparHtml(linha.image_topo_url || "")}" alt="Planta da versão de ${escaparHtml(data)}" loading="lazy">
+                    <span class="hist-textos">
+                        <span class="hist-topo">
+                            <span class="hist-data">${escaparHtml(data)}</span>
+                            ${indice === 0 ? `<span class="hist-tag">Atual</span>` : ""}
+                            <span class="hist-num">Versão ${total - indice}</span>
+                            <span class="hist-tag hist-tag--aver">A ver</span>
+                            <span class="hist-itens">${textoItens(itens.length)} <span>${variacao}</span></span>
+                        </span>
+                        <span class="hist-chips">${mudancas}</span>
+                    </span>
+                </button>
+            </li>
+        `;
+    }).join("");
+
+    marcarVersaoAVer();
+}
+
+function marcarVersaoAVer() {
+    document.querySelectorAll("#listaHistorico .hist-cartao").forEach(botao => {
+        const aVer = estadoPasta.versoes[Number(botao.dataset.versao)] === estadoPasta.aVer;
+        botao.classList.toggle("a-ver", aVer);
+        botao.setAttribute("aria-pressed", aVer);
+    });
+    // A árvore mostra a versão que está aberta.
+    if (document.querySelector("#arvoreRemixes .arvore-raiz")) desenharArvore();
+}
+
+document.getElementById("listaHistorico").addEventListener("click", evento => {
+    const botao = evento.target.closest(".hist-cartao");
+    if (!botao) return;
+    const linha = estadoPasta.versoes[Number(botao.dataset.versao)];
+    if (!linha) return;
+    mostrarVersao(linha);
+    trocarAba("capa");
+});
 
 
 // ==========================================
@@ -1602,27 +2291,35 @@ function verificarStatusDoLike(id, totalLikes) {
 
     if (localStorage.getItem("liked_" + id)) {
         btnLike.classList.add("curtido");
+        btnLike.setAttribute("aria-pressed", "true");
         btnLike.disabled = true;
     } else {
         btnLike.classList.remove("curtido");
+        btnLike.setAttribute("aria-pressed", "false");
         btnLike.disabled = false;
         btnLike.onclick = () => enviarLikeParaSupabase(id);
     }
 }
 
 async function enviarLikeParaSupabase(id) {
+    const contador = document.getElementById("modalLikesCount");
+    const totalAntes = parseInt(contador.innerText) || 0;
+
+    // O botão muda logo para "gostado" (cor, número e dancinha) e só volta
+    // atrás se o pedido falhar — assim não fica um estado intermédio esbatido.
     btnLike.disabled = true;
-    btnLike.classList.add("animar"); // 2. Dispara a dancinha imediatamente ao clicar
+    btnLike.classList.add("animar", "curtido");
+    btnLike.setAttribute("aria-pressed", "true");
+    contador.innerText = totalAntes + 1;
 
     const { error } = await db.rpc('dar_like', { id_praca: id });
 
     if (!error) {
-        const contador = document.getElementById("modalLikesCount");
-        contador.innerText = parseInt(contador.innerText) + 1;
-        btnLike.classList.add("curtido");
         localStorage.setItem("liked_" + id, "true");
     } else {
-        btnLike.classList.remove("animar"); // 3. Remove a animação caso ocorra erro
+        btnLike.classList.remove("animar", "curtido");
+        btnLike.setAttribute("aria-pressed", "false");
+        contador.innerText = totalAntes;
         btnLike.disabled = false;
         alert("Erro ao registar o gosto!");
     }
