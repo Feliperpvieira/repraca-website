@@ -864,8 +864,8 @@ html.popup-aberto body {
     min-width: 0;
 }
 
-/* O botão "Ver os itens um a um" só existe no mobile */
-.comp-toggle { display: none; }
+/* Título "Item a item" só no mobile */
+.comp-lista-titulo { display: none; }
 
 .comp-lista-wrap {
     display: grid;
@@ -1804,37 +1804,36 @@ html.popup-aberto body {
         box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
     }
 
-    /* Ficha: uma linha no topo da folha, com scroll para a direita */
+    /* Ficha: rodapé no fim do conteúdo, dentro do scroll (o app.js muda-a
+       para dentro do .pasta-scroll), de ponta a ponta da folha, em 2×2 */
     .pasta-ficha {
-        order: -1;
-        overflow-x: auto;
-        scrollbar-width: none;
-        border-top: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin: 10px -16px 0;
+        border-top: 2px solid var(--azul-marinho);
         border-bottom: 2px solid var(--azul-marinho);
     }
 
-    .pasta-ficha::-webkit-scrollbar { display: none; }
-
     .ficha-celula,
     .ficha-celula:nth-child(n) {
-        flex: none;
-        gap: 1px;
-        padding: 7px 14px;
+        gap: 2px;
+        padding: 10px 14px;
+        border-right: 0;
+        border-bottom: 1px solid #CDBFAF;
     }
 
     .ficha-rotulo { font-size: 10px; }
 
     .ficha-valor,
-    #modalNumero {
-        font-size: 14px;
-        white-space: nowrap;
-    }
+    #modalNumero { font-size: 14px; }
 
-    .ficha-celula--denunciar {
+    .ficha-celula--denunciar,
+    .ficha-celula--denunciar:nth-child(n) {
         display: flex;
-        justify-content: center;
-        padding: 0 10px;
-        border-right: 0;
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        padding: 2px 8px;
+        border-bottom: 0;
     }
 
     .pasta-denunciar--ficha {
@@ -1972,36 +1971,14 @@ html.popup-aberto body {
     #compTotal { font-size: 22px; }
     .comp-total-dif { font-size: 15px; height: 28px; }
 
-    .comp-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 48px;
-        padding: 0 14px;
-        border: 1px solid var(--pasta-linha);
-        border-radius: 8px;
-        background: var(--pasta-cartao);
-        color: var(--azul-marinho);
-        font-size: 15px;
+    .comp-lista-titulo {
+        display: block;
+        margin: 6px 0 0;
+        font-size: 18px;
+        text-align: left;
         font-weight: 700;
-        cursor: pointer;
+        color: var(--azul-marinho);
     }
-
-    .comp-toggle svg {
-        width: 18px;
-        height: 18px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2.4;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        transition: transform .2s ease;
-    }
-
-    .comp-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-
-    .comp-lista-wrap { grid-template-rows: 0fr; }
-    .comp-lista-wrap.aberta { grid-template-rows: 1fr; }
 
     .comp { --comp-cols: 40px 44px 48px; --comp-gap: 4px; }
 

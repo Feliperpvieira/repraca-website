@@ -214,10 +214,7 @@ const cssFiles = [
                                 </div>
                             </div>
                             <div class="comp-lista-col">
-                                <button type="button" id="btnVerItens" class="comp-toggle" aria-expanded="false" aria-controls="compListaWrap">
-                                    Ver os itens um a um
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-                                </button>
+                                <h3 class="comp-lista-titulo">Item a item</h3>
                                 <div id="compListaWrap" class="comp-lista-wrap">
                                     <div class="comp-lista-dentro">
                                         <div id="modalListaItens" class="comp-inventario"></div>
@@ -245,7 +242,8 @@ const cssFiles = [
                         </section>
                     </div>
 
-                    <!-- Ficha do projeto: rodapé da folha no desktop, topo da folha no mobile -->
+                    <!-- Ficha do projeto: rodapé da folha no desktop. No mobile o app.js
+                         passa-a para o fim do .pasta-scroll (rodapé dentro do scroll). -->
                     <div class="pasta-ficha" role="group" aria-label="Ficha do projeto">
                         <div class="ficha-celula"><span class="ficha-rotulo">Projeto</span><span class="ficha-valor ficha-valor--forte" id="modalNumero"></span></div>
                         <div class="ficha-celula"><span class="ficha-rotulo" id="fichaDataRotulo">Última edição</span><span class="ficha-valor" id="modalData"></span></div>

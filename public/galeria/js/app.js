@@ -2042,13 +2042,21 @@ function resumoDaComparacao(imaginados, originais) {
     return maisCresceu ? `${parteItens} · mais ${maisCresceu}` : parteItens;
 }
 
-// No mobile a lista item a item fica fechada, para a página não ficar longa.
-document.getElementById("btnVerItens").addEventListener("click", evento => {
-    const botao = evento.currentTarget;
-    const aberta = botao.getAttribute("aria-expanded") !== "true";
-    botao.setAttribute("aria-expanded", aberta);
-    document.getElementById("compListaWrap").classList.toggle("aberta", aberta);
-});
+// No mobile a ficha do projeto vai para o fim do conteúdo, dentro do scroll,
+// para o ecrã não ficar cheio. No desktop volta a ser o rodapé fixo da folha.
+(function () {
+    const ficha = document.querySelector(".pasta-ficha");
+    const scroll = document.querySelector(".pasta-scroll");
+    const folha = document.querySelector(".pasta-folha");
+    if (!ficha || !scroll || !folha) return;
+    const mobile = window.matchMedia("(max-width: 768px)");
+    const colocar = () => {
+        if (mobile.matches) scroll.appendChild(ficha);
+        else folha.appendChild(ficha);
+    };
+    colocar();
+    mobile.addEventListener("change", colocar);
+})();
 
 // ==========================================
 // 5c. SEPARADOR "REMIXES" — árvore: praça-mãe → esta → remixes → remixes dos remixes
