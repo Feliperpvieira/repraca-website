@@ -651,7 +651,7 @@ function criarListaComparativa(dadosImaginados, dadosOriginais, opcoes = {}) {
     // emColunas: layout da página da praça-base — cabeçalho "Original: / Média:"
     // uma vez por categoria e só os números em cada linha. O popup continua com
     // o layout antigo (rótulo pequeno dentro de cada linha).
-    const { containerId = "modalListaItens", rotuloComparacao = "Na sua praça", emColunas = false } = opcoes;
+    const { containerId = "modalListaItens", rotuloComparacao = "Nesta praça", emColunas = false } = opcoes;
 
     const lista = document.getElementById(containerId);
     if (!lista) return;
@@ -908,7 +908,7 @@ async function carregarPracas() {
 
     if (error) {
         console.error("Erro ao buscar:", error);
-        loader.innerText = "Não foi possível carregar a galeria. Tente novamente mais tarde.";
+        loader.innerText = "Não foi possível carregar a galeria. Tenta novamente mais tarde.";
         carregando = false;
         return false;
     }
@@ -993,7 +993,7 @@ function desenharCards(pracas) {
 // pessoa mexendo filtro por filtro tentando adivinhar qual está travando.
 function mostrarAvisoSemResultados() {
     loader.innerHTML = `
-        Nenhuma praça com essa combinação ainda. Que tal ser o primeiro a criar?
+        Ainda não há praças com esta combinação. Que tal seres o primeiro a criar uma?
         <br>
         <a href="#" id="linkLimparFiltros">Limpar todos os filtros</a>
     `;
@@ -1008,7 +1008,7 @@ function mostrarAvisoSemResultados() {
 // menos uma praça na página atual de filtros.
 function mostrarAvisoFimDaGaleria() {
     loader.innerHTML = `
-        Chegou ao fim das rePraças!
+        Chegaste ao fim das rePraças!
         <br>
         <a href="#" id="linkVoltarAoTopo">Voltar ao topo</a>
     `;
@@ -1317,7 +1317,7 @@ async function compartilharPraca() {
         texto.innerText = "Não foi possível partilhar";
     }
 
-    window.setTimeout(() => { texto.innerText = "Compartilhar"; }, 2000);
+    window.setTimeout(() => { texto.innerText = "Partilhar"; }, 2000);
     botao.focus();
 }
 
@@ -1531,8 +1531,8 @@ async function carregarRemixes(pracaId) {
     if (!data || data.length === 0) {
         container.innerHTML = `
             <div class="remix-vazio">
-                Ninguém reimaginou esta praça ainda.<br/>
-                <a href="https://feliperpv.com/repraca/galeria/abrir-app/?id=${pracaId}">Seja o primeiro a remixar →</a>
+                Ainda ninguém reimaginou esta praça.<br/>
+                <a href="https://feliperpv.com/repraca/galeria/abrir-app/?id=${pracaId}">Sê o primeiro a remixar →</a>
             </div>
         `;
         return;

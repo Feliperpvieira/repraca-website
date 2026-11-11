@@ -35,7 +35,7 @@ const itensOriginais = dados.itens || {};
 ---
 <GaleriaLayout
     title={`${dados.nome} — rePraça`}
-    ogDescription={`Veja as reimaginações da praça ${dados.nome} no rePraça.`}
+    ogDescription={`Vê as reimaginações da praça ${dados.nome} no rePraça.`}
     canonical={`https://repraca.feliperpv.com/galeria/praca/${slug}/`}
     pracaSlug={slug}
     pracaNome={dados.nome}
@@ -62,8 +62,8 @@ const itensOriginais = dados.itens || {};
 
              ATENÇÃO: o link usa "?mapa=" (mapaId), não "?id=" (que é o
              formato usado hoje só pra remixar UMA criação existente). O
-             DeepLinkManager.cs do app Unity ainda não trata "?mapa=" —
-             isso precisa ser adicionado lá pro botão funcionar de facto. -->
+             DeepLinkManager.cs da app já trata "?mapa=" (abre a praça
+             limpa). -->
         <div class="praca-topo">
             <div class="praca-local">
                 {dados.mapsUrl && (
@@ -154,9 +154,9 @@ const itensOriginais = dados.itens || {};
             <label for="filtroOrdem">Ordenar por:</label>
             <select id="filtroOrdem">
                 <button><selectedcontent></selectedcontent></button>
-                <option value="recentes">Mais Recentes</option>
-                <option value="antigas">Mais Antigas</option>
-                <option value="likes">Mais Likes</option>
+                <option value="recentes">Mais recentes</option>
+                <option value="antigas">Mais antigas</option>
+                <option value="likes">Mais gostos</option>
             </select>
         </div>
 

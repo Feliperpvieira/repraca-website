@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-  <loc>http://repraca.feliperpv.com/</loc>
+  <loc>https://repraca.feliperpv.com/</loc>
   <changefreq>monthly</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/galeria/</loc>
+  <loc>https://repraca.feliperpv.com/galeria/</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
@@ -13,79 +13,83 @@
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/relatorio.html</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/arquivos/</loc>
-  <changefreq>yearly</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/privacidade/</loc>
-  <changefreq>yearly</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/termos/</loc>
-  <changefreq>yearly</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/arquivos/relatorio.pdf</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/demoday/galeria/index.html</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/demoday/web/index.html</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/fbx/banco-concreto-v2.fbx</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/fbx/banco-madeira.fbx</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/fbx/barra-ginastica.fbx</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/fbx/bicicletario-u.fbx</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/fbx/cesta-basquete.fbx</loc>
-  <changefreq>never</changefreq>
-</url>
-<url>
-  <loc>http://repraca.feliperpv.com/fbx/escorrega.fbx</loc>
+  <loc>https://repraca.feliperpv.com/galeria/praca/centro-de-saude-de-alcantara/</loc>
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/fbx/gangorra.fbx</loc>
+  <loc>https://repraca.feliperpv.com/relatorio/</loc>
   <changefreq>never</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/fbx/lixeira-comlurb-v2.fbx</loc>
+  <loc>https://repraca.feliperpv.com/arquivos/</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/privacidade/</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/termos/</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/relatorio.pdf</loc>
   <changefreq>never</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/fbx/mesa-de-xadrez.fbx</loc>
+  <loc>https://repraca.feliperpv.com/demoday/galeria/index.html</loc>
   <changefreq>never</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/fbx/monumento-estatua.fbx</loc>
+  <loc>https://repraca.feliperpv.com/demoday/web/index.html</loc>
   <changefreq>never</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/fbx/mupi-estrutura.fbx</loc>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/banco-concreto-v2.fbx</loc>
   <changefreq>never</changefreq>
 </url>
 <url>
-  <loc>http://repraca.feliperpv.com/fbx/poste-v2.fbx</loc>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/banco-madeira.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/barra-ginastica.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/bicicletario-u.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/cesta-basquete.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/escorrega.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/gangorra.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/lixeira-comlurb-v2.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/mesa-de-xadrez.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/monumento-estatua.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/mupi-estrutura.fbx</loc>
+  <changefreq>never</changefreq>
+</url>
+<url>
+  <loc>https://repraca.feliperpv.com/arquivos/fbx/poste-v2.fbx</loc>
   <changefreq>never</changefreq>
 </url>
 </urlset>

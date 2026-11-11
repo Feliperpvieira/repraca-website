@@ -32,7 +32,7 @@ export default {
       // título quando existe; "mapa_id" serve pra buscar o nome bonito da
       // praça-base e deixar a descrição mais gostosa de ler).
       const busca = await fetch(
-        `${SUPABASE_URL}/rest/v1/city_creations?praca_id=eq.${id}&select=mapa_id,titulo,image_topo_url,total_objects&order=created_at.desc&limit=1`,
+        `${SUPABASE_URL}/rest/v1/city_creations?praca_id=eq.${encodeURIComponent(id)}&select=mapa_id,titulo,image_topo_url,total_objects&order=created_at.desc&limit=1`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
       );
 
@@ -70,7 +70,7 @@ export default {
         .on('title', { element(el) { el.setInnerContent(titulo); } })
         .on('meta[property="og:title"]', { element(el) { el.setAttribute("content", titulo); } })
         .on('meta[property="og:description"]', { element(el) { el.setAttribute("content", descricao); } })
-        .on('meta[property="og:image"]', { element(el) { el.setAttribute("content", praca.image_topo_url); } })
+        .on('meta[property="og:image"]', { element(el) { if (praca.image_topo_url) el.setAttribute("content", praca.image_topo_url); } })
         .on('meta[property="og:url"]', { element(el) { el.setAttribute("content", url.toString()); } })
         .transform(resposta);
     } catch (erro) {
