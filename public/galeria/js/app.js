@@ -1450,6 +1450,15 @@ function atualizarSetas() {
 let pracaAbertaId = null;
 
 const LINK_REMIX = "https://feliperpv.com/repraca/galeria/abrir-app/?id=";
+
+// Link do reMixar. Leva também o slug da praça em "praca" (e não "mapa", porque
+// a app recusa links com id e mapa juntos), para o "Voltar à galeria" da página
+// abrir-app conseguir voltar a esta pasta.
+function linkRemix(praca) {
+    let link = LINK_REMIX + encodeURIComponent(praca.praca_id);
+    if (praca.mapa_id) link += "&praca=" + encodeURIComponent(praca.mapa_id);
+    return link;
+}
 const EMAIL_DENUNCIA = "repraca@feliperpv.com";
 
 // Pergunta no balão por cima do reMixar, conforme o separador aberto.
@@ -1672,7 +1681,7 @@ async function preencherModal(praca, versoes) {
         imagemHoje.removeAttribute("src");
     }
 
-    document.getElementById("btnRemix").href = LINK_REMIX + praca.praca_id;
+    document.getElementById("btnRemix").href = linkRemix(praca);
 
     mostrarVersao(praca);
     verificarStatusDoLike(praca.praca_id, praca.likes || 0);
@@ -2219,7 +2228,7 @@ function desenharArvore() {
     // Convite a abrir um ramo novo (só na versão atual, a única remixável).
     const ramoNovo = antiga ? "" : `
         <li class="arvore-item">
-            <a class="arvore-no arvore-novo" href="${LINK_REMIX + encodeURIComponent(estadoPasta.atual.praca_id)}">
+            <a class="arvore-no arvore-novo" href="${linkRemix(estadoPasta.atual)}">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
                 <span class="arvore-textos">
                     <span class="arvore-nome">Faz o teu remix</span>
