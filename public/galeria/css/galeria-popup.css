@@ -722,6 +722,7 @@ html.popup-aberto body {
 .indice-nome { font-size: 17px; font-weight: 700; }
 .indice-desc { font-size: 13px; color: var(--pasta-texto-suave); }
 .indice-resumo { font-size: 15px; font-weight: 700; text-align: right; }
+.indice-resumo-parte + .indice-resumo-parte::before { content: " · "; }
 
 .indice-chevron {
     width: 16px;
@@ -1714,9 +1715,10 @@ html.popup-aberto body {
 .denuncia-aviso.erro { color: #9A3B22; }
 
 @media (max-width: 768px) {
+    /* A pasta não ocupa o ecrã todo: a galeria aparece em cima e em baixo */
     #popup {
-        padding: 16px 12px 20px;
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding: 44px 12px 56px;
+        padding-bottom: max(56px, env(safe-area-inset-bottom));
         align-items: stretch;
     }
 
@@ -1941,17 +1943,21 @@ html.popup-aberto body {
 
     .capa-indice { gap: 6px; }
 
+    /* O nome nunca encolhe; o resumo ocupa o resto e quebra linha se
+       precisar, em vez de passar por cima do nome */
     .indice-linha {
-        grid-template-columns: 30px minmax(0, 1fr) auto;
+        grid-template-columns: 30px auto minmax(0, 1fr);
         min-height: 48px;
-        padding: 0 12px;
+        padding: 6px 12px;
     }
 
     .indice-badge { width: 30px; height: 30px; border-radius: 7px; }
     .indice-badge svg { width: 16px; height: 16px; }
     .indice-desc, .indice-chevron { display: none; }
     .indice-nome { font-size: 16px; }
-    .indice-resumo { font-size: 14px; font-weight: 400; color: var(--pasta-texto-suave); }
+    .indice-resumo { font-size: 14px; font-weight: 400; color: var(--pasta-texto-suave); text-align: right; }
+    .indice-resumo-parte { display: block; }
+    .indice-resumo-parte + .indice-resumo-parte::before { content: none; }
 
     /* Comparação */
     .comp.ativo {
@@ -2064,30 +2070,63 @@ html.popup-aberto body {
         gap: 8px;
     }
 
+    /* Post-it estreito, a pergunta em 2 linhas */
     .pasta-balao {
-        max-width: 230px;
-        padding: 8px 12px;
-        font-size: 14px;
+        max-width: 136px;
+        padding: 5px 10px;
+        font-size: 12.5px;
+    }
+
+    .pasta-balao::before {
+        top: -7px;
+        width: 40px;
+        height: 13px;
+        margin-left: -20px;
+    }
+
+    /* Durante o scroll o post-it esconde-se (ver app.js). Tirar a animação
+       de entrada deixa a transição agir, e ao voltar a animação repete. */
+    .pasta-remix.a-rolar .pasta-balao {
+        animation: none;
+        opacity: 0;
+        transform: translateY(10px) rotate(-2deg) scale(.95);
+        transition: opacity .22s ease, transform .28s cubic-bezier(.22, 1, .36, 1);
+        pointer-events: none;
+    }
+
+    /* O fundo da folha desvanece por trás do reMixar */
+    .pasta-folha { position: relative; }
+
+    .pasta-folha::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 96px;
+        background: linear-gradient(180deg, rgba(251, 245, 238, 0) 0%, rgba(251, 245, 238, 0.92) 60%, var(--pasta-folha) 100%);
+        pointer-events: none;
+        z-index: 1;
     }
 
     .pasta-btn-remix {
-        min-width: 170px;
-        height: 50px;
-        padding: 0 64px 0 0;
-        border-radius: 25px;
-        font-size: 17px;
+        min-width: 150px;
+        height: 46px;
+        padding: 0 56px 0 0;
+        border-radius: 23px;
+        font-size: 16px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), 0 0 0 3px rgba(251, 245, 238, 0.9);
     }
 
     .pasta-btn-remix img {
-        right: 11px;
-        top: -12px;
-        width: 54px;
-        height: 54px;
+        right: 9px;
+        top: -10px;
+        width: 46px;
+        height: 46px;
     }
 
     .pasta-btn-voltar {
-        height: 50px;
+        height: 46px;
         padding: 0 16px;
         border-radius: 25px;
         font-size: 14px;

@@ -1727,8 +1727,12 @@ function mostrarVersao(linha) {
     // Comparação e resumo no índice
     const itensPorCategoria = contarItensImaginados(itens);
     desenharComparacao(itensPorCategoria, estadoPasta.itensOriginais);
-    document.getElementById("resumoComparacao").textContent =
-        resumoDaComparacao(itensPorCategoria, estadoPasta.itensOriginais);
+    // Cada parte do resumo num span: no mobile ficam em linhas separadas
+    document.getElementById("resumoComparacao").innerHTML =
+        resumoDaComparacao(itensPorCategoria, estadoPasta.itensOriginais)
+            .split(" · ")
+            .map(parte => `<span class="indice-resumo-parte">${escaparHtml(parte)}</span>`)
+            .join("");
 
     atualizarDenuncia(linha, titulo, nomeBase, local);
     atualizarRemix();
@@ -2014,7 +2018,7 @@ function desenharComparacao(imaginados, originais) {
     }).join("") || `<p class="pasta-sub">Nem a praça real nem esta proposta têm itens registados.</p>`;
 }
 
-// Resumo no índice da capa: a diferença em si, ex. "+9 itens · mais Paisagem"
+// Resumo no índice da capa: a diferença em si, ex. "+9 itens · + Paisagem"
 // (quantos itens a mais ou a menos e a categoria cujo peso mais cresceu).
 function resumoDaComparacao(imaginados, originais) {
     const totalProposta = totalDeItens(imaginados);
@@ -2023,7 +2027,7 @@ function resumoDaComparacao(imaginados, originais) {
 
     const dif = totalProposta - totalReal;
     const parteItens = dif === 0
-        ? "Mesmo n.º de itens"
+        ? "Igual em itens"
         : `${sinalDe(dif)} ${Math.abs(dif) === 1 ? "item" : "itens"}`;
 
     const pctReal = percentualPorCategoria(originais);
@@ -2039,7 +2043,7 @@ function resumoDaComparacao(imaginados, originais) {
         }
     });
 
-    return maisCresceu ? `${parteItens} · mais ${maisCresceu}` : parteItens;
+    return maisCresceu ? `${parteItens} · + ${maisCresceu}` : parteItens;
 }
 
 // No mobile a ficha do projeto vai para o fim do conteúdo, dentro do scroll,
@@ -2056,6 +2060,20 @@ function resumoDaComparacao(imaginados, originais) {
     };
     colocar();
     mobile.addEventListener("change", colocar);
+})();
+
+// Enquanto se faz scroll, o post-it do reMixar esconde-se (só no mobile, pelo
+// CSS) e volta 1,2 s depois de o scroll parar. O botão fica sempre à vista.
+(function () {
+    const scroll = document.querySelector(".pasta-scroll");
+    const remix = document.querySelector(".pasta-remix");
+    if (!scroll || !remix) return;
+    let espera;
+    scroll.addEventListener("scroll", () => {
+        remix.classList.add("a-rolar");
+        clearTimeout(espera);
+        espera = setTimeout(() => remix.classList.remove("a-rolar"), 1200);
+    }, { passive: true });
 })();
 
 // ==========================================
