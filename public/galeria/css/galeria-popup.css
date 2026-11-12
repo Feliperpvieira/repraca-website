@@ -910,7 +910,7 @@ html.popup-aberto body {
     color: var(--pasta-castanho);
 }
 
-.comp-num--forte { color: var(--azul-marinho); }
+.comp-num--forte { color: var(--azul); } /* azul, como a barra da proposta no gráfico */
 
 /* A pílula da diferença também é .comp-num: repõe a cor e o tamanho dela */
 .comp-num.comp-dif { color: var(--azul-marinho); font-size: 15px; }
@@ -1815,7 +1815,8 @@ html.popup-aberto body {
     .pasta-ficha {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        margin: 10px -16px 0;
+        /* 34px + os 14px de gap do .pasta-scroll = 48px até ao conteúdo */
+        margin: 34px -16px 0;
         border-top: 2px solid var(--azul-marinho);
         border-bottom: 2px solid var(--azul-marinho);
     }
