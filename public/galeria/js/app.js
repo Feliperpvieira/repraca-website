@@ -1332,19 +1332,21 @@ async function compartilharPraca() {
     const texto = document.getElementById("textoCompartilhar");
     const url = new URL(window.location.href);
     url.searchParams.set("id", pracaAbertaId);
-    const dados = {
-        title: document.getElementById("modalTitulo").innerText,
-        text: document.getElementById("modalNumero").innerText,
-        url: url.toString(),
-    };
+    // A mesma mensagem no mobile e no desktop. Sem "title": algumas apps
+    // juntam-no ao texto e a mensagem aparece repetida.
+    const praca = document.getElementById("fichaBase").textContent.trim().replace(/^—$/, "");
+    const mensagem = praca
+        ? `Ei! Olha como reimaginaram a praça ${praca}. E tu, o que mudavas?`
+        : "Ei! Olha como reimaginaram esta praça. E tu, o que mudavas?";
+    const dados = { text: mensagem, url: url.toString() };
 
     try {
         if (navigator.share) {
             await navigator.share(dados);
             texto.innerText = "Partilhado";
         } else {
-            await navigator.clipboard.writeText(dados.url);
-            texto.innerText = "Link copiado";
+            await navigator.clipboard.writeText(`${mensagem}\n${dados.url}`);
+            texto.innerText = "Mensagem copiada";
         }
     } catch (erro) {
         if (erro.name === "AbortError") return;
