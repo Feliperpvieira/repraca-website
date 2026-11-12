@@ -2072,7 +2072,11 @@ function resumoDaComparacao(imaginados, originais) {
     scroll.addEventListener("scroll", () => {
         remix.classList.add("a-rolar");
         clearTimeout(espera);
-        espera = setTimeout(() => remix.classList.remove("a-rolar"), 1200);
+        espera = setTimeout(() => {
+            remix.classList.remove("a-rolar");
+            // Volta com a mesma animação de entrada do post-it
+            reanimar(document.getElementById("balaoRemix"), "anim-balao");
+        }, 1200);
     }, { passive: true });
 })();
 

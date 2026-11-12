@@ -544,7 +544,8 @@ html.popup-aberto body {
 }
 
 .capa-vista svg { fill: var(--azul); transition: fill .3s ease; }
-.capa-vista.ativo { background: linear-gradient(180deg, #5A86C5, #2E4677); }
+/* O mesmo degradê do botão de vista ativo da versão anterior (.btn-vista no style.css) */
+.capa-vista.ativo { background: linear-gradient(154deg, rgba(10, 110, 182, 0.70) 31.41%, rgba(10, 110, 182, 0.70) 44.7%, rgba(19, 28, 59, 0.70) 102.06%), linear-gradient(151deg, rgba(249, 239, 231, 0.70) 12.97%, rgba(183, 111, 81, 0.70) 100%), var(--azul-marinho); }
 .capa-vista.ativo svg { fill: var(--bege); }
 .capa-vista:active { transform: scale(.92, .86); }
 
@@ -1412,7 +1413,10 @@ html.popup-aberto body {
     height: 64px;
     padding: 0 92px 0 0;
     border-radius: 32px;
-    background: linear-gradient(90deg, #5A86C5 0%, #4E77B5 55%, #2E3558 100%);
+    /* O mesmo degradê do botão reMixar da versão anterior (.btn-remix no style.css) */
+    background: linear-gradient(170deg, rgba(10, 110, 182, 0.7) 31.41%, rgba(10, 110, 182, 0.7) 44.7%, rgba(19, 28, 59, 0.7) 102.06%),
+                linear-gradient(151.35deg, rgba(249, 239, 231, 0.7) 12.97%, rgba(183, 111, 81, 0.7) 100%),
+                var(--azul-marinho);
     color: #FFFFFF;
     font-size: 21px;
     font-weight: 700;
@@ -1717,8 +1721,8 @@ html.popup-aberto body {
 @media (max-width: 768px) {
     /* A pasta não ocupa o ecrã todo: a galeria aparece em cima e em baixo */
     #popup {
-        padding: 44px 12px 56px;
-        padding-bottom: max(56px, env(safe-area-inset-bottom));
+        padding: 28px 12px 36px;
+        padding-bottom: max(36px, env(safe-area-inset-bottom));
         align-items: stretch;
     }
 
