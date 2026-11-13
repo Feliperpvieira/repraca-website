@@ -1,71 +1,85 @@
 {
     "Banco de concreto": {
         "categoria": "Lazer",
-        "icone": "banco-concreto.png"
+        "icone": "banco-concreto.png",
+        "plural": "bancos de concreto"
     },
 
     "Banco de madeira": {
         "categoria": "Lazer",
-        "icone": "banco-madeira.png"
+        "icone": "banco-madeira.png",
+        "plural": "bancos de madeira"
     },
 
     "Barra Fixa": {
         "categoria": "Atividade física",
-        "icone": "barra-fixa.png"
+        "icone": "barra-fixa.png",
+        "plural": "barras fixas"
     },
 
     "Bicicletário U": {
         "categoria": "Transporte",
-        "icone": "bicicletario-u.png"
+        "icone": "bicicletario-u.png",
+        "plural": "bicicletários"
     },
 
     "Cereja-do-mato": {
         "categoria": "Paisagem",
-        "icone": "cereja-do-mato.png"
+        "icone": "cereja-do-mato.png",
+        "plural": "cerejas-do-mato"
     },
 
     "Cesta de Basquete": {
         "categoria": "Atividade física",
-        "icone": "cesta-basquete.png"
+        "icone": "cesta-basquete.png",
+        "plural": "cestas de basquete"
     },
 
     "Escorrega": {
         "categoria": "Infantil",
-        "icone": "escorrega.png"
+        "icone": "escorrega.png",
+        "plural": "escorregas"
     },
 
     "Estátua": {
         "categoria": "Paisagem",
-        "icone": "estatua.png"
+        "icone": "estatua.png",
+        "plural": "estátuas"
     },
 
     "Gangorra": {
         "categoria": "Infantil",
-        "icone": "gangorra.png"
+        "icone": "gangorra.png",
+        "plural": "gangorras"
     },
 
     "Lixeira Comlurb": {
         "categoria": "Infraestrutura",
-        "icone": "lixeira-comlurb.png"
+        "icone": "lixeira-comlurb.png",
+        "plural": "lixeiras"
     },
 
     "Mesa de xadrez": {
         "categoria": "Lazer",
-        "icone": "mesa-xadrez.png"
+        "icone": "mesa-xadrez.png",
+        "plural": "mesas de xadrez"
     },
 
     "MUPI": {
         "categoria": "Infraestrutura",
-        "icone": "mupi.png"
+        "icone": "mupi.png",
+        "plural": "MUPIs"
     },
 
     "Palmeira": {
         "categoria": "Paisagem",
-        "icone": "palmeira.png"
+        "icone": "palmeira.png",
+        "plural": "palmeiras"
     },
 
     "Poste duplo": {
         "categoria": "Infraestrutura",
-        "icone": "poste-duplo.png"
+        "icone": "poste-duplo.png",
+        "plural": "postes duplos"
     }
 }

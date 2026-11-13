@@ -1366,9 +1366,15 @@ document.getElementById("btnCompartilhar").addEventListener("click", compartilha
 // Cada reexportação pode aparecer como um card à parte; para as setas conta
 // só o primeiro card de cada praca_id, senão "seguinte" abria a mesma praça.
 function cardsDaGrelha() {
-    if (!gallery) return [];
+    // O hub /galeria/ não tem grelha: aí as setas andam pelos cartões da
+    // linha ou faixa onde se clicou, que o hub.js dá em cardsDoHub().
+    if (!gallery) return typeof window.cardsDoHub === "function" ? semRepetidos(window.cardsDoHub()) : [];
+    return semRepetidos([...gallery.querySelectorAll(".card-praca")]);
+}
+
+function semRepetidos(cards) {
     const vistos = new Set();
-    return [...gallery.querySelectorAll(".card-praca")].filter(card => {
+    return cards.filter(card => {
         if (vistos.has(card.dataset.pracaId)) return false;
         vistos.add(card.dataset.pracaId);
         return true;
@@ -1376,7 +1382,7 @@ function cardsDaGrelha() {
 }
 
 async function navegarPelaGrelha(direcao) {
-    if (!gallery || !pracaAbertaId) return;
+    if (!pracaAbertaId) return;
 
     let cards = cardsDaGrelha();
     let indiceAtual = cards.findIndex(card => card.dataset.pracaId === pracaAbertaId);
@@ -1384,7 +1390,7 @@ async function navegarPelaGrelha(direcao) {
 
     let indiceDestino = indiceAtual + direcao;
 
-    while (indiceDestino >= cards.length && !chegouAoFim) {
+    while (gallery && indiceDestino >= cards.length && !chegouAoFim) {
         const carregou = await carregarPracas();
         cards = cardsDaGrelha();
 
@@ -1427,9 +1433,9 @@ const btnPracaSeguinte = document.getElementById("btnPracaSeguinte");
 btnPracaAnterior.addEventListener("click", () => irParaPracaVizinha(-1));
 btnPracaSeguinte.addEventListener("click", () => irParaPracaVizinha(1));
 
-// As setas só aparecem quando a praça aberta está na grelha desta página
-// (a hub /galeria/ não tem grelha, e um link direto pode abrir uma praça
-// que ainda não carregou).
+// As setas só aparecem quando a praça aberta está na grelha desta página,
+// ou, no hub /galeria/, no grupo de cartões onde se clicou (um link
+// direto pode abrir uma praça que ainda não carregou).
 function atualizarSetas() {
     const cards = cardsDaGrelha();
     const indice = cards.findIndex(card => card.dataset.pracaId === pracaAbertaId);
@@ -1440,7 +1446,7 @@ function atualizarSetas() {
     if (!temGrelha) return;
 
     btnPracaAnterior.disabled = indice === 0;
-    btnPracaSeguinte.disabled = indice === cards.length - 1 && chegouAoFim;
+    btnPracaSeguinte.disabled = indice === cards.length - 1 && (chegouAoFim || !gallery);
 }
 
 // ==========================================
@@ -1500,7 +1506,9 @@ function lerLayout(linha) {
     if (!linha || !linha.layout_data) return {};
     if (typeof linha.layout_data === "object") return linha.layout_data;
     try {
-        return JSON.parse(linha.layout_data);
+        // "null" ou um número também são JSON válido; só serve um objeto.
+        const lido = JSON.parse(linha.layout_data);
+        return lido && typeof lido === "object" ? lido : {};
     } catch (erro) {
         console.warn("layout_data inválido na linha", linha.id, erro);
         return {};
@@ -1508,7 +1516,8 @@ function lerLayout(linha) {
 }
 
 function itensDaLinha(linha) {
-    return lerLayout(linha).layoutDaPraca || [];
+    const itens = lerLayout(linha).layoutDaPraca;
+    return Array.isArray(itens) ? itens.filter(item => item && typeof item === "object") : [];
 }
 
 // { "Banco de madeira": 2, "Palmeira": 3 } a partir dos itens posicionados.
@@ -1696,7 +1705,7 @@ function mostrarVersao(linha) {
     estadoPasta.aVer = linha;
     const antiga = eVersaoAntiga();
     const layout = lerLayout(linha);
-    const itens = layout.layoutDaPraca || [];
+    const itens = itensDaLinha(linha);
     const nomeBase = layout.nomeDaCena || estadoPasta.base.nome || "";
     const numero = numeroDaVersao(linha);
     const data = formatarData(linha.created_at);

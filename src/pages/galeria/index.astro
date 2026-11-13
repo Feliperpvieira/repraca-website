@@ -1,19 +1,24 @@
 ---
 // src/pages/galeria/index.astro
 //
-// A "central": só leva pra cada praça-base. Não mostra mais uma grade
-// geral com criações de TODAS as praças misturadas — isso virou papel
-// de cada página /galeria/praca/<slug>/, que já filtra pela cena certa
-// do Unity. Conteúdo daqui pra frente ainda em aberto (talvez destaques,
-// contagem total, etc.) — por enquanto é só o essencial: a lista.
+// O hub da galeria. Tudo o que vem dos JSON das praças (nome, local,
+// foto de hoje, itens) sai pronto daqui, no build. Tudo o que vem das
+// propostas (contagens, propostas recentes, ideias diferentes, conversas
+// de remixes) é posto no browser pelo /galeria/js/hub.js, que corre
+// depois do app.js e usa as funções dele.
 //
 // A lista é montada a partir dos mesmos arquivos que geram as páginas
 // de praça (getStaticPaths em praca/[slug].astro), pra nunca ficar
-// desatualizada — adicionar um .json novo já basta, sem editar aqui.
+// desatualizada: adicionar um .json novo já basta, sem editar aqui.
 
 import fs from "node:fs";
 import path from "node:path";
 import GaleriaLayout from "../../layouts/GaleriaLayout.astro";
+import Download from "../../components/logo-download.astro";
+import LinhaPraca from "../../components/galeria/LinhaPraca.astro";
+import FaixaHorizontal from "../../components/galeria/FaixaHorizontal.astro";
+import CartaoIdeia from "../../components/galeria/CartaoIdeia.astro";
+import CartaoRemixes from "../../components/galeria/CartaoRemixes.astro";
 
 const PASTA_PRACAS = path.resolve("./public/galeria/dados/pracas");
 
@@ -23,27 +28,96 @@ const pracas = fs
     .map(arquivo => {
         const slug = arquivo.replace(/\.json$/, "");
         const dados = JSON.parse(fs.readFileSync(path.join(PASTA_PRACAS, arquivo), "utf-8"));
-        return { slug, nome: dados.nome || slug };
+        // A foto de hoje é a primeira imagem do JSON, a mesma que o popup
+        // usa no "Hoje".
+        const primeira = Array.isArray(dados.imagens) ? dados.imagens[0] : null;
+        return {
+            slug,
+            nome: dados.nome || slug,
+            bairro: dados.bairro || "",
+            cidade: dados.cidade || "",
+            hoje: primeira ? { src: primeira.src, alt: primeira.alt || "" } : null,
+            itens: dados.itens || {},
+        };
     })
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
+
+// O topo começa com a foto de hoje da primeira praça, para não haver
+// salto; o hub.js depois sorteia a praça e põe a proposta ao lado.
+const primeiraComFoto = pracas.find(p => p.hoje);
 ---
 <GaleriaLayout
     title="rePraça — Galeria"
-    ogDescription="Vê e cria praças reimaginadas no rePraça."
+    ogDescription="As praças são nossas. Vê como cada praça está hoje e como outras pessoas a reimaginaram."
     canonical="https://repraca.feliperpv.com/galeria/"
 
     stylesheets={[
         "/css/index.css",
         "/css/privacidade.css",
-        "/galeria/css/galeria.css"
+        "/galeria/css/galeria.css",
+        "/galeria/css/hub.css"
     ]}
+    scripts={["/galeria/js/hub.js"]}
 >
-    <section class="praca-lista">
-        <h2>Praças</h2>
-        <ul>
-            {pracas.map(praca => (
-                <li><a href={`/galeria/praca/${praca.slug}/`}>{praca.nome}</a></li>
+    <!-- Dados das praças para o hub.js (o mesmo truque do
+         dados-itens-originais na página de cada praça). -->
+    <script type="application/json" id="dados-hub" set:html={JSON.stringify(pracas)} />
+
+    <div class="hub">
+        <!-- 1. Topo. No telemóvel a imagem passa para cima do título só
+             com CSS (order); no HTML o título vem primeiro, para quem usa
+             leitor de ecrã ouvir primeiro o título. -->
+        <section class="hub-topo" aria-labelledby="hub-titulo">
+            <div class="hub-topo-texto">
+                <h1 class="hub-titulo" id="hub-titulo">As praças são nossas.<br />Como as imaginamos?</h1>
+                <p class="hub-subtitulo">
+                    Vê como cada praça está hoje e como outras pessoas a reimaginaram. Pega numa ideia e leva-a mais longe, ou começa do zero e junta a tua.<br />
+                    <b>A cidade também é tua, imagina-a.</b>
+                </p>
+            </div>
+
+            {primeiraComFoto && (
+                <figure class="hub-comparar" id="hubComparar" style="--pos: 50%">
+                    <div class="hub-comparar-caixa">
+                        <!-- Cada etiqueta vive dentro da camada da sua imagem: o slider tapa a foto e a etiqueta ao mesmo tempo. -->
+                        <div class="hub-comparar-camada" id="hubPropostaCamada" hidden>
+                            <img id="hubPropostaImg" alt="" />
+                            <span class="hub-etq hub-etq--proposta" aria-hidden="true">rePraça</span>
+                        </div>
+                        <div class="hub-comparar-camada hub-comparar-hoje">
+                            <img id="hubHojeImg" src={primeiraComFoto.hoje!.src} alt={`${primeiraComFoto.nome} como está hoje`} width="520" height="520" />
+                            <span class="hub-etq hub-etq--hoje" aria-hidden="true">Hoje</span>
+                        </div>
+                        <span class="hub-comparar-linha" aria-hidden="true"></span>
+                        <input class="hub-comparar-range" id="hubCompararRange" type="range" min="0" max="100" value="50" step="1" autocomplete="off"
+                               aria-label="Comparar a praça hoje com a rePraça: para a esquerda mostra mais rePraça, para a direita mais hoje" hidden />
+                        <span class="hub-comparar-pega" aria-hidden="true" hidden>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6l-6 6 6 6" /><path d="M15 6l6 6-6 6" /></svg>
+                        </span>
+                    </div>
+                    <figcaption class="hub-comparar-legenda" id="hubLegenda">{primeiraComFoto.nome}, como está hoje.</figcaption>
+                </figure>
+            )}
+        </section>
+
+        <!-- 2. As praças: uma linha por praça, sem título visível. -->
+        <section class="hub-pracas" aria-labelledby="hub-pracas-titulo">
+            <h2 class="hub-so-leitor" id="hub-pracas-titulo">Praças</h2>
+            {pracas.map(p => (
+                <LinhaPraca slug={p.slug} nome={p.nome} bairro={p.bairro} cidade={p.cidade} hoje={p.hoje} />
             ))}
-        </ul>
-    </section>
+        </section>
+
+        <!-- 3. Faixas preenchidas pelo hub.js. -->
+        <FaixaHorizontal id="hub-ideias" titulo="Ideias muito diferentes" subtitulo="As propostas que mais se afastam da praça real.">
+            <CartaoIdeia />
+        </FaixaHorizontal>
+
+        <FaixaHorizontal id="hub-remixes" titulo="Conversas de remixes" subtitulo="Ideias que outras pessoas pegaram e levaram para outro lado.">
+            <CartaoRemixes />
+        </FaixaHorizontal>
+
+        <!-- 4. O mesmo bloco de download das outras páginas. -->
+        <Download />
+    </div>
 </GaleriaLayout>

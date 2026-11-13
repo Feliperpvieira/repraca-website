@@ -1,0 +1,35 @@
+---
+// src/components/galeria/FaixaHorizontal.astro
+//
+// Moldura das faixas que andam para o lado no hub ("Ideias muito
+// diferentes" e "Conversas de remixes"): título, subtítulo, as duas
+// setas e a lista com scroll horizontal. Os cartões chegam pelo <slot />
+// como <template>, e o hub.js copia-os para a lista. A secção nasce
+// escondida e só aparece quando há cartões que cheguem.
+
+interface Props {
+    id: string;
+    titulo: string;
+    subtitulo?: string;
+}
+
+const { id, titulo, subtitulo } = Astro.props;
+---
+<section class="hub-faixa" id={id} aria-labelledby={`${id}-titulo`} hidden>
+    <div class="hub-faixa-cab">
+        <div>
+            <h2 class="hub-faixa-titulo" id={`${id}-titulo`}>{titulo}</h2>
+            {subtitulo && <p class="hub-faixa-subtitulo">{subtitulo}</p>}
+        </div>
+        <div class="hub-faixa-setas">
+            <button type="button" class="hub-seta" data-direcao="-1" aria-controls={`${id}-lista`} aria-label="Anteriores">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <button type="button" class="hub-seta hub-seta--cheia" data-direcao="1" aria-controls={`${id}-lista`} aria-label="Seguintes">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+        </div>
+    </div>
+    <ul class="hub-faixa-lista" id={`${id}-lista`} data-hub-grupo></ul>
+    <slot />
+</section>

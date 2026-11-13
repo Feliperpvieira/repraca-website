@@ -1,0 +1,34 @@
+---
+// src/components/galeria/CartaoRemixes.astro
+//
+// Cartão de "Conversas de remixes": a proposta original, a frase
+// "Começou com…", e um ramo por remix ligado por um tronco verde (como
+// um fork). Os dois <template> são copiados pelo hub.js
+// (desenharRemixes): o primeiro uma vez por conversa, o segundo uma vez
+// por remix.
+---
+<template id="tpl-remixes">
+    <li class="hub-conversa">
+        <a class="hub-conversa-original" href="#" data-praca-id="">
+            <img class="hub-conversa-img" src="" alt="" width="88" height="88" loading="lazy" />
+            <span class="hub-conversa-texto">
+                <span class="hub-conversa-frase"></span>
+                <span class="hub-conversa-meta"><b class="hub-conversa-n"></b> · <span class="hub-conversa-praca"></span></span>
+            </span>
+        </a>
+        <ul class="hub-conversa-ramos"></ul>
+        <p class="hub-conversa-resto"></p>
+    </li>
+</template>
+
+<template id="tpl-ramo">
+    <li class="hub-ramo">
+        <svg class="hub-ramo-linha" width="20" height="28" viewBox="0 0 20 28" fill="none" aria-hidden="true">
+            <path d="M8.5 0 V20 Q8.5 28 16 28 H18" />
+        </svg>
+        <a class="hub-ramo-link" href="#" data-praca-id="">
+            <img class="hub-ramo-img" src="" alt="" width="44" height="44" loading="lazy" />
+        </a>
+        <span class="hub-ramo-etiquetas"></span>
+    </li>
+</template>

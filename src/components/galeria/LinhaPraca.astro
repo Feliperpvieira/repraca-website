@@ -1,0 +1,54 @@
+---
+// src/components/galeria/LinhaPraca.astro
+//
+// Uma praça no hub /galeria/: nome e local, a foto de hoje e as 4
+// propostas mais recentes. O Astro escreve tudo o que vem do JSON da
+// praça; as contagens e as propostas vêm do Supabase e são postas pelo
+// hub.js (preencherLinhas), que procura esta linha pelo data-slug.
+// Até lá, os 4 lugares das propostas ficam a pulsar.
+
+interface Props {
+    slug: string;
+    nome: string;
+    bairro?: string;
+    cidade?: string;
+    hoje?: { src: string; alt?: string } | null;
+}
+
+const { slug, nome, bairro, cidade, hoje } = Astro.props;
+const local = [bairro, cidade].filter(Boolean).join(", ");
+const linkPraca = `/galeria/praca/${slug}/`;
+---
+<article class="hub-praca" data-slug={slug} aria-labelledby={`praca-${slug}`}>
+    <div class="hub-praca-cab">
+        <h3 class="hub-praca-nome" id={`praca-${slug}`}><a href={linkPraca}>{nome}</a></h3>
+        <p class="hub-praca-meta">
+            {local}<span class="hub-praca-contagens" data-contagens></span>
+        </p>
+    </div>
+
+    <div class="hub-praca-faixa">
+        {hoje ? (
+            <a class="hub-praca-hoje" href={linkPraca}>
+                <img src={hoje.src} alt={`${nome} como está hoje`} width="200" height="200" loading="lazy" />
+                <span class="hub-etq hub-etq--hoje" aria-hidden="true">Hoje</span>
+            </a>
+        ) : (
+            <div class="hub-praca-hoje hub-praca-hoje--vazio">Ainda sem foto de hoje</div>
+        )}
+
+        <svg class="hub-praca-seta" width="28" height="20" viewBox="0 0 28 20" fill="none" aria-hidden="true">
+            <path d="M2 10h22" /><path d="M17 4l6 6-6 6" />
+        </svg>
+
+        <div class="hub-praca-propostas">
+            <p class="hub-praca-rotulo" id={`recentes-${slug}`}>Mais recentes</p>
+            <ul class="hub-praca-lista" data-propostas data-hub-grupo aria-labelledby={`recentes-${slug}`} aria-busy="true">
+                <li class="hub-esqueleto" aria-hidden="true"></li>
+                <li class="hub-esqueleto" aria-hidden="true"></li>
+                <li class="hub-esqueleto" aria-hidden="true"></li>
+                <li class="hub-esqueleto" aria-hidden="true"></li>
+            </ul>
+        </div>
+    </div>
+</article>

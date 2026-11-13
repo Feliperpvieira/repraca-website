@@ -1,0 +1,18 @@
+---
+// src/components/galeria/CartaoIdeia.astro
+//
+// Cartão de "Ideias muito diferentes". É só o HTML, dentro de um
+// <template>: os dados vêm do Supabase no browser, onde o Astro já não
+// corre. O hub.js (desenharIdeias) copia-o e preenche-o.
+---
+<template id="tpl-ideia">
+    <li class="hub-ideia">
+        <a class="hub-ideia-link" href="#" data-praca-id="">
+            <img class="hub-ideia-img" src="" alt="" width="200" height="200" loading="lazy" />
+            <span class="hub-ideia-info">
+                <span class="hub-ideia-etiqueta"></span>
+                <span class="hub-ideia-praca"></span>
+            </span>
+        </a>
+    </li>
+</template>

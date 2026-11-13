@@ -23,6 +23,9 @@ const {
     // do app.js.
     pracaSlug,
     pracaNome,
+    // Scripts extra, carregados DEPOIS do app.js (podem usar as funções
+    // dele). Só o hub /galeria/ usa: ["/galeria/js/hub.js"].
+    scripts = [],
 } = Astro.props;
 
 const cssFiles = [
@@ -295,5 +298,8 @@ const cssFiles = [
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4" is:inline></script>
     <!-- Caminho absoluto pelo mesmo motivo do CSS acima -->
     <script src="/galeria/js/app.js" is:inline></script>
+    {scripts.map((src: string) => (
+        <script src={src} is:inline></script>
+    ))}
 </body>
 </html>

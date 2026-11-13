@@ -1,0 +1,558 @@
+/* ==========================================
+   HUB DA GALERIA (/galeria/)
+   Só esta página carrega este ficheiro. Cores do index.css (--azul,
+   --azul-marinho, --bege, --marrom, --verde); as etiquetas usam as
+   classes .chip do galeria-popup.css.
+   Tamanhos: desktop; tablet (781px a 1024px) com 3 propostas por praça;
+   telemóvel (até 780px, o mesmo corte do resto do site).
+   ========================================== */
+
+.hub {
+    --hub-texto: var(--azul-marinho);
+    --hub-texto-suave: #3B4058;
+    --hub-texto-fraco: #5C5F70;
+    --hub-castanho: #6E5A4C;
+    --hub-tracejado: #C9B5A3;
+
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    color: var(--hub-texto);
+}
+
+.hub [hidden] { display: none !important; }
+
+/* O index.css centra e aumenta h1/h2/h3 (e dá largura de 90% ao h3);
+   aqui os títulos seguem o desenho do hub. */
+.hub h1,
+.hub h2,
+.hub h3 {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.hub-so-leitor {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.hub a:focus-visible,
+.hub button:focus-visible,
+.hub-faixa-lista:focus-visible {
+    outline: 3px solid var(--azul);
+    outline-offset: 3px;
+}
+
+/* Etiquetas "Hoje" / "Proposta" por cima das imagens */
+.hub-etq {
+    position: absolute;
+    top: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 14px;
+    padding: 6px 12px;
+    pointer-events: none;
+}
+.hub-etq--hoje { left: 12px; background: var(--azul-marinho); color: var(--bege); }
+.hub-etq--proposta { right: 12px; background: var(--azul); color: #FFFFFF; }
+
+/* ---------- 1. Topo ---------- */
+
+.hub-topo {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.hub-topo-texto {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.hub-titulo {
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+.hub-subtitulo {
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--hub-texto-suave);
+}
+.hub-subtitulo b { color: var(--hub-texto); }
+
+.hub-comparar {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hub-comparar-caixa {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #EDE0D3;
+    box-shadow: 0 10px 28px rgba(19, 28, 59, .18);
+}
+
+.hub-comparar-camada {
+    position: absolute;
+    inset: 0;
+}
+
+.hub-comparar-caixa img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+}
+
+/* A camada de hoje (foto + etiqueta) fica por cima e é cortada à direita de --pos; a etiqueta da rePraça fica por baixo dela e só se vê onde a foto de hoje já não está. */
+.hub-comparar.tem-proposta .hub-comparar-hoje {
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.hub-comparar-linha { display: none; }
+.hub-comparar.tem-proposta .hub-comparar-linha {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--pos) - 2px);
+    width: 4px;
+    background: var(--bege);
+    pointer-events: none;
+}
+
+/* O range ocupa a caixa toda, invisível: arrastar em qualquer ponto
+   move a divisão, e o teclado (setas) também. */
+.hub-comparar-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    touch-action: pan-y;
+}
+
+.hub-comparar-pega {
+    position: absolute;
+    top: calc(50% - 22px);
+    left: calc(var(--pos) - 22px);
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background: var(--bege);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+    pointer-events: none;
+}
+.hub-comparar-pega svg { stroke: var(--azul-marinho); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hub-comparar-range:focus-visible + .hub-comparar-pega {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+}
+
+.hub-comparar-legenda {
+    font-size: 15px;
+    color: var(--hub-texto-fraco);
+}
+.hub-comparar-legenda a {
+    font-weight: 700;
+    color: var(--azul);
+}
+
+/* ---------- 2. Praças ---------- */
+
+.hub-pracas {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.hub-praca {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(19, 28, 59, .06);
+}
+
+.hub-praca-cab {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+}
+
+.hub-praca-nome { font-size: 24px; font-weight: 700; }
+.hub-praca-nome a { color: inherit; text-decoration: none; }
+.hub-praca-nome a:hover { color: var(--azul); }
+
+.hub-praca-meta { font-size: 15px; color: var(--hub-texto-suave); }
+.hub-praca-contagens b { color: var(--hub-texto); }
+
+.hub-praca-faixa {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.hub-praca-hoje {
+    position: relative;
+    flex: none;
+    width: 200px;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #EDE0D3;
+}
+.hub-praca-hoje img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hub-praca-hoje .hub-etq { top: 8px; left: 8px; font-size: 12px; padding: 4px 8px; }
+
+.hub-praca-seta { flex: none; stroke: var(--marrom); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.hub-praca-propostas {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hub-praca-rotulo { font-size: 14px; font-weight: 600; color: var(--hub-castanho); }
+
+.hub-praca-lista {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    list-style: none;
+}
+
+.hub-praca-lista > li > a {
+    display: block;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.hub-praca-lista img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* "+N ver todas": +N-4 por defeito, +N-3 no tablet (ver hub.js). */
+.hub-todas-3,
+.hub-praca-todas--so-tablet { display: none; }
+
+.hub-praca-lista > .hub-praca-todas > a {
+    position: relative; /* prende o texto .hub-so-leitor dentro da faixa */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--bege);
+    color: var(--azul);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.hub-praca-vazia {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    padding: 16px;
+    text-align: center;
+    border: 2px dashed var(--hub-tracejado);
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--hub-castanho);
+}
+.hub-praca-vazia a { color: var(--azul); font-weight: 700; }
+
+/* Praça sem foto de hoje no JSON */
+.hub-praca-hoje--vazio {
+    display: grid;
+    place-items: center;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--hub-castanho);
+    border: 2px dashed var(--hub-tracejado);
+}
+
+.hub-esqueleto {
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    background: #EFE3D6;
+    animation: hub-pulsar 1.4s ease-in-out infinite;
+}
+
+@keyframes hub-pulsar {
+    50% { opacity: .55; }
+}
+
+/* ---------- 3. Faixas horizontais ---------- */
+
+.hub-faixa {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.hub-faixa[hidden] { display: none; }
+
+.hub-faixa-cab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hub-faixa-titulo { font-size: 30px; font-weight: 700; }
+.hub-faixa-subtitulo { margin-top: 6px; font-size: 18px; color: var(--hub-texto-suave); }
+
+.hub-faixa-setas { display: flex; gap: 8px; }
+
+.hub-seta {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    border: 2px solid var(--azul-marinho);
+    background: transparent;
+    color: var(--azul-marinho);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.hub-seta--cheia { background: var(--azul-marinho); color: var(--bege); }
+.hub-seta svg { stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.hub-seta[aria-disabled="true"] { opacity: .35; cursor: default; }
+
+.hub-faixa-lista {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    list-style: none;
+    padding: 8px 8px 14px;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 8px;
+}
+
+/* Ideias muito diferentes */
+.hub-ideia { flex: 0 0 200px; scroll-snap-align: start; }
+
+.hub-ideia-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    color: var(--hub-texto);
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(19, 28, 59, .08);
+}
+.hub-ideia-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.hub-ideia-info { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+.hub-ideia-etiqueta .chip { height: auto; min-height: 22px; white-space: normal; font-size: 13px; }
+.hub-ideia-praca { font-size: 13px; color: var(--hub-texto-fraco); }
+
+/* Conversas de remixes */
+.hub-conversa {
+    flex: 0 0 380px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(19, 28, 59, .08);
+}
+
+.hub-conversa-original {
+    --hub-img-conversa: 88px;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--hub-texto);
+    text-decoration: none;
+    border-radius: 8px;
+}
+/* Tronco verde: desce da foto original até ao primeiro ramo, mesmo
+   quando o texto ao lado é mais alto do que a foto. */
+.hub-conversa-original::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: var(--hub-img-conversa);
+    bottom: -12px;
+    width: 3px;
+    background: var(--verde);
+}
+.hub-conversa-img {
+    flex: none;
+    width: var(--hub-img-conversa);
+    height: var(--hub-img-conversa);
+    object-fit: cover;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+}
+.hub-conversa-texto { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hub-conversa-frase { font-size: 16px; line-height: 1.35; }
+.hub-conversa-meta { font-size: 14px; color: var(--hub-texto-suave); }
+.hub-conversa-meta b { color: var(--hub-texto); }
+
+.hub-conversa-ramos { list-style: none; }
+
+/* Cada ramo cresce com as etiquetas; a curva (svg) fica no topo e o
+   tronco até ao ramo seguinte é a borda do ::before. */
+.hub-ramo {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding-bottom: 6px;
+}
+.hub-ramo:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 20px;
+    bottom: 0;
+    width: 3px;
+    background: var(--verde);
+}
+.hub-ramo-linha { flex: none; overflow: visible; stroke: var(--verde); stroke-width: 3; stroke-linecap: round; }
+.hub-ramo-link { flex: none; margin-top: 6px; border-radius: 6px; }
+.hub-ramo-img { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; display: block; }
+.hub-ramo-etiquetas { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; padding-top: 10px; }
+
+.hub-conversa-resto { font-size: 14px; color: var(--hub-texto-fraco); }
+
+/* Levantar ao passar o rato (só onde há rato e sem pedir menos movimento) */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .hub-ideia-link,
+    .hub-conversa,
+    .hub-praca-lista > li > a,
+    a.hub-praca-hoje {
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .hub-ideia-link:hover,
+    .hub-conversa:hover,
+    .hub-praca-lista > li > a:hover,
+    a.hub-praca-hoje:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(19, 28, 59, .14);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hub-esqueleto { animation: none; }
+    .hub-faixa-lista { scroll-behavior: auto; }
+}
+
+/* ---------- Tablet: 3 propostas por praça ---------- */
+
+@media screen and (min-width: 781px) and (max-width: 1024px) {
+    .hub { gap: 64px; }
+    .hub-topo { gap: 28px; }
+    .hub-titulo { font-size: 34px; line-height: 1.12; }
+    .hub-subtitulo { font-size: 17px; }
+    .hub-praca-hoje { width: 160px; }
+    .hub-praca-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .hub-praca-lista > li:nth-child(4):not(.hub-praca-todas) { display: none; }
+    .hub-todas-4 { display: none; }
+    .hub-todas-3 { display: inline; }
+    .hub-praca-todas--so-tablet { display: list-item; }
+    .hub-praca-vazia { min-height: 120px; }
+    .hub-conversa { flex-basis: 340px; }
+}
+
+/* ---------- Telemóvel ---------- */
+
+@media screen and (max-width: 780px) {
+    .hub { gap: 48px; padding-top: 0; }
+
+    /* A imagem passa para cima do título só visualmente. */
+    .hub-topo { flex-direction: column; align-items: stretch; gap: 22px; }
+    .hub-comparar { order: -1; }
+    .hub-comparar-caixa { max-width: none; }
+    .hub-topo-texto { gap: 12px; }
+    .hub-titulo { font-size: 30px; line-height: 1.12; }
+    .hub-subtitulo { font-size: 17px; }
+    .hub-comparar-legenda { font-size: 14px; }
+
+    .hub-pracas { gap: 16px; }
+    .hub-praca { padding: 16px; gap: 12px; overflow: hidden; }
+    .hub-praca-cab { flex-direction: column; gap: 2px; }
+    .hub-praca-nome { font-size: 20px; }
+    .hub-praca-meta { font-size: 14px; }
+
+    /* Cada praça vira uma faixa horizontal com scroll livre: Hoje, seta
+       e as propostas. A faixa sai pela borda do cartão para se ver que
+       há mais. */
+    .hub-praca-faixa {
+        gap: 10px;
+        overflow-x: auto;
+        margin: -8px -16px 0;
+        padding: 8px 16px 8px; /* espaço para o anel de foco */
+    }
+    .hub-praca-hoje { width: 150px; }
+    .hub-praca-seta { width: 22px; }
+    .hub-praca-propostas { flex: none; }
+    .hub-praca-rotulo { display: none; }
+    .hub-praca-lista { display: flex; gap: 10px; }
+    .hub-praca-lista > li { flex: 0 0 110px; }
+    .hub-praca-todas a { font-size: 14px; }
+    .hub-praca.sem-propostas .hub-praca-propostas { flex: 1; }
+    .hub-praca.sem-propostas .hub-praca-lista { display: block; }
+    .hub-praca-vazia { min-height: 150px; min-width: 150px; font-size: 15px; padding: 10px; }
+
+    .hub-faixa-setas { display: none; }
+    .hub-faixa-titulo { font-size: 24px; }
+    .hub-faixa-subtitulo { margin-top: 4px; font-size: 16px; }
+    .hub-faixa-lista {
+        margin: 0 -12px;
+        padding: 8px 12px 14px;
+        scroll-padding: 0 12px;
+    }
+    .hub-ideia { flex-basis: 160px; }
+    .hub-conversa { flex-basis: 300px; }
+    .hub-conversa-original { --hub-img-conversa: 72px; }
+    .hub-conversa-frase { font-size: 15px; }
+}
